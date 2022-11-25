@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ga should initial ga and add plugins 1`] = `
+Array [
+  Array [
+    "create",
+    "UA-145395677-10",
+    "auto",
+  ],
+]
+`;
+
+exports[`ga should read correct UA depends on environment 1`] = `"UA-145395677-10"`;

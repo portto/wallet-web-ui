@@ -4,11 +4,40 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
+    <!-- Allow installing the app to the homescreen -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- iOS home screen icons -->
+    <meta name="apple-mobile-web-app-title" content="Blocto">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="theme-color" content="#0E1519" />
+    <link rel="apple-touch-icon" sizes="120x120" href="https://storage.googleapis.com/blocto/icon_120x120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://storage.googleapis.com/blocto/icon_152x152.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="https://storage.googleapis.com/blocto/icon_167x167.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://storage.googleapis.com/blocto/icon_180x180.png">
+
+    <!-- Social sharing meta -->
+    <meta name="description" content="Explore blockchain world and use dapps with Blocto wallet." />
+    <meta property="og:description" content="Explore blockchain world and use dapps with Blocto wallet.">
+    <meta property="og:image" content="https://portto.io/images/social-new.png" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Blocto | Explore blockchain world">
+    <meta name="twitter:site" content="@BloctoApp" />
+    <meta name="twitter:creator" content="@BloctoApp" />
+    <meta name="twitter:description" content="Explore blockchain world and use dapps with Blocto wallet." />
+    <meta name="twitter:image" content="https://portto.io/images/social-new.png" />
+    <style>
+      body {
+        background: rgba(0,0,0,.3);
+        height: 100vh;
+        width: 100%;
+      }
+    </style>
+
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -24,11 +53,19 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>Blocto | Explore blockchain world</title>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <!-- Display a message if JS has been disabled on the browser. -->
+    <noscript>If you're seeing this message, that means <strong>JavaScript has been disabled on your browser</strong>,
+      please <strong>enable JS</strong> to make this app work.</noscript>
+    <div id="root">
+      <div>Loading wallet UI ...</div>
+    </div>
+    <!-- Work Sans Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -39,5 +76,6 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script src="%PUBLIC_URL%/statics/js/amplitude-v2.js"></script>
   </body>
 </html>

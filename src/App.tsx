@@ -1,26 +1,18 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Box } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { logPageView } from "services/Amplitude";
+import { sendPageView } from "services/GoogleAnalytics";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    sendPageView(location.pathname);
+    logPageView({ pathname: location.pathname });
+  }, [location]);
+
+  return <Box>Hello world</Box>;
+};
 
 export default App;
