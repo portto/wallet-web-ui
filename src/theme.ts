@@ -2,10 +2,17 @@ import { extendTheme } from "@chakra-ui/react";
 import merge from "lodash.merge";
 import boTheme from "@blocto/web-chakra-theme";
 
-
 export const FONT_DEFAULT = "Work Sans, Helvetica Neue, Helvetica, Arial, sans-serif";
 
+const IS_PROD = process.env.ENV === "production";
+
 const theme = extendTheme(merge(boTheme, {
+  colors: {
+    accent: {
+      border: IS_PROD ? "transparent" : "#FFECB0",
+      text: IS_PROD ? "transparent" : "#FFB200"
+    }
+  },
   styles: {
     global: {
       "html body": {
