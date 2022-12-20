@@ -6,6 +6,9 @@ import { logPageView } from "services/Amplitude";
 import { sendPageView } from "services/GoogleAnalytics";
 
 const Authenticate = React.lazy(() => import("features/Authenticate"));
+const EVM = {
+  Transaction: React.lazy(() => import("features/EVM/Transaction"))
+};
 
 const App = () => {
   const location = useLocation();
@@ -22,6 +25,10 @@ const App = () => {
           <Route
             path="/authn/:appId?/:userEmail?"
             render={() => <Authenticate />}
+          />
+          <Route
+            path="/:appId/authz/:blockchain(ethereum|bsc|polygon|avalanche)/:authorizationId?"
+            render={() => <EVM.Transaction />}
           />
         </Switch>
       </Suspense>

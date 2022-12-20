@@ -41,16 +41,17 @@ export const getAuthnQueue = (queueId: number) =>
 export const estimatePoint = ({
   sessionId,
   blockchain = "ethereum",
-  ...otherParams
+  rawObject,
 }: {
   sessionId: string;
   blockchain: string;
+  rawObject: any;
 }) =>
   apiPost({
     url: `api/${blockchain}/estimatePoint`,
     request: {
       sessionId,
-      ...otherParams,
+      ...rawObject,
     },
     isAuthorized: true,
   });

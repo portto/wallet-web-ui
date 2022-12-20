@@ -21,3 +21,8 @@ export const INTERNAL_WL_DOMAINS = [
 ];
 
 export const EVM_CHAINS = ["ethereum", "bsc", "polygon", "avalanche"];
+
+export const ERROR_MESSAGES = {
+  AUTHZ_DECLINE_ERROR: "User declined to send the transaction",
+  SIGN_DECLINE_ERROR: "User declined the signing request",
+};
