@@ -13,7 +13,7 @@ const Input2FA = () => {
   useEffect(() => {
     const { user, dapp } = context;
     const { email, authCode, authCodeId } = user;
-    const { id: dAppId = "", url = "", name: dAppName = "", chain } = dapp;
+    const { id: dAppId = "", url = "", name: dAppName = "", blockchain } = dapp;
 
     const domain = new URL(url).host;
 
@@ -24,9 +24,9 @@ const Input2FA = () => {
       auth_code: authCode,
       auth_code_id: authCodeId,
       totp: input,
-      chain,
+      chain: blockchain,
     }).then(({ jwt, key }) => {
-      logLogin({ chain, domain, dAppName, dAppId });
+      logLogin({ chain: blockchain, domain, dAppName, dAppId });
       send({
         type: "next",
         data: { accessToken: jwt, deviceKey: key },

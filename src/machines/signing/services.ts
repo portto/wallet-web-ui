@@ -16,10 +16,10 @@ export const finish = async (context: SigningMachineContext) => {
 };
 
 export const abort = async (context: SigningMachineContext) => {
-  const { url } = context.dapp;
+  const { url = "" } = context.dapp;
   const { error } = context.message;
   const { onReject } = context.user;
-  onSignatureDecline({ l6n: url, errorMessage: error });
+  onSignatureDecline({ type: ETH_EVENTS.RESPONSE, l6n: url, errorMessage: error });
 
   onReject?.(error);
 };

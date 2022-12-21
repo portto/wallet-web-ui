@@ -46,18 +46,15 @@ const stageComponentMapping = {
 };
 
 const useDefaultStateFromProps = (props: any) => {
-  const { appId, userEmail } = useParams<{
+  const { appId, userEmail, blockchain: paramBlockchain } = useParams<{
     appId?: string;
+    blockchain?: string;
     userEmail?: string;
   }>();
   const location = useLocation<{
-    appId?: string;
-    chain?: string;
     l6n: string;
     channel?: string;
     authenticationId?: string;
-    thumbnail?: string;
-    title?: string;
   }>();
 
   const search = new URLSearchParams(location.search);
@@ -66,14 +63,12 @@ const useDefaultStateFromProps = (props: any) => {
   const channel = search.get("channel");
   const id = props?.appId || appId || search.get("appId");
   const authenticationId = search.get("authenticationId");
-  const thumbnail = search.get("thumbnail");
-  const title = search.get("title");
   const isThroughBackChannel = channel === "back" && Boolean(authenticationId);
-  const chain = search.get("chain") || props?.chain || "flow";
+  const blockchain = paramBlockchain || props?.blockchain || "flow";
   const email = userEmail || getItem(KEY_EMAIL);
 
-  const name = title || props?.name;
-  const logo = thumbnail || props?.logo;
+  const name = props?.name;
+  const logo = props?.logo;
 
   const noop = () => undefined;
   const onConfirm = props?.onConfirm || noop;
@@ -86,7 +81,7 @@ const useDefaultStateFromProps = (props: any) => {
         id,
         name,
         logo,
-        chain,
+        blockchain,
         url,
       },
       user: {
@@ -121,9 +116,9 @@ const Authenticate = withAuthenticateContext(
       // eslint-disable-next-line
     }, []);
 
-    // check maintenance status for chain
+    // check maintenance status for blockchain
     useEffect(() => {
-      getMaintenanceStatus(state.dapp.chain).then(
+      getMaintenanceStatus(state.dapp.blockchain).then(
         (status) => status.isUnderMaintenance && send("serviceInvalid")
       );
     }, [send]);

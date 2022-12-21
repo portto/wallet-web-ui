@@ -2,7 +2,7 @@ import { createMachine, assign } from "xstate";
 
 const defaultContext = {
   dapp: {
-    chain: "flow",
+    blockchain: "flow",
   },
   user: {
     onConfirm: () => undefined,
@@ -41,7 +41,7 @@ export interface AuthenticateMachineContext {
     id?: string;
     name?: string;
     logo?: string;
-    chain: string;
+    blockchain: string;
     chainLogo?: string;
     url?: string;
   };

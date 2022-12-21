@@ -14,7 +14,7 @@ const EnableBlockchain = () => {
   const { context, send } = useAuthenticateMachine();
   const [ableToEnable, setAbleToEnable] = useState(true);
 
-  const { chain: blockchain } = context.dapp;
+  const { blockchain } = context.dapp;
   const { points = 0 } = context.user;
 
   // try auto enable chain for user

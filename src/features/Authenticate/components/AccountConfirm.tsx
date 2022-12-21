@@ -22,7 +22,7 @@ const AccountConifrm = () => {
       name: dAppName = "",
       logo,
       url = "",
-      chain: blockchain,
+      blockchain,
     } = context.dapp;
 
     const domain = new URL(url).host;

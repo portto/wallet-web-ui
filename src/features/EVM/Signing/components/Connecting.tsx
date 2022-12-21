@@ -46,31 +46,6 @@ const Connecting = () => {
     });
   }, []);
 
-  // get user type: custodial or not
-  useEffect(() => {
-    getUserInfo({}).then((data) =>
-      send({ type: "updateUser", data: { type: data.userType } })
-    );
-  }, []);
-
-  // notify parant frame ready
-  useEffect(() => {
-    const { blockchain, url = "" } = context.dapp;
-    if (!url) return;
-    onReady({ l6n: url, chain: blockchain });
-  }, [context.dapp.blockchain, context.dapp.url]);
-
-  // gather current dapp info
-  useEffect(() => {
-    const { name, logo, id, url = "" } = context.dapp || {};
-    if (!(name && logo)) {
-      fetchDappInfo({ id, url }).then((data) =>
-        send({ type: "updateDapp", data })
-      );
-    }
-    // intentionally run once
-  }, []);
-
   // get message and preprocess
   useEffect(() => {
     if (context.message) return;
@@ -83,6 +58,31 @@ const Connecting = () => {
     };
     window.addEventListener("message", listener);
     return () => window.removeEventListener("message", listener);
+  }, []);
+
+  // get user type: custodial or not
+  useEffect(() => {
+    getUserInfo({}).then((data) =>
+      send({ type: "updateUser", data: { type: data.userType } })
+    );
+  }, []);
+
+  // notify parant frame ready
+  useEffect(() => {
+    const { blockchain, url = "" } = context.dapp;
+    if (!url) return;
+    onReady({ l6n: url, blockchain });
+  }, [context.dapp.blockchain, context.dapp.url]);
+
+  // gather current dapp info
+  useEffect(() => {
+    const { name, logo, id, url = "" } = context.dapp || {};
+    if (!(name && logo)) {
+      fetchDappInfo({ id, url }).then((data) =>
+        send({ type: "updateDapp", data })
+      );
+    }
+    // intentionally run once
   }, []);
 
   return <Loading />;

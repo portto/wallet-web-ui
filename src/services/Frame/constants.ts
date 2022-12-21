@@ -13,9 +13,7 @@ export const FCL_EVENTS = {
 };
 
 export const FCL_EVENTS_DEPRECATED = {
-  FRAME_RESPONSE: "FCL:FRAME:RESPONSE",
-  FRAME_READY_RESPONSE: "FCL:FRAME:READY:RESPONSE",
-  CHALLENGE_RESPONSE: "FCL::CHALLENGE::RESPONSE",
+  CHALLENGE_RESPONSE: "FCL::CHALLENGE:RESPONSE",
   CHALLENGE_CANCEL: "FCL::CHALLENGE::CANCEL",
 };
 
@@ -51,13 +49,9 @@ export const READY_EVENTS: { [key in string]: string[] } = {
 export const RESPONSE_EVENTS: { [key in string]: string[] } = {
   ethereum: [
     ETH_EVENTS.RESPONSE,
-    // @todo: remove fcl events for eth after blocto-sdk@1.0.0, it's only for backward compatibility currently.
-    FCL_EVENTS_DEPRECATED.CHALLENGE_RESPONSE,
   ],
   solana: [
     SOL_EVENTS.RESPONSE,
-    // @todo: remove fcl events for solana after blocto-sdk@1.0.0, it's only for backward compatibility currently.
-    FCL_EVENTS_DEPRECATED.CHALLENGE_RESPONSE,
   ],
   aptos: [
     APTOS_EVENTS.RESPONSE,
@@ -72,15 +66,9 @@ export const CLOSE_EVENTS: { [key in string]: string[] } = {
   ],
   ethereum: [
     ETH_EVENTS.CLOSE,
-    // @todo: remove fcl events for eth after blocto-sdk@1.0.0, it's only for backward compatibility currently.
-    FCL_EVENTS.CLOSE,
-    FCL_EVENTS_DEPRECATED.CHALLENGE_CANCEL,
   ],
   solana: [
     SOL_EVENTS.CLOSE,
-    // @todo: remove fcl events for solana after blocto-sdk@1.0.0, it's only for backward compatibility currently.
-    FCL_EVENTS.CLOSE,
-    FCL_EVENTS_DEPRECATED.CHALLENGE_CANCEL,
   ],
   aptos: [
     APTOS_EVENTS.CLOSE,

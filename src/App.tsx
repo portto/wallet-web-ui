@@ -4,12 +4,15 @@ import React, { Suspense, useEffect } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
 import { logPageView } from "services/Amplitude";
 import { sendPageView } from "services/GoogleAnalytics";
+import { EVM_CHAINS } from "utils/constants";
 
 const Authenticate = React.lazy(() => import("features/Authenticate"));
 const EVM = {
   Transaction: React.lazy(() => import("features/EVM/Transaction")),
   Signing: React.lazy(() => import("features/EVM/Signing"))
 };
+
+const supportedEVMChains = EVM_CHAINS.join("|");
 
 const App = () => {
   const location = useLocation();
@@ -24,15 +27,15 @@ const App = () => {
       <Suspense fallback={<Loading />}>
         <Switch>
           <Route
-            path="/authn/:appId?/:userEmail?"
+            path="/:appId/:blockchain/authn/:userEmail?"
             render={() => <Authenticate />}
           />
           <Route
-            path="/:appId/authz/:blockchain(ethereum|bsc|polygon|avalanche)/:authorizationId?"
+            path={`/:appId/:blockchain(${supportedEVMChains})/authz/:authorizationId?`}
             render={() => <EVM.Transaction />}
           />
           <Route
-            path="/:appId/user-signature/:blockchain(ethereum|bsc|polygon|avalanche)"
+            path={`/:appId/:blockchain(${supportedEVMChains})/user-signature`}
             render={() => <EVM.Signing />}
           />
         </Switch>

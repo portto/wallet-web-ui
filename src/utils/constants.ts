@@ -20,9 +20,11 @@ export const INTERNAL_WL_DOMAINS = [
   "sale.blocto.app",
 ];
 
-export const EVM_CHAINS = ["ethereum", "bsc", "polygon", "avalanche"];
+export const EVM_CHAINS = ["ethereum", "bsc", "polygon", "avalanche", ];
 
 export const ERROR_MESSAGES = {
   AUTHZ_DECLINE_ERROR: "User declined to send the transaction",
   SIGN_DECLINE_ERROR: "User declined the signing request",
 };
+
+export const DEFAULT_APP_ID = "00000000-0000-0000-0000-000000000000";

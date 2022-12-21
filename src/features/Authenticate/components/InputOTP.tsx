@@ -14,10 +14,10 @@ const InputOTP = () => {
   useEffect(() => {
     const { user, dapp } = context;
     const { action, email, authCode, authCodeId = "" } = user;
-    const { id = "", chain, url = "", name: dAppName = "" } = dapp;
+    const { id = "", blockchain, url = "", name: dAppName = "" } = dapp;
     const domain = new URL(url).host;
 
-    const isFlow = chain === "flow";
+    const isFlow = blockchain === "flow";
     if (user.accessToken || authCode || input.length !== 6) return;
 
     const authenticate = () =>
@@ -28,19 +28,19 @@ const InputOTP = () => {
           authCode: input,
           authCodeId,
           // flow is the default option in the pre-enable list
-          blockchains: isFlow ? ["flow"] : [chain, "flow"],
+          blockchains: isFlow ? ["flow"] : [blockchain, "flow"],
         })
         : loginAndAcquireToken({
           email,
           authCode: input,
           authCodeId,
-          chain,
+          chain: blockchain,
         });
 
     authenticate()
       .then(({ jwt, key }) => {
         const logAction = action === "register" ? logRegister : logLogin;
-        logAction({ domain, chain, dAppName, dAppId: id });
+        logAction({ domain, chain: blockchain, dAppName, dAppId: id });
 
         send({
           type: "next",

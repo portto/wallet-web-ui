@@ -275,11 +275,11 @@ export const onTransactionDecline = ({
   postMessageToParentFrame(msg, l6n);
 };
 
-export const onReady = ({ l6n, chain }: { l6n: string; chain: string }) => {
-  const isEvmChain = EVM_CHAINS.includes(chain);
+export const onReady = ({ l6n, blockchain }: { l6n: string; blockchain: string }) => {
+  const isEvmChain = EVM_CHAINS.includes(blockchain);
   const targetEvents = isEvmChain
     ? READY_EVENTS.ethereum
-    : READY_EVENTS[chain] || [];
+    : READY_EVENTS[blockchain] || [];
 
   targetEvents.forEach((event: string) => {
     postMessageToParentFrame(
@@ -295,15 +295,15 @@ export const onReady = ({ l6n, chain }: { l6n: string; chain: string }) => {
 export const onClose = ({
   nonce,
   l6n,
-  chain,
+  blockchain,
 }: {
   nonce: string;
   l6n: string;
-  chain: string;
+  blockchain: string;
 }) => {
-  const isEvmChain = EVM_CHAINS.includes(chain);
+  const isEvmChain = EVM_CHAINS.includes(blockchain);
 
-  const targetEvents = isEvmChain ? CLOSE_EVENTS.ethereum : CLOSE_EVENTS[chain];
+  const targetEvents = isEvmChain ? CLOSE_EVENTS.ethereum : CLOSE_EVENTS[blockchain];
 
   targetEvents.forEach((event) => {
     postMessageToParentFrame(
@@ -317,13 +317,13 @@ export const onClose = ({
   });
 };
 
-export const onResponse = ({ l6n, chain, ...args }: any) => {
-  const isEvmChain = EVM_CHAINS.includes(chain);
+export const onResponse = ({ l6n, blockchain, ...args }: any) => {
+  const isEvmChain = EVM_CHAINS.includes(blockchain);
   const targetEvents = isEvmChain
     ? RESPONSE_EVENTS.ethereum
-    : RESPONSE_EVENTS[chain];
+    : RESPONSE_EVENTS[blockchain];
 
-  if (chain === "flow") {
+  if (blockchain === "flow") {
     onChallengeResponse({
       l6n,
       ...args,

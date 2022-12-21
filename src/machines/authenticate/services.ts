@@ -22,14 +22,14 @@ export const verifyUser =
       }
 
       // Get account assets & update user info
-      const { chain = "Flow" } = context.dapp;
+      const { blockchain = "Flow" } = context.dapp;
       const { assets } = await getAccountAssets();
 
       // Try get user enabled specific chain or not,
       // if no native token asset found, go to enabling UI and try to enable,
       // otherwise go to account confirm account UI
       const addresses = mapAssetsToAddresses(assets);
-      const enabled = checkBlockchainEnabled(assets, chain);
+      const enabled = checkBlockchainEnabled(assets, blockchain);
 
       const data = { ...userInfo, addresses };
 
@@ -53,19 +53,18 @@ export const finish = async (context: AuthenticateMachineContext) => {
     nonce,
     onConfirm,
   } = context.user;
-  const { chain, url = "" } = context.dapp;
+  const { blockchain, url = "" } = context.dapp;
 
   const l6n = url;
 
   onResponse({
     l6n,
-    chain,
+    blockchain,
     nonce,
     address: addresses,
     // keep 'addr' field for backward compatibility, will be removed one day
-    addr: addresses?.[chain],
+    addr: addresses?.[blockchain],
     exp: Date.now() + EXP_TIME,
-    email,
     userId: id,
     signatureData,
     signatures,
@@ -75,11 +74,11 @@ export const finish = async (context: AuthenticateMachineContext) => {
   if (isThroughBackChannel) {
     await updateAuthentication({
       authenticationId,
-      blockchain: chain,
+      blockchain,
       action: "approve",
       data: {
         l6n,
-        addr: addresses?.[chain],
+        addr: addresses?.[blockchain],
         ...accountInfo,
         exp: Date.now() + EXP_TIME,
         email,
@@ -100,21 +99,21 @@ export const finish = async (context: AuthenticateMachineContext) => {
   }
 
   // try to call callback
-  onConfirm(addresses?.[chain]);
+  onConfirm(addresses?.[blockchain]);
 };
 
 export const abort = async (context: AuthenticateMachineContext) => {
   const { isThroughBackChannel } = context;
-  const { chain, url = "" } = context.dapp;
+  const { blockchain, url = "" } = context.dapp;
   const { authenticationId = "", nonce = "", onReject } = context.user;
 
   const l6n = url;
-  onClose({ l6n, nonce, chain });
+  onClose({ l6n, nonce, blockchain });
 
   if (isThroughBackChannel) {
     await updateAuthentication({
       authenticationId,
-      blockchain: chain,
+      blockchain,
       action: "decline",
     });
   }
