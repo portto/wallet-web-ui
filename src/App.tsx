@@ -7,7 +7,8 @@ import { sendPageView } from "services/GoogleAnalytics";
 
 const Authenticate = React.lazy(() => import("features/Authenticate"));
 const EVM = {
-  Transaction: React.lazy(() => import("features/EVM/Transaction"))
+  Transaction: React.lazy(() => import("features/EVM/Transaction")),
+  Signing: React.lazy(() => import("features/EVM/Signing"))
 };
 
 const App = () => {
@@ -29,6 +30,10 @@ const App = () => {
           <Route
             path="/:appId/authz/:blockchain(ethereum|bsc|polygon|avalanche)/:authorizationId?"
             render={() => <EVM.Transaction />}
+          />
+          <Route
+            path="/:appId/user-signature/:blockchain(ethereum|bsc|polygon|avalanche)"
+            render={() => <EVM.Signing />}
           />
         </Switch>
       </Suspense>

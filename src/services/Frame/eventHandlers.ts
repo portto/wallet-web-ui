@@ -201,15 +201,21 @@ export const onSignatureResponse = ({
   type,
   l6n,
   signature,
+  signatures,
+  ...rest
 }: {
   type: string;
   l6n: string;
-  signature: string;
+  signature: string | string[];
+  signatures?:  string[];
+  [key: string]: any;
 }) => {
   const msg = {
     type,
     status: "APPROVED",
     signature,
+    signatures,
+    ...rest,
   };
 
   postMessageToParentFrame(msg, l6n);
