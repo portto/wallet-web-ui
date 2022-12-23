@@ -29,12 +29,14 @@ import {
   initAmplitude,
   initSentry,
 } from "./initializers";
+import initMocks from "mocks/index";
 
 loadGA();
 initAmplitude();
 initSentry();
 
 initFontObserver();
+initMocks();
 
 const defaultLocale = getLocale();
 
