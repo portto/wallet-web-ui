@@ -1,14 +1,13 @@
 {
   "env": {
-    "node": true,
     "browser": true,
     "es2021": true,
     "jest": true
   },
   "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "@portto/eslint-config-portto",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
@@ -17,15 +16,38 @@
     "sourceType": "module"
   },
   "plugins": [
-    "react",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "prettier"
   ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+        "project": "."
+      }
+    }
+  },
   "rules": {
-    "indent": ["error", 2],
-    "linebreak-style": ["error", "unix"],
-    "quotes": ["error", "double"],
-    "semi": ["error", "always"],
+    "prettier/prettier": "error",
+    "import/extensions": ["error", "always", {
+      "js": "never",
+      "ts": "never",
+      "tsx": "never"
+    }],
     "react/react-in-jsx-scope": "off",
-    "react/display-name": "off"
+    "react/display-name": "off",
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+    "sort-imports": ["error", { "ignoreDeclarationSort": true }],
+    "import/first": "off",
+    "import/order": ["error", { 
+      "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"],
+      "alphabetize": { "order": "asc", "caseInsensitive": true },
+      "pathGroups": [
+        {
+          "pattern": "src/**",
+          "group": "internal"
+        }
+      ]
+    }]
   }
 }

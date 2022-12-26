@@ -3,9 +3,8 @@
 
 import bowser from "bowser";
 
-export const isHandheld = bowser.mobile
-  || bowser.tablet
-  || window.innerWidth < 960;
+export const isHandheld =
+  bowser.mobile || bowser.tablet || window.innerWidth < 960;
 
 export const isIOS = Boolean(bowser.ios);
 

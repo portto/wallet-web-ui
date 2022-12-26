@@ -1,4 +1,4 @@
-import { getItem, setItem, removeItem } from "../";
+import { getItem, removeItem, setItem } from "../";
 
 describe("LocalStorage", () => {
   it("should set key-value", () => {

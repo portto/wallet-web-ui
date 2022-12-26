@@ -1,5 +1,9 @@
-import { acquireAccessToken, login } from "apis";
-import { KEY_ACCESS_TOKEN, KEY_DEVICE_KEY, setItem } from "services/LocalStorage";
+import { acquireAccessToken, login } from "src/apis";
+import {
+  KEY_ACCESS_TOKEN,
+  KEY_DEVICE_KEY,
+  setItem,
+} from "src/services/LocalStorage";
 
 const loginAndAcquireToken = async ({
   email,
@@ -8,7 +12,7 @@ const loginAndAcquireToken = async ({
   totpCode,
   chain,
 }: any) => {
-  // login API returns a temp jwt and it has to be converted 
+  // login API returns a temp jwt and it has to be converted
   // to real user access token through acquireAccessToken PI
   const { jwt: tmpJWT } = await login({
     email,

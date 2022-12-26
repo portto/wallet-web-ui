@@ -1,9 +1,9 @@
 import { Box } from "@chakra-ui/react";
-import { createSigningRequest, getSigningRequest } from "apis";
-import { useTransactionMachine } from "machines/transaction";
 import { useEffect, useState } from "react";
-import { logSendTx } from "services/Amplitude";
-import { ERROR_MESSAGES } from "utils/constants";
+import { createSigningRequest, getSigningRequest } from "src/apis";
+import { useTransactionMachine } from "src/machines/transaction";
+import { logSendTx } from "src/services/Amplitude";
+import { ERROR_MESSAGES } from "src/utils/constants";
 
 const NonCustodial = () => {
   const { context, send } = useTransactionMachine();

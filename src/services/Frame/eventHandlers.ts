@@ -1,5 +1,5 @@
-import { EVM_CHAINS } from "utils/constants";
 import semver from "semver";
+import { EVM_CHAINS } from "src/utils/constants";
 import {
   CLOSE_EVENTS,
   FCL_EVENTS,
@@ -207,7 +207,7 @@ export const onSignatureResponse = ({
   type: string;
   l6n: string;
   signature: string | string[];
-  signatures?:  string[];
+  signatures?: string[];
   [key: string]: any;
 }) => {
   const msg = {
@@ -275,7 +275,13 @@ export const onTransactionDecline = ({
   postMessageToParentFrame(msg, l6n);
 };
 
-export const onReady = ({ l6n, blockchain }: { l6n: string; blockchain: string }) => {
+export const onReady = ({
+  l6n,
+  blockchain,
+}: {
+  l6n: string;
+  blockchain: string;
+}) => {
   const isEvmChain = EVM_CHAINS.includes(blockchain);
   const targetEvents = isEvmChain
     ? READY_EVENTS.ethereum
@@ -303,7 +309,9 @@ export const onClose = ({
 }) => {
   const isEvmChain = EVM_CHAINS.includes(blockchain);
 
-  const targetEvents = isEvmChain ? CLOSE_EVENTS.ethereum : CLOSE_EVENTS[blockchain];
+  const targetEvents = isEvmChain
+    ? CLOSE_EVENTS.ethereum
+    : CLOSE_EVENTS[blockchain];
 
   targetEvents.forEach((event) => {
     postMessageToParentFrame(

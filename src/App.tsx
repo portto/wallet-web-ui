@@ -1,15 +1,15 @@
-import Layout from "components/Layout";
-import Loading from "components/Loading";
 import React, { Suspense, useEffect } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
-import { logPageView } from "services/Amplitude";
-import { sendPageView } from "services/GoogleAnalytics";
-import { EVM_CHAINS } from "utils/constants";
+import Layout from "src/components/Layout";
+import Loading from "src/components/Loading";
+import { logPageView } from "src/services/Amplitude";
+import { sendPageView } from "src/services/GoogleAnalytics";
+import { EVM_CHAINS } from "src/utils/constants";
 
-const Authenticate = React.lazy(() => import("features/Authenticate"));
+const Authenticate = React.lazy(() => import("src/features/Authenticate"));
 const EVM = {
-  Transaction: React.lazy(() => import("features/EVM/Transaction")),
-  Signing: React.lazy(() => import("features/EVM/Signing"))
+  Transaction: React.lazy(() => import("src/features/EVM/Transaction")),
+  Signing: React.lazy(() => import("src/features/EVM/Signing")),
 };
 
 const supportedEVMChains = EVM_CHAINS.join("|");

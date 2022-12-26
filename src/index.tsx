@@ -6,30 +6,30 @@
  */
 
 // Import all the third party stuff
-import { createRoot } from "react-dom/client";
-import reportWebVitals from "./reportWebVitals";
 
 import { ChakraProvider } from "@chakra-ui/react";
+import { createRoot } from "react-dom/client";
 import { IntlProvider } from "react-intl";
 import { BrowserRouter as Router } from "react-router-dom";
-import { getLocale } from "./utils/locales";
 
 // Import root app
+import initMocks from "src/mocks/index";
 import App from "./App";
 
 // Import i18n messages
 import translationMessages from "./i18n";
 // Import Custom theme
-import theme from "./theme";
 // Import initializers
 import {
-  initFontObserver,
-  runIntlPolyfill,
-  loadGA,
   initAmplitude,
+  initFontObserver,
   initSentry,
+  loadGA,
+  runIntlPolyfill,
 } from "./initializers";
-import initMocks from "mocks/index";
+import reportWebVitals from "./reportWebVitals";
+import theme from "./theme";
+import { getLocale } from "./utils/locales";
 
 loadGA();
 initAmplitude();

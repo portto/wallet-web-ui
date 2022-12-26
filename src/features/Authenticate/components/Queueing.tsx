@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
-import { getAuthnQueue } from "apis";
-import { useAuthenticateMachine } from "machines/authenticate";
 import { useEffect } from "react";
+import { getAuthnQueue } from "src/apis";
+import { useAuthenticateMachine } from "src/machines/authenticate";
 
 const Queueing = () => {
   const { context, send } = useAuthenticateMachine();

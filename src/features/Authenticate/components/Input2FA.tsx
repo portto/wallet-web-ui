@@ -1,8 +1,8 @@
 import { Box, Input } from "@chakra-ui/react";
-import { useAuthenticateMachine } from "machines/authenticate";
 import { useEffect, useState } from "react";
-import { logLogin } from "services/Amplitude";
-import loginAndAcquireToken from "utils/loginAndAcquireToken";
+import { useAuthenticateMachine } from "src/machines/authenticate";
+import { logLogin } from "src/services/Amplitude";
+import loginAndAcquireToken from "src/utils/loginAndAcquireToken";
 
 const Input2FA = () => {
   const { context, send } = useAuthenticateMachine();
@@ -18,7 +18,7 @@ const Input2FA = () => {
     const domain = new URL(url).host;
 
     if (user.accessToken && user.deviceKey && input.length !== 6) return;
-    
+
     loginAndAcquireToken({
       email,
       auth_code: authCode,

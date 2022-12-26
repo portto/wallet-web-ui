@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import Loading from "components/Loading";
-import { useTransactionMachine } from "machines/transaction";
-import fetchDappInfo from "utils/fetchDappInfo";
-import { getAccountAssets, getAuthorization, getUserInfo } from "apis";
+import { getAccountAssets, getAuthorization, getUserInfo } from "src/apis";
+import Loading from "src/components/Loading";
+import { useTransactionMachine } from "src/machines/transaction";
+import fetchDappInfo from "src/utils/fetchDappInfo";
 
 const Connecting = () => {
   const { context, send } = useTransactionMachine();
@@ -38,7 +38,7 @@ const Connecting = () => {
         type,
         points: point,
         assets,
-        sessionId: sessionId,
+        sessionId,
       };
       if (type === "security")
         return send({ type: "nonCustodial", data: userData });

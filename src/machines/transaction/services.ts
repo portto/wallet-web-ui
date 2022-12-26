@@ -1,6 +1,6 @@
-import { updateAuthorization } from "apis";
-import { ETH_EVENTS, onTransactionResponse } from "services/Frame";
-import { ERROR_MESSAGES } from "utils/constants";
+import { updateAuthorization } from "src/apis";
+import { ETH_EVENTS, onTransactionResponse } from "src/services/Frame";
+import { ERROR_MESSAGES } from "src/utils/constants";
 import { TransactionMachineContext } from "./definition";
 
 export const finish = async (context: TransactionMachineContext) => {

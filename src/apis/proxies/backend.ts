@@ -1,5 +1,5 @@
-import { getReadableDeviceInfo } from "services/Device";
-import { getItem, KEY_ACCESS_TOKEN } from "services/LocalStorage";
+import { getReadableDeviceInfo } from "src/services/Device";
+import { KEY_ACCESS_TOKEN, getItem } from "src/services/LocalStorage";
 import { apiGet, apiPost } from "../axios";
 
 export const checkEmailExist = (email = "") =>

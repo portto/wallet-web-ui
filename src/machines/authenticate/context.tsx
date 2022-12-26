@@ -1,8 +1,8 @@
-import React, { createContext } from "react";
 import { useInterpret } from "@xstate/react";
+import React, { createContext } from "react";
+import { InterpreterFrom } from "xstate";
 import machine from "./definition";
 import * as services from "./services";
-import { InterpreterFrom } from "xstate";
 
 export const AuthenticateContext = createContext({
   actor: {} as InterpreterFrom<typeof machine>,

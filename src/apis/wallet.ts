@@ -1,11 +1,11 @@
-import { apiGet, apiPut, apiPost } from "./axios";
+import { apiGet, apiPost, apiPut } from "./axios";
 
 export const getMaintenanceStatus = (chain: string) =>
   apiGet<boolean>({
     url: "api/isUnderMaintenance",
     request: {
-      chain
-    }
+      chain,
+    },
   });
 
 export const createHandshake = (params: any) =>

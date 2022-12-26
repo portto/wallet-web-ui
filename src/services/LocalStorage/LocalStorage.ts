@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import MemoryStorage from "./MemoryStorage";
 import * as keys from "./constants";
+import MemoryStorage from "./MemoryStorage";
 
 const isSupported = () => {
   try {
@@ -27,7 +27,7 @@ export const getItem = (key, defaultValue = null) => {
   }
 };
 
-export const getRawItem = key => storage.getItem(key);
+export const getRawItem = (key) => storage.getItem(key);
 
 export const setItem = (key, value) =>
   storage.setItem(
@@ -51,13 +51,15 @@ export const removeOutdatedKeys = () => {
 
   setItem(keys.KEY_LOCAL_STORAGE_VERSION, keys.LOCAL_STORAGE_VERSION);
 
-  const localKeys = Object.keys(localStorage).filter(key => key.indexOf(keys.APP_STORAGE_KEY_PREFIX) === 0);
+  const localKeys = Object.keys(localStorage).filter(
+    (key) => key.indexOf(keys.APP_STORAGE_KEY_PREFIX) === 0
+  );
 
   // Using 'Object.values()' fails unit testing because some browsers don't support it
-  const localValues = Object.keys(keys).map(it => keys[it]);
+  const localValues = Object.keys(keys).map((it) => keys[it]);
 
   localKeys.forEach((localKey) => {
-    const hasMatch = localValues.some(key => key === localKey);
+    const hasMatch = localValues.some((key) => key === localKey);
     if (!hasMatch) {
       localStorage.removeItem(localKey);
     }

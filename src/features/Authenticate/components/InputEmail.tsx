@@ -1,7 +1,7 @@
 import { Box, Button, Input, InputGroup } from "@chakra-ui/react";
-import { checkEmailExist, requestEmailAuth } from "apis";
 import { useCallback, useEffect, useState } from "react";
-import { useAuthenticateMachine } from "machines/authenticate";
+import { checkEmailExist, requestEmailAuth } from "src/apis";
+import { useAuthenticateMachine } from "src/machines/authenticate";
 
 const InputEmail = () => {
   const { send, context } = useAuthenticateMachine();

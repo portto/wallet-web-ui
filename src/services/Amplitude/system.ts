@@ -31,5 +31,4 @@ export const initAmplitude = () => {
   });
 };
 
-export const setUserId = userId =>
-  getInstance().setUserId(userId);
+export const setUserId = (userId) => getInstance().setUserId(userId);

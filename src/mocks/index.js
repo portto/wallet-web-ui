@@ -1,5 +1,4 @@
-import { setupWorker } from "msw";
-import { rest } from "msw";
+import { rest, setupWorker } from "msw";
 
 const ENV = process.env.REACT_APP_ENV || "local";
 
