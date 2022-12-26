@@ -1,6 +1,22 @@
-# Getting Started with Create React App
+# Project Description
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a new version of the blocto wallet for the web user to interact with dApps.
+
+See old project repo [here](https://github.com/portto/wallet-webapp).
+
+And in this new we use x-state to do the states management. See the document [here](https://xstate.js.org/docs/guides/states.html#api).
+
+## Project Structure
+
+There're couple of folders under `src`:
+
+- `apis`: Functions of wallet api and BE proxies.
+- `component`: React components that might be shared across pages/views, e.g. a button or a input.
+- `features`: A separated view with a top feature of dApp related interaction, like **SendTransaction** or **SignMessage**.
+- `machines`: x-state and react binding logics.
+- `utils`: Simple utils functions.
+- `services` : A bunch of utils that might be more complex than a simple util function.
+- `translations`: i18n strings.
 
 ## Available Scripts
 
@@ -38,9 +54,3 @@ If you aren’t satisfied with the build tool and configuration choices, you can
 Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
