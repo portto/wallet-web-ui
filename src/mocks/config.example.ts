@@ -1,5 +1,13 @@
 // this is an example config for mocking a real sdk user
 // if you want to apply it to the mocking library,
+import {
+  DefaultBodyType,
+  PathParams,
+  ResponseComposition,
+  RestContext,
+  RestRequest,
+} from "msw";
+
 // copy this file into config.js under the folder
 const config = {
   email: "foo@bar.com",
@@ -127,13 +135,27 @@ export default {
     },
     {
       url: `${WALLET_API_BASE}/blocto/account/checkEmailExist`,
-      response: (req, res, ctx) =>
-        res(ctx.json({ exist: req.body.email === config.email })),
+      response: (
+        req: RestRequest<DefaultBodyType, PathParams<string>>,
+        res: ResponseComposition<DefaultBodyType>,
+        ctx: RestContext
+      ) =>
+        res(
+          ctx.json({
+            exist:
+              req.body instanceof Object &&
+              "email" in req.body &&
+              req.body?.email === config.email,
+          })
+        ),
     },
     {
       url: `${WALLET_API_BASE}/blocto/account/requestEmailAuth`,
-      response: (req, res, ctx) =>
-        res(ctx.json({ id: "ffffffff-ffff-ffff-8982-97f60db91fe7" })),
+      response: (
+        req: RestRequest<DefaultBodyType, PathParams<string>>,
+        res: ResponseComposition<DefaultBodyType>,
+        ctx: RestContext
+      ) => res(ctx.json({ id: "ffffffff-ffff-ffff-8982-97f60db91fe7" })),
     },
     {
       url: `${WALLET_API_BASE}/blocto/account/login`,

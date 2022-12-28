@@ -9,7 +9,7 @@ const initMocks = async () => {
   const getHandlers = settings.gets.map(({ url, response }) =>
     rest.get(url, (req, res, ctx) =>
       response instanceof Function
-        ? response(req, res, ctx)
+        ? (response as unknown as (...params: unknown[]) => void)(req, res, ctx)
         : res(ctx.json(response))
     )
   );
