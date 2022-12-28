@@ -17,8 +17,11 @@ const Queueing = () => {
       send("ready");
     }
     const interval = setInterval(() => {
-      getAuthnQueue(queueId).then(({ queueNumber, readyNumber }) =>
-        readyNumber >= queueNumber ? send("ready") : null
+      getAuthnQueue(queueId).then(
+        ({
+          queueNumber: updatedQueueNumber,
+          readyNumber: updatedReadyNumber,
+        }) => (updatedReadyNumber >= updatedQueueNumber ? send("ready") : null)
       );
     }, 1000);
     return () => clearInterval(interval);

@@ -5,7 +5,7 @@ const ENV = process.env.REACT_APP_ENV || "local";
 const initMocks = async () => {
   if (!["local", "test"].includes(ENV)) return;
   // mock apis
-  const settings = (await import("./config.js")).default;
+  const settings = (await import("./config")).default;
   const getHandlers = settings.gets.map(({ url, response }) =>
     rest.get(url, (req, res, ctx) =>
       response instanceof Function
