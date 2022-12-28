@@ -4,9 +4,9 @@ import {
   enableBlockchain,
   estimateEnableBlockchain,
   getAccountAssets,
-} from "apis";
-import { useAuthenticateMachine } from "machines/authenticate";
-import checkBlockchainEnabled from "utils/checkBlockchainEnabled";
+} from "src/apis";
+import { useAuthenticateMachine } from "src/machines/authenticate";
+import checkBlockchainEnabled from "src/utils/checkBlockchainEnabled";
 
 const ACCOUNT_POLLING_INTERVAL = 2000;
 

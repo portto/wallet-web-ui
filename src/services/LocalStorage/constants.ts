@@ -2,7 +2,6 @@
 export const LOCAL_STORAGE_VERSION = "0.0.1";
 export const KEY_LOCAL_STORAGE_VERSION = "blocto.app.version";
 
-
 // app global keys
 export const KEY_LANGUAGE = "blocto.app.language";
 export const KEY_THEME = "blocto.app.theme";

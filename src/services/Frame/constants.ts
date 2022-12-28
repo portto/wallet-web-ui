@@ -1,5 +1,3 @@
-
-
 export const INTERNAL_EVENTS = {
   CONFIRM: "FCL::BLOCTO::INTERNAL",
 };
@@ -37,7 +35,6 @@ export const APTOS_EVENTS = {
   CLOSE: "APTOS:FRAME:CLOSE",
 };
 
-
 export const READY_EVENTS: { [key in string]: string[] } = {
   flow: [FCL_EVENTS.READY],
   ethereum: [ETH_EVENTS.READY],
@@ -45,32 +42,15 @@ export const READY_EVENTS: { [key in string]: string[] } = {
   aptos: [APTOS_EVENTS.READY],
 };
 
-
 export const RESPONSE_EVENTS: { [key in string]: string[] } = {
-  ethereum: [
-    ETH_EVENTS.RESPONSE,
-  ],
-  solana: [
-    SOL_EVENTS.RESPONSE,
-  ],
-  aptos: [
-    APTOS_EVENTS.RESPONSE,
-  ],
+  ethereum: [ETH_EVENTS.RESPONSE],
+  solana: [SOL_EVENTS.RESPONSE],
+  aptos: [APTOS_EVENTS.RESPONSE],
 };
 
-
 export const CLOSE_EVENTS: { [key in string]: string[] } = {
-  flow: [
-    FCL_EVENTS.CLOSE,
-    FCL_EVENTS_DEPRECATED.CHALLENGE_CANCEL,
-  ],
-  ethereum: [
-    ETH_EVENTS.CLOSE,
-  ],
-  solana: [
-    SOL_EVENTS.CLOSE,
-  ],
-  aptos: [
-    APTOS_EVENTS.CLOSE,
-  ],
+  flow: [FCL_EVENTS.CLOSE, FCL_EVENTS_DEPRECATED.CHALLENGE_CANCEL],
+  ethereum: [ETH_EVENTS.CLOSE],
+  solana: [SOL_EVENTS.CLOSE],
+  aptos: [APTOS_EVENTS.CLOSE],
 };

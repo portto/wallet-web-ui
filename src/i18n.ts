@@ -1,10 +1,9 @@
-
 import enTranslationMessages from "./translations/en.json";
-import zhTranslationMessages from "./translations/zh-Hant.json";
-import zhCnTranslationMessages from "./translations/zh-Hans.json";
 import jaTranslationMessages from "./translations/ja.json";
 import koTranslationMessages from "./translations/ko.json";
 import ruTranslationMessages from "./translations/ru.json";
+import zhCnTranslationMessages from "./translations/zh-Hans.json";
+import zhTranslationMessages from "./translations/zh-Hant.json";
 
 export const LOCALE_EN = "en";
 export const LOCALE_ZH_TW = "zh-Hant";

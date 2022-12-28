@@ -1,4 +1,3 @@
-
 export const CHAIN_ASSET_NAME_MAPPING: { [key in string]: string } = {
   aptos: "Aptos",
   flow: "Flow",
@@ -20,7 +19,7 @@ export const INTERNAL_WL_DOMAINS = [
   "sale.blocto.app",
 ];
 
-export const EVM_CHAINS = ["ethereum", "bsc", "polygon", "avalanche", ];
+export const EVM_CHAINS = ["ethereum", "bsc", "polygon", "avalanche"];
 
 export const ERROR_MESSAGES = {
   AUTHZ_DECLINE_ERROR: "User declined to send the transaction",

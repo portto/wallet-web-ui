@@ -1,9 +1,18 @@
 import { Box, Button, Text } from "@chakra-ui/react";
-import { createHandshake } from "apis";
 import { useCallback } from "react";
-import { logAuthenticated } from "services/Amplitude";
-import { useAuthenticateMachine } from "machines/authenticate";
-import { KEY_ACCESS_TOKEN, KEY_DEVICE_KEY, KEY_EMAIL, KEY_SESSION_ID, KEY_USER_ID, KEY_USER_TYPE, removeItem, setItem } from "services/LocalStorage";
+import { createHandshake } from "src/apis";
+import { useAuthenticateMachine } from "src/machines/authenticate";
+import { logAuthenticated } from "src/services/Amplitude";
+import {
+  KEY_ACCESS_TOKEN,
+  KEY_DEVICE_KEY,
+  KEY_EMAIL,
+  KEY_SESSION_ID,
+  KEY_USER_ID,
+  KEY_USER_TYPE,
+  removeItem,
+  setItem,
+} from "src/services/LocalStorage";
 
 const AccountConifrm = () => {
   const { context, send } = useAuthenticateMachine();

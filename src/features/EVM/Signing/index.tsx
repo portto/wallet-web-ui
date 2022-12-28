@@ -1,16 +1,19 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getItem, KEY_SESSION_ID, KEY_USER_TYPE } from "services/LocalStorage";
-
-import Connecting from "./components/Connecting";
-import { getMaintenanceStatus } from "apis";
-import Main from "./components/Main";
-import NonCustodial from "./components/NonCustodial";
+import { getMaintenanceStatus } from "src/apis";
 import {
   machineStates,
   useSigningMachine,
   withSigningContext,
-} from "machines/signing";
+} from "src/machines/signing";
+import {
+  KEY_SESSION_ID,
+  KEY_USER_TYPE,
+  getItem,
+} from "src/services/LocalStorage";
+import Connecting from "./components/Connecting";
+import Main from "./components/Main";
+import NonCustodial from "./components/NonCustodial";
 
 const systemStatus = [
   machineStates.IDLE,

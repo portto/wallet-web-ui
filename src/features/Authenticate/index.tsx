@@ -1,29 +1,29 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { getMaintenanceStatus } from "src/apis";
 import {
-  getItem,
+  machineStates,
+  useAuthenticateMachine,
+  withAuthenticateContext,
+} from "src/machines/authenticate";
+import {
   KEY_ACCESS_TOKEN,
   KEY_DEVICE_KEY,
   KEY_EMAIL,
   KEY_USER_ID,
   KEY_USER_TYPE,
-} from "services/LocalStorage";
-import {
-  withAuthenticateContext,
-  machineStates,
-  useAuthenticateMachine,
-} from "machines/authenticate";
+  getItem,
+} from "src/services/LocalStorage";
 
+import AccountConfirm from "./components/AccountConfirm";
 import Connecting from "./components/Connecting";
-import Maintenance from "./components/Maintenance";
-import Queueing from "./components/Queueing";
+import EnableBlockchain from "./components/EnableBlockchain";
+import Input2FA from "./components/Input2FA";
 import InputEmail from "./components/InputEmail";
 import InputOTP from "./components/InputOTP";
-import Input2FA from "./components/Input2FA";
-import EnableBlockchain from "./components/EnableBlockchain";
-import AccountConfirm from "./components/AccountConfirm";
+import Maintenance from "./components/Maintenance";
+import Queueing from "./components/Queueing";
 import RunInitScripts from "./components/RunInitScripts";
-import { getMaintenanceStatus } from "apis";
 
 const systemStatus = [
   machineStates.IDLE,
@@ -46,7 +46,11 @@ const stageComponentMapping = {
 };
 
 const useDefaultStateFromProps = (props: any) => {
-  const { appId, userEmail, blockchain: paramBlockchain } = useParams<{
+  const {
+    appId,
+    userEmail,
+    blockchain: paramBlockchain,
+  } = useParams<{
     appId?: string;
     blockchain?: string;
     userEmail?: string;
@@ -94,7 +98,7 @@ const useDefaultStateFromProps = (props: any) => {
         type: getItem(KEY_USER_TYPE),
         nonce,
         onConfirm,
-        onReject
+        onReject,
       },
     }),
     [location]

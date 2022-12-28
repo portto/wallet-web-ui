@@ -1,4 +1,4 @@
-import { createMachine, assign } from "xstate";
+import { assign, createMachine } from "xstate";
 
 const defaultContext = {
   dapp: {
@@ -8,7 +8,7 @@ const defaultContext = {
     onApprove: () => undefined,
     onReject: () => undefined,
   },
-  message: {}
+  message: {},
 };
 
 export const machineStates = {
@@ -43,7 +43,7 @@ export interface SigningMachineContext {
     // raw message input
     raw?: string;
     // converted message to besigned
-    toBeSigned?:string;
+    toBeSigned?: string;
     signature?: string | string[];
     signatures?: string[];
     // for aptos signature
@@ -51,7 +51,7 @@ export interface SigningMachineContext {
     // any other things need to be stored
     meta?: any;
     error?: any;
-  }
+  };
 }
 
 const machine = createMachine<SigningMachineContext>(
@@ -79,7 +79,10 @@ const machine = createMachine<SigningMachineContext>(
       },
       [machineStates.CONNECTING]: {
         on: {
-          ready: { target: machineStates.MAIN, actions: "updateUserAndMessage" },
+          ready: {
+            target: machineStates.MAIN,
+            actions: "updateUserAndMessage",
+          },
           nonCustodial: {
             target: machineStates.NON_CUSTODIAL,
             actions: "updateUserAndMessage",
@@ -89,13 +92,19 @@ const machine = createMachine<SigningMachineContext>(
       [machineStates.MAIN]: {
         on: {
           reject: { target: machineStates.CLOSE, actions: "updateMessage" },
-          approve: { target: machineStates.FINISH_PROCESS, actions: "updateMessage" },
+          approve: {
+            target: machineStates.FINISH_PROCESS,
+            actions: "updateMessage",
+          },
         },
       },
       [machineStates.NON_CUSTODIAL]: {
         on: {
           reject: { target: machineStates.CLOSE, actions: "updateMessage" },
-          approve: { target: machineStates.FINISH_PROCESS, actions: "updateMessage" },
+          approve: {
+            target: machineStates.FINISH_PROCESS,
+            actions: "updateMessage",
+          },
         },
       },
       [machineStates.FINISH_PROCESS]: {

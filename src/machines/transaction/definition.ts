@@ -1,4 +1,4 @@
-import { createMachine, assign } from "xstate";
+import { assign, createMachine } from "xstate";
 
 const defaultContext = {
   dapp: {
@@ -90,13 +90,19 @@ const machine = createMachine<TransactionMachineContext>(
       [machineStates.MAIN]: {
         on: {
           reject: { target: machineStates.CLOSE, actions: "updateTransaction" },
-          approve: { target: machineStates.FINISH_PROCESS, actions: "updateTransaction" },
+          approve: {
+            target: machineStates.FINISH_PROCESS,
+            actions: "updateTransaction",
+          },
         },
       },
       [machineStates.NON_CUSTODIAL]: {
         on: {
           reject: { target: machineStates.CLOSE, actions: "updateTransaction" },
-          approve: { target: machineStates.FINISH_PROCESS, actions: "updateTransaction" },
+          approve: {
+            target: machineStates.FINISH_PROCESS,
+            actions: "updateTransaction",
+          },
         },
       },
       [machineStates.FINISH_PROCESS]: {

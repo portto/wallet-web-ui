@@ -1,8 +1,8 @@
-import { createAuthnQueue } from "apis";
 import { useEffect } from "react";
-import { useAuthenticateMachine } from "machines/authenticate";
-import Loading from "components/Loading";
-import fetchDappInfo from "utils/fetchDappInfo";
+import { createAuthnQueue } from "src/apis";
+import Loading from "src/components/Loading";
+import { useAuthenticateMachine } from "src/machines/authenticate";
+import fetchDappInfo from "src/utils/fetchDappInfo";
 
 const Connecting = () => {
   const { context, send } = useAuthenticateMachine();

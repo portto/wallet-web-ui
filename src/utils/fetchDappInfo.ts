@@ -1,4 +1,4 @@
-import { getDappInfo, getDappMetadata } from "apis";
+import { getDappInfo, getDappMetadata } from "src/apis";
 import { DEFAULT_APP_ID } from "./constants";
 
 const fetchDappInfo = async ({

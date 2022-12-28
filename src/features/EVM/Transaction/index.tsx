@@ -1,20 +1,20 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  getItem,
-  KEY_EMAIL,
-  KEY_SESSION_ID,
-  KEY_USER_ID,
-  KEY_USER_TYPE,
-} from "services/LocalStorage";
-
-import Connecting from "./components/Connecting";
-import { getMaintenanceStatus } from "apis";
+import { getMaintenanceStatus } from "src/apis";
 import {
   machineStates,
   useTransactionMachine,
   withTransactionContext,
-} from "machines/transaction";
+} from "src/machines/transaction";
+import {
+  KEY_EMAIL,
+  KEY_SESSION_ID,
+  KEY_USER_ID,
+  KEY_USER_TYPE,
+  getItem,
+} from "src/services/LocalStorage";
+
+import Connecting from "./components/Connecting";
 import Main from "./components/Main";
 import NonCustodial from "./components/NonCustodial";
 

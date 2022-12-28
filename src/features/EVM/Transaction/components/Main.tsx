@@ -1,8 +1,8 @@
 import { Box, Button, Flex, Img } from "@chakra-ui/react";
-import { estimatePoint, getAuthorization, updateAuthorization } from "apis";
-import { useTransactionMachine } from "machines/transaction";
 import { useCallback, useEffect } from "react";
-import { logSendTx } from "services/Amplitude";
+import { estimatePoint, getAuthorization, updateAuthorization } from "src/apis";
+import { useTransactionMachine } from "src/machines/transaction";
+import { logSendTx } from "src/services/Amplitude";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
@@ -55,8 +55,7 @@ const Main = () => {
         dAppName: name,
         dAppId: id,
       });
-    }
-    else send({ type: "reject", data: { failReason: reason } });
+    } else send({ type: "reject", data: { failReason: reason } });
   }, [user, dapp, transaction]);
 
   return (

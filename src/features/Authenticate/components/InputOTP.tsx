@@ -1,9 +1,9 @@
 import { Box, Input } from "@chakra-ui/react";
-import { register } from "apis";
-import { useAuthenticateMachine } from "machines/authenticate";
 import { useEffect, useState } from "react";
-import { logLogin, logRegister } from "services/Amplitude";
-import loginAndAcquireToken from "utils/loginAndAcquireToken";
+import { register } from "src/apis";
+import { useAuthenticateMachine } from "src/machines/authenticate";
+import { logLogin, logRegister } from "src/services/Amplitude";
+import loginAndAcquireToken from "src/utils/loginAndAcquireToken";
 
 const InputOTP = () => {
   const { context, send } = useAuthenticateMachine();
@@ -23,19 +23,19 @@ const InputOTP = () => {
     const authenticate = () =>
       action === "register"
         ? register({
-          appId: id,
-          email: email?.toLowerCase() || "",
-          authCode: input,
-          authCodeId,
-          // flow is the default option in the pre-enable list
-          blockchains: isFlow ? ["flow"] : [blockchain, "flow"],
-        })
+            appId: id,
+            email: email?.toLowerCase() || "",
+            authCode: input,
+            authCodeId,
+            // flow is the default option in the pre-enable list
+            blockchains: isFlow ? ["flow"] : [blockchain, "flow"],
+          })
         : loginAndAcquireToken({
-          email,
-          authCode: input,
-          authCodeId,
-          chain: blockchain,
-        });
+            email,
+            authCode: input,
+            authCodeId,
+            chain: blockchain,
+          });
 
     authenticate()
       .then(({ jwt, key }) => {

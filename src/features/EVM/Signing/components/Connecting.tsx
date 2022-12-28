@@ -1,10 +1,10 @@
-import { useCallback, useEffect } from "react";
-import Loading from "components/Loading";
-import { useSigningMachine } from "machines/signing";
-import fetchDappInfo from "utils/fetchDappInfo";
-import { ETH_EVENTS, onReady } from "services/Frame";
 import { SignTypedDataVersion, TypedDataUtils } from "@metamask/eth-sig-util";
-import { getUserInfo } from "apis";
+import { useCallback, useEffect } from "react";
+import { getUserInfo } from "src/apis";
+import Loading from "src/components/Loading";
+import { useSigningMachine } from "src/machines/signing";
+import { ETH_EVENTS, onReady } from "src/services/Frame";
+import fetchDappInfo from "src/utils/fetchDappInfo";
 
 const Connecting = () => {
   const { context, send } = useSigningMachine();

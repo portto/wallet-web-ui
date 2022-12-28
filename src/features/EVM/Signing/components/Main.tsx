@@ -1,8 +1,8 @@
-import { useCallback } from "react";
 import { Box, Button, Flex, Img } from "@chakra-ui/react";
-import { signEthereumMessage } from "apis";
-import { useSigningMachine } from "machines/signing";
-import { logSignTx } from "services/Amplitude";
+import { useCallback } from "react";
+import { signEthereumMessage } from "src/apis";
+import { useSigningMachine } from "src/machines/signing";
+import { logSignTx } from "src/services/Amplitude";
 
 const Main = () => {
   const { context, send } = useSigningMachine();

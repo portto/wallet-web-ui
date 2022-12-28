@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
 import { Box } from "@chakra-ui/react";
-import { createSigningRequest, getSigningRequest } from "apis";
-import { useSigningMachine } from "machines/signing";
-import { logSendTx } from "services/Amplitude";
-import { ERROR_MESSAGES } from "utils/constants";
+import { useEffect, useState } from "react";
+import { createSigningRequest, getSigningRequest } from "src/apis";
+import { useSigningMachine } from "src/machines/signing";
+import { logSendTx } from "src/services/Amplitude";
+import { ERROR_MESSAGES } from "src/utils/constants";
 
 const NonCustodial = () => {
   const { context, send } = useSigningMachine();
@@ -22,7 +22,7 @@ const NonCustodial = () => {
       blockchain,
       url,
       type: "tx",
-      message: toBeSigned
+      message: toBeSigned,
     }).then(({ id }) => setSigningRequestId(id));
   }, [user.sessionId, message.toBeSigned, dapp.blockchain]);
 

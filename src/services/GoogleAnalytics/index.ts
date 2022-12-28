@@ -13,7 +13,8 @@ export const loadGA = () => {
 export const sendPageView = (path) => {
   if (IS_LOCAL) {
     console.debug(`[GA-PV]: ${path}`);
-  } if (window.ga) {
+  }
+  if (window.ga) {
     window.ga("send", "pageview", path);
   }
 };
