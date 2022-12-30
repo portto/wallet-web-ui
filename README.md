@@ -2,13 +2,15 @@
 
 This project is a new version of the blocto wallet for the web user to interact with dApps.
 
+We've separated the client side and server side apart to two different repo at the current version, this repo is only the client side part of the blocto wallet's web service.  
+
 See old project repo [here](https://github.com/portto/wallet-webapp).
 
-And in this new we use x-state to do the states management. See the document [here](https://xstate.js.org/docs/guides/states.html#api).
+And in this new repo we use x-state to do the states management. See the document [here](https://xstate.js.org/docs/guides/states.html#api).
 
 ## Project Structure
 
-There're couple of folders under `src`:
+There're a couple of folders under `src`:
 
 - `apis`: Functions of wallet api and BE proxies.
 - `component`: React components that might be shared across pages/views, e.g. a button or a input.
