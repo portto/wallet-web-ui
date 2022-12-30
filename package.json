@@ -5,6 +5,7 @@
   "dependencies": {
     "@blocto/web-chakra-theme": "^1.2.2",
     "@chakra-ui/react": "^2.4.1",
+    "@chakra-ui/styled-system": "^2.5.1",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@formatjs/intl-pluralrules": "^5.1.4",
