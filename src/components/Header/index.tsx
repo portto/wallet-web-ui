@@ -48,8 +48,8 @@ const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
       <Box
         as="button"
         cursor="auto"
-        bg="accent.border"
-        color="accent.text"
+        bg="status.warning.light"
+        color="status.warning.dark"
         borderRadius="20px"
         fontSize="size.subheading.3"
         fontWeight={500}
