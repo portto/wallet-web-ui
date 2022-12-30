@@ -6,7 +6,23 @@ import { IS_LOCAL, IS_STAGING } from "src/services/Env";
 
 const PADDING_HORIZONTAL = 8;
 
-const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
+export enum Blockchain {
+  FLOW = "Flow",
+  ETHEREUM = "Ethereum",
+  RINKEBY = "Rinkeby",
+  BNB_MAINNET = "BNB Mainnet",
+  BNB_TESTNET = "BNB Testnet",
+  POLYGON = "Polygon",
+  MUMBAI = "Mumbai",
+  AVALANCHE = "Avalanche",
+  FUJI = "Fuji",
+  SOLANA_MAINNET = "Solana",
+  SOLANA_DEVNET = "Solana Devnet",
+  APTOS_MAINNET = "Aptos",
+  APTOS_TESTNET = "Aptos Testnet",
+}
+
+const NetworkLabel = ({ blockchain }: { blockchain: Blockchain }) => {
   const chainRef = useRef<HTMLDivElement>(null);
   const envRef = useRef<HTMLDivElement>(null);
   const [chainWidth, setChainWidth] = useState(0);
@@ -52,7 +68,7 @@ const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
         color="status.warning.dark"
         borderRadius="20px"
         fontSize="size.subheading.3"
-        fontWeight={500}
+        fontWeight="weight.m"
         overflow="hidden"
         paddingRight={0}
         _hover={{
@@ -64,7 +80,7 @@ const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
         onClick={onTagClick}
         {...(!!tagAnimation && { animation: tagAnimation })}
       >
-        <Box padding={`4px ${PADDING_HORIZONTAL}px`} ref={envRef}>
+        <Box py="space.4xs" px={`${PADDING_HORIZONTAL}px`} ref={envRef}>
           DEV
         </Box>
         <Box
@@ -72,7 +88,7 @@ const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
           as="span"
           pos="absolute"
           left={`${envWidth}px`}
-          top="4px"
+          top="space.4xs"
           textTransform="capitalize"
         >
           ({blockchain})
@@ -96,21 +112,22 @@ const Header = ({
 }: {
   onClose?: () => void;
   onLastStepClick?: () => void;
-  blockchain: string;
+  blockchain: Blockchain;
 }) => {
   return (
     <Flex
-      padding="18.5px 22px"
+      px="space.l"
+      py="space.m"
       justifyContent="space-between"
       alignItems="center"
     >
       <Flex alignItems="center">
         {onLastStepClick && (
-          <Box mr="12px">
+          <Box mr="space.s">
             <ArrowBack
               onClick={onLastStepClick}
-              width="20px"
-              height="20px"
+              width="space.l"
+              height="space.l"
               cursor="pointer"
             />
           </Box>
