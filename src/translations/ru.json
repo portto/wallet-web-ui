@@ -1,1 +1,4 @@
-{}
+{
+  "app.general.loading": "Connecting...",
+  "app.general.loading.description": "It may take a few seconds."
+}
