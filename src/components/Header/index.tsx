@@ -6,23 +6,43 @@ import { IS_LOCAL, IS_STAGING } from "src/services/Env";
 
 const PADDING_HORIZONTAL = 8;
 
-export enum Blockchain {
-  FLOW = "Flow",
-  ETHEREUM = "Ethereum",
-  RINKEBY = "Rinkeby",
-  BNB_MAINNET = "BNB Mainnet",
-  BNB_TESTNET = "BNB Testnet",
-  POLYGON = "Polygon",
-  MUMBAI = "Mumbai",
-  AVALANCHE = "Avalanche",
-  FUJI = "Fuji",
-  SOLANA_MAINNET = "Solana",
-  SOLANA_DEVNET = "Solana Devnet",
-  APTOS_MAINNET = "Aptos",
-  APTOS_TESTNET = "Aptos Testnet",
-}
+const ChainNameMappingOnProd = {
+  flow: "Flow",
+  ethereum: "Ethereum",
+  bsc: "BNB Mainnet",
+  polygon: "Polygon",
+  avalanche: "Avalanche",
+  solana: "Solana",
+  aptos: "Aptos",
+};
 
-const NetworkLabel = ({ blockchain }: { blockchain: Blockchain }) => {
+const ChainNameMappingOnStaging = {
+  flow: "Flow Sandboxnet",
+  ethereum: "Rinkeby",
+  bsc: "BNB Testnet",
+  polygon: "Mumbai",
+  avalanche: "Fuji",
+  solana: "Solana Devnet",
+  aptos: "Aptos Testnet",
+};
+
+const ChainNameMappingOnDev = {
+  flow: "Flow Testnet",
+  ethereum: "Rinkeby",
+  bsc: "BNB Testnet",
+  polygon: "Mumbai",
+  avalanche: "Fuji",
+  solana: "Solana Devnet",
+  aptos: "Aptos Testnet",
+};
+
+const NetworkChainNameMapping: Record<string, Record<string, string>> = {
+  mainnet: ChainNameMappingOnProd,
+  sandboxnet: ChainNameMappingOnStaging,
+  testnet: ChainNameMappingOnDev,
+};
+
+const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
   const chainRef = useRef<HTMLDivElement>(null);
   const envRef = useRef<HTMLDivElement>(null);
   const [chainWidth, setChainWidth] = useState(0);
@@ -86,12 +106,19 @@ const NetworkLabel = ({ blockchain }: { blockchain: Blockchain }) => {
         <Box
           ref={chainRef}
           as="span"
+          width="max-content"
           pos="absolute"
           left={`${envWidth}px`}
           top="space.4xs"
           textTransform="capitalize"
         >
-          ({blockchain})
+          (
+          {
+            NetworkChainNameMapping[process.env.REACT_APP_NETWORK || "testnet"][
+              blockchain
+            ]
+          }
+          )
         </Box>
       </Box>
     );
@@ -112,12 +139,12 @@ const Header = ({
 }: {
   onClose?: () => void;
   onLastStepClick?: () => void;
-  blockchain: Blockchain;
+  blockchain: string;
 }) => {
   return (
     <Flex
       px="space.l"
-      py="space.m"
+      py="space.s"
       justifyContent="space-between"
       alignItems="center"
     >
