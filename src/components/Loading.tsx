@@ -1,6 +1,6 @@
 import { Box, Center, Flex, Image, Text } from "@chakra-ui/react";
 import { FormattedMessage } from "react-intl";
-import logo from "src/images/icons/logo.svg";
+import logo from "src/assets/images/icons/logo.svg";
 
 const Loading = () => (
   <Center height="100%">

@@ -1,7 +1,7 @@
 import { Box, Flex, keyframes, useBreakpointValue } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-import { ReactComponent as ArrowBack } from "src/images/icons/arrow-back.svg";
-import { ReactComponent as CloseIcon } from "src/images/icons/close.svg";
+import { ReactComponent as ArrowBack } from "src/assets/images/icons/arrow-back.svg";
+import { ReactComponent as CloseIcon } from "src/assets/images/icons/close.svg";
 import { IS_LOCAL, IS_STAGING } from "src/services/Env";
 
 const PADDING_HORIZONTAL = 8;
@@ -115,7 +115,7 @@ const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
           (
           {
             NetworkChainNameMapping[process.env.REACT_APP_NETWORK || "testnet"][
-              blockchain
+            blockchain
             ]
           }
           )

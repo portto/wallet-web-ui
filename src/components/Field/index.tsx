@@ -1,7 +1,7 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { ReactNode, useState } from "react";
-import { ReactComponent as ArrowBack } from "src/images/icons/arrow-back.svg";
-import { ReactComponent as ArrowNext } from "src/images/icons/arrow-next.svg";
+import { ReactComponent as ArrowBack } from "src/assets/images/icons/arrow-back.svg";
+import { ReactComponent as ArrowNext } from "src/assets/images/icons/arrow-next.svg";
 
 export const FieldLine = () => (
   <Box w="100%" h="0.5px" bg="background.tertiary" />
