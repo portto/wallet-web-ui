@@ -1,22 +1,22 @@
-import { Box, Flex, Image, chakra } from "@chakra-ui/react";
+import { Box, Flex, FlexProps, Image, chakra } from "@chakra-ui/react";
 import { Player } from "@lottiefiles/react-lottie-player";
-import placeholder from "src/images/icons/ic-dapp-placeholder.png";
-import BloctoLogo from "src/images/icons/logo.svg";
-import loadingCircleLeft from "src/images/logo-loading-left.json";
-import loadingCircleRight from "src/images/logo-loading-right.json";
+import placeholder from "src/assets/images/icons/ic-dapp-placeholder.png";
+import BloctoLogo from "src/assets/images/icons/logo.svg";
+import loadingCircleLeft from "src/assets/lottie/logo-loading-left.json";
+import loadingCircleRight from "src/assets/lottie/logo-loading-right.json";
 
 const ChakraPlayer = chakra(Player);
 
-const DappLogo = ({ url }: { url: string }) => {
+const DappLogo = ({ url, ...rest }: { url: string } & FlexProps) => {
   return (
-    <Flex justifyContent="center" mb="12px">
+    <Flex justifyContent="center" {...rest}>
       <Flex
         justifyContent="center"
         alignItems="center"
         width="60px"
         height="60px"
         pos="relative"
-        marginRight="12px"
+        marginRight="space.s"
       >
         <Image src={BloctoLogo} width="48px" height="48px" borderRadius="50%" />
         <ChakraPlayer
