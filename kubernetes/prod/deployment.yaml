@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wallet-web-ui-deployment
+  labels:
+    app: wallet-web-ui
+spec:
+  selector:
+    matchLabels:
+      app: wallet-web-ui
+  replicas: 1
+  template:
+    metadata:
+      name: wallet-web-ui-pod
+      labels:
+        app: wallet-web-ui
+    spec:
+      containers:
+        - name: wallet-web-ui
+          image: dummy:tag
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi

@@ -1,0 +1,29 @@
+timeout: 1800s
+steps:
+  - name: 'node:16'
+    args:
+      - 'yarn'
+  - name: 'node:16'
+    args:
+      - 'yarn'
+      - 'build'
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'asia.gcr.io/$PROJECT_ID/wallet-web-ui:prod-$SHORT_SHA',
+        '.',
+      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'asia.gcr.io/$PROJECT_ID/wallet-web-ui:prod-$SHORT_SHA']
+
+  - name: "asia.gcr.io/k8s-artifacts-prod/kustomize/kustomize:v4.5.5"
+    dir: kubernetes/dev
+    args: ['edit', 'set', 'image', 'dummy=asia.gcr.io/$PROJECT_ID/wallet-web-ui:prod-$SHORT_SHA']
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=asia-east1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=prod'
+    args: ['apply', '-k', 'kubernetes/prod']
