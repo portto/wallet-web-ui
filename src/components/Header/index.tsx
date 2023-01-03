@@ -6,6 +6,42 @@ import { IS_LOCAL, IS_STAGING } from "src/services/Env";
 
 const PADDING_HORIZONTAL = 8;
 
+const ChainNameMappingOnProd = {
+  flow: "Flow",
+  ethereum: "Ethereum",
+  bsc: "BNB Mainnet",
+  polygon: "Polygon",
+  avalanche: "Avalanche",
+  solana: "Solana",
+  aptos: "Aptos",
+};
+
+const ChainNameMappingOnStaging = {
+  flow: "Flow Sandboxnet",
+  ethereum: "Rinkeby",
+  bsc: "BNB Testnet",
+  polygon: "Mumbai",
+  avalanche: "Fuji",
+  solana: "Solana Devnet",
+  aptos: "Aptos Testnet",
+};
+
+const ChainNameMappingOnDev = {
+  flow: "Flow Testnet",
+  ethereum: "Rinkeby",
+  bsc: "BNB Testnet",
+  polygon: "Mumbai",
+  avalanche: "Fuji",
+  solana: "Solana Devnet",
+  aptos: "Aptos Testnet",
+};
+
+const NetworkChainNameMapping: Record<string, Record<string, string>> = {
+  mainnet: ChainNameMappingOnProd,
+  sandboxnet: ChainNameMappingOnStaging,
+  testnet: ChainNameMappingOnDev,
+};
+
 const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
   const chainRef = useRef<HTMLDivElement>(null);
   const envRef = useRef<HTMLDivElement>(null);
@@ -52,7 +88,7 @@ const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
         color="status.warning.dark"
         borderRadius="20px"
         fontSize="size.subheading.3"
-        fontWeight={500}
+        fontWeight="weight.m"
         overflow="hidden"
         paddingRight={0}
         _hover={{
@@ -64,18 +100,25 @@ const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
         onClick={onTagClick}
         {...(!!tagAnimation && { animation: tagAnimation })}
       >
-        <Box padding={`4px ${PADDING_HORIZONTAL}px`} ref={envRef}>
+        <Box py="space.4xs" px={`${PADDING_HORIZONTAL}px`} ref={envRef}>
           DEV
         </Box>
         <Box
           ref={chainRef}
           as="span"
+          width="max-content"
           pos="absolute"
           left={`${envWidth}px`}
-          top="4px"
+          top="space.4xs"
           textTransform="capitalize"
         >
-          ({blockchain})
+          (
+          {
+            NetworkChainNameMapping[process.env.REACT_APP_NETWORK || "testnet"][
+              blockchain
+            ]
+          }
+          )
         </Box>
       </Box>
     );
@@ -100,17 +143,18 @@ const Header = ({
 }) => {
   return (
     <Flex
-      padding="18.5px 22px"
+      px="space.l"
+      py="space.s"
       justifyContent="space-between"
       alignItems="center"
     >
       <Flex alignItems="center">
         {onLastStepClick && (
-          <Box mr="12px">
+          <Box mr="space.s">
             <ArrowBack
               onClick={onLastStepClick}
-              width="20px"
-              height="20px"
+              width="space.l"
+              height="space.l"
               cursor="pointer"
             />
           </Box>
