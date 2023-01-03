@@ -1,7 +1,7 @@
 import { apiGet, apiPost, apiPut } from "./axios";
 
 export const getMaintenanceStatus = (chain: string) =>
-  apiGet<boolean>({
+  apiGet<{ isUnderMaintenance: boolean }>({
     url: "api/isUnderMaintenance",
     request: {
       chain,
@@ -47,7 +47,12 @@ export const estimatePoint = ({
   blockchain: string;
   rawObject: any;
 }) =>
-  apiPost({
+  apiPost<{
+    cost?: string;
+    discount?: string;
+    error_code?: string;
+    chain_error_msg?: string;
+  }>({
     url: `api/${blockchain}/estimatePoint`,
     request: {
       sessionId,
@@ -65,7 +70,7 @@ export const signEthereumMessage = ({
   message: string;
   sessionId: string;
 }) =>
-  apiPost({
+  apiPost<{ signature: string }>({
     url: `api/${chain}/sign`,
     request: {
       message: `0x${message}`,
@@ -124,6 +129,15 @@ export const updateSignatureDetails = ({
     isAuthorized: true,
   });
 
+interface EvmTx {
+  from: string;
+  to: string;
+  value?: string;
+  maxPriorityFeePerGas?: string;
+  maxFeePerGas?: string;
+  gas?: number | string;
+}
+
 export const getAuthorization = ({
   authorizationId,
   blockchain = "flow",
@@ -131,7 +145,13 @@ export const getAuthorization = ({
   authorizationId: string;
   blockchain: string;
 }) =>
-  apiGet({
+  apiGet<{
+    sessionId: string;
+    status: "PENDING" | "APPROVED" | "DECLINED";
+    reason: string | null;
+    transactionHash: string | null;
+    transactions?: EvmTx[];
+  }>({
     url: `api/${blockchain}/authzDetails`,
     request: {
       authorizationId,

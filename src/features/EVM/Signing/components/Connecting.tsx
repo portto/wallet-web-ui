@@ -30,7 +30,7 @@ const Connecting = () => {
         version
       ).toString("hex");
     }
-    const { userType: type } = await getUserInfo({});
+    const { type } = await getUserInfo();
     send({
       type: type === "normal" ? "ready" : "nonCustodial",
       data: {
@@ -62,8 +62,8 @@ const Connecting = () => {
 
   // get user type: custodial or not
   useEffect(() => {
-    getUserInfo({}).then((data) =>
-      send({ type: "updateUser", data: { type: data.userType } })
+    getUserInfo().then(({ type }) =>
+      send({ type: "updateUser", data: { type } })
     );
   }, []);
 

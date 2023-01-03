@@ -13,7 +13,7 @@ const InputEmail = () => {
     // debounce with timeout
     const timeout = setTimeout(() => {
       // @todo: regex check email validity before send request
-      checkEmailExist(input).then((exist: boolean) =>
+      checkEmailExist(input).then(({ exist }) =>
         send({
           type: "updateUser",
           data: { action: exist ? "login" : "register" },
