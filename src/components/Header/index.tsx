@@ -115,7 +115,7 @@ const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
           (
           {
             NetworkChainNameMapping[process.env.REACT_APP_NETWORK || "testnet"][
-            blockchain
+              blockchain
             ]
           }
           )
