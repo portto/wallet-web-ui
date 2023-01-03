@@ -1,13 +1,21 @@
 import { Box, Button, Flex, Img } from "@chakra-ui/react";
 import { useCallback, useEffect } from "react";
 import { estimatePoint, getAuthorization, updateAuthorization } from "src/apis";
+import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
+import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
+import DappLogo from "src/components/DappLogo";
+import Field, { FieldLine } from "src/components/Field";
+import Header from "src/components/Header";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
+import TransactionContent from "./TransactionContent";
+import TransactionInfo from "./TransactionInfo";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
 
   const { user, transaction, dapp } = context;
+  const dappDomain = new URL(dapp.url || "").host;
 
   useEffect(() => {
     const { sessionId = "" } = user;
@@ -31,7 +39,6 @@ const Main = () => {
     const { sessionId, authorizationId = "" } = user;
     const { fee, discount } = transaction;
     const { id = "", blockchain, url = "", name = "" } = dapp;
-    const domain = new URL(url).host;
 
     await updateAuthorization({
       authorizationId,
@@ -48,7 +55,7 @@ const Main = () => {
     if (status === "APPROVED") {
       send({ type: "approve", data: { txHash: transactionHash } });
       logSendTx({
-        domain,
+        domain: dappDomain,
         url,
         chain: blockchain,
         type: "authz",
@@ -60,6 +67,46 @@ const Main = () => {
 
   return (
     <Box fontSize={10}>
+      <Header
+        onClose={() => send({ type: "close" })}
+        blockchain={dapp?.blockchain}
+      />
+      <TransactionInfo host={dappDomain}>
+        <DappLogo url={dapp.logo || ""} />
+      </TransactionInfo>
+      <Box px="20px">
+        <Field
+          title="Message"
+          hidableInfo={
+            <TransactionContent verified>
+              {/* //TODO: use real tx data here  */}
+              Argument: [xxx, xxx]
+              0x552410770000000000000000000000000000000000000000000000000x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x552410770000000000000005
+              0x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x55241077
+            </TransactionContent>
+          }
+          icon={<Check width="16px" height="16px" />}
+        >
+          Hello Blocto !
+        </Field>
+        <FieldLine />
+        <Field
+          title="Message"
+          hidableInfo={
+            <TransactionContent>
+              {/* //TODO: use real tx data here  */}
+              Argument: [xxx, xxx]
+              0x552410770000000000000000000000000000000000000000000000000x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x552410770000000000000005
+              0x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x5524107700000000000000000000000000000000000000000000000000000000000000050x55241077
+            </TransactionContent>
+          }
+          icon={<CheckAlert width="16px" height="16px" />}
+        >
+          Hello Blocto !
+        </Field>
+        <FieldLine />
+      </Box>
+
       <Box>Dapp</Box>
       <Box px={4}>
         <Box>Dapp name: {dapp.name}</Box>
