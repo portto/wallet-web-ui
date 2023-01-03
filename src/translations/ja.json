@@ -7,5 +7,7 @@
   "feature.authn.signIn.submit": "Sign in",
   "feature.authn.register.submit": "Register",
   "feature.authn.input.invalidEmail": "メールアドレスのフォーマットを確認してください",
-  "feature.authn.input.checkCasing": "Blocto アカウントでは大文字と小文字が区別されます。正しいメールアドレスであることを確認してください。"
+  "feature.authn.input.checkCasing": "Blocto アカウントでは大文字と小文字が区別されます。正しいメールアドレスであることを確認してください。",
+  "app.authn.queue.title": "There is too much activity on Blocto",
+  "app.authn.queue.description": "Please wait until it's your turn to proceed with authentication..."
 }

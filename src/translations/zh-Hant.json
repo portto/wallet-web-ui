@@ -7,5 +7,7 @@
   "feature.authn.signIn.submit": "Sign in",
   "feature.authn.register.submit": "Register",
   "feature.authn.input.invalidEmail": "請確認電子郵件格式。",
-  "feature.authn.input.checkCasing": "Blocto 帳戶將大小寫英文視為不同的帳戶。請確定你輸入的是正確的 Blocto 帳戶信箱。"
+  "feature.authn.input.checkCasing": "Blocto 帳戶將大小寫英文視為不同的帳戶。請確定你輸入的是正確的 Blocto 帳戶信箱。",
+  "app.authn.queue.title": "Blocto 上的身分驗證請求過多",
+  "app.authn.queue.description": "請稍等，很快就會輪到您進行身份驗證..."
 }
