@@ -1,7 +1,7 @@
 import { Box, Flex, FlexProps, Image, chakra } from "@chakra-ui/react";
 import { Player } from "@lottiefiles/react-lottie-player";
 import placeholder from "src/assets/images/icons/ic-dapp-placeholder.png";
-import BloctoLogoWithBg from "src/assets/images/icons/logo-white-bg.svg";
+import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import loadingCircleLeft from "src/assets/lottie/logo-loading-left.json";
 import loadingCircleRight from "src/assets/lottie/logo-loading-right.json";
 
@@ -18,12 +18,17 @@ const DappLogo = ({ url, ...rest }: { url: string } & FlexProps) => {
         pos="relative"
         marginRight="space.s"
       >
-        <Image
-          src={BloctoLogoWithBg}
+        <Flex
+          bg="white"
+          borderRadius="50%"
           width="48px"
           height="48px"
-          borderRadius="50%"
-        />
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Logo />
+        </Flex>
+
         <ChakraPlayer
           width="100%"
           autoplay
