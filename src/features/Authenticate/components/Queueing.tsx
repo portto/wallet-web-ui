@@ -51,10 +51,10 @@ const Queueing = () => {
               fontWeight="weight.l"
               mb="space.2xs"
             >
-              <FormattedMessage id="app.authn.queue.title" />
+              <FormattedMessage id="feature.authn.queue.title" />
             </Text>
             <Text fontSize="size.body.3" textAlign="center">
-              <FormattedMessage id="app.authn.queue.description" />
+              <FormattedMessage id="feature.authn.queue.description" />
             </Text>
           </Flex>
         </Center>
