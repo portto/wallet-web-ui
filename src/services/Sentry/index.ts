@@ -70,7 +70,7 @@ export const captureApiError = (error: any) => {
     });
   }
 
-  return error;
+  throw error;
 };
 
 export function initSentry() {

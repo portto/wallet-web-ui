@@ -36,7 +36,7 @@ const NonCustodial = () => {
         blockchain,
         id: signingRequestId,
       });
-      if (status === "APPROVED") {
+      if (status === "approve") {
         logSendTx({
           domain,
           url,
@@ -47,7 +47,7 @@ const NonCustodial = () => {
         });
         clearInterval(interval);
         send({ type: "approve", data: { txHash } });
-      } else if (status === "DECLINED") {
+      } else if (status === "reject") {
         send({
           type: "reject",
           data: { failReason: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },

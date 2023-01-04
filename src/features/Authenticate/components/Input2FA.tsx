@@ -20,10 +20,10 @@ const Input2FA = () => {
     if (user.accessToken && user.deviceKey && input.length !== 6) return;
 
     loginAndAcquireToken({
-      email,
-      auth_code: authCode,
-      auth_code_id: authCodeId,
-      totp: input,
+      email: email || "",
+      authCode: authCode || "",
+      authCodeId: authCodeId || "",
+      totpCode: input || "",
       chain: blockchain,
     }).then(({ jwt, key }) => {
       logLogin({ chain: blockchain, domain, dAppName, dAppId });

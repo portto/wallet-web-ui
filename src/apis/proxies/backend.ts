@@ -3,7 +3,7 @@ import { KEY_ACCESS_TOKEN, getItem } from "src/services/LocalStorage";
 import { apiGet, apiPost } from "../axios";
 
 export const checkEmailExist = (email = "") =>
-  apiPost<{ isUnderMaintenance: boolean }>({
+  apiPost<{ exist: boolean }>({
     url: "blocto/account/checkEmailExist",
     request: {
       email,
@@ -58,7 +58,7 @@ export const login = ({
   email: string;
   authCode: string;
   authCodeId: string;
-  totpCode: string;
+  totpCode?: string;
 }) =>
   apiPost<{
     jwt: string;
@@ -112,14 +112,16 @@ export const refreshToken = () =>
     isAuthorized: true,
   });
 
-export const getUserInfo = ({ jwt }: { jwt?: string }) =>
+export const getUserInfo = (param: { jwt?: string } = {}) =>
   apiGet<{
+    id: string;
     email: string;
     type: string;
+    point: string;
   }>({
     url: "blocto/account/getUserInfo",
     headers: {
-      authorization: jwt || getItem(KEY_ACCESS_TOKEN),
+      authorization: param.jwt || getItem(KEY_ACCESS_TOKEN),
     },
   });
 
@@ -301,7 +303,7 @@ export const signPayer = ({
   });
 
 export const createSigningRequest = ({ blockchain = "flow", ...payload }) =>
-  apiPost({
+  apiPost<{ id: string }>({
     url: `blocto/nonCustodial/signingRequest/${blockchain}`,
     request: payload,
     isAuthorized: true,
@@ -314,7 +316,10 @@ export const getSigningRequest = ({
   blockchain: string;
   id: string;
 }) =>
-  apiGet({
+  apiGet<{
+    status: "pending" | "approve" | "reject";
+    tx_hash: string;
+  }>({
     url: `blocto/nonCustodial/signingRequest/${blockchain}/${id}`,
     isAuthorized: true,
   });
@@ -329,6 +334,6 @@ export const signMoonPayUrl = ({ query }: { query: string }) =>
   });
 
 export const getDappInfo = ({ id }: { id: string }) =>
-  apiGet<{ name: string; logo: string }>({
+  apiGet<{ name: string; logo: string; web: { web_domain: string } }>({
     url: `blocto/dapps/${id}/info`,
   });
