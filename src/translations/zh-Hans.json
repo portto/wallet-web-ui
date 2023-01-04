@@ -1,6 +1,7 @@
 {
   "app.general.loading": "Connecting...",
   "app.general.loading.description": "It may take a few seconds.",
+  "app.genaral.approve": "批准",
   "feature.authn.signInOrRegister": "Sign in / Register",
   "feature.authn.signIn.title": "Sign in",
   "feature.authn.signIn.description": "Request account with",
@@ -12,5 +13,7 @@
   "feature.authn.queue.description": "请等待，很快轮到您进行身份验证...",
   "feature.authn.otp.title": "密码",
   "feature.authn.otp.description": "我们已经向您的电子邮件发送了 6 位代码",
-  "feature.authn.otp.resend": "重新发送"
+  "feature.authn.otp.resend": "重新发送",
+  "feature.authn.2fa.title": "二阶段验证码",
+  "feature.authn.2fa.description": "输入由「Google 验证器」生成的验证代码"
 }
