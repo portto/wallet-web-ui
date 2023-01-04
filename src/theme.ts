@@ -2,9 +2,6 @@ import boTheme from "@blocto/web-chakra-theme";
 import { extendTheme } from "@chakra-ui/react";
 import merge from "lodash.merge";
 
-export const FONT_DEFAULT =
-  "Work Sans, Helvetica Neue, Helvetica, Arial, sans-serif";
-
 const IS_PROD = process.env.ENV === "production";
 
 const theme = extendTheme(
@@ -17,21 +14,23 @@ const theme = extendTheme(
     },
     styles: {
       global: {
+        html: {
+          fontSize: "16px",
+        },
         "html body": {
           minHeight: "100%",
           width: "100%",
           background: "rgba(0,0,0,.3)",
         },
         body: {
-          color: "#141414",
-          fontSize: 14,
-          lineHeight: "20px",
-          fontFamily:
-            "'Work Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+          fontFamily: "boFontFamily.base",
+          fontSize: "size.body.3",
+          lineHeight: "line.height.body.3",
+          color: "font.primary",
           textRendering: "geometricPrecision",
         },
         "body.fontLoaded": {
-          fontFamily: FONT_DEFAULT,
+          fontFamily: "boFontFamily.base",
         },
         button: {
           textRendering: "geometricPrecision",
