@@ -1,13 +1,15 @@
-import { Box, Button, Flex, Img } from "@chakra-ui/react";
-import { useCallback, useEffect } from "react";
+import { Box, Button, Flex, HStack, Img } from "@chakra-ui/react";
+import { useCallback, useEffect, useState } from "react";
+import { FormattedMessage } from "react-intl";
 import { estimatePoint, getAuthorization, updateAuthorization } from "src/apis";
-import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
+import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
 import Header from "src/components/Header";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
+import messages from "./messages";
 import TransactionContent from "./TransactionContent";
 import TransactionInfo from "./TransactionInfo";
 
@@ -17,7 +19,8 @@ interface EvmTransaction {
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
-
+  // TODO: add verification logic for tx's operation
+  const [opIsVerified] = useState(false);
   const { user, transaction, dapp } = context;
   const dappDomain = new URL(dapp.url || "").host;
   const { rawObject } = transaction;
@@ -25,6 +28,10 @@ const Main = () => {
     .filter(({ data }: EvmTransaction) => data)
     .map(({ data }: EvmTransaction) => data)
     .join("\n\n");
+
+  const hasDiscount = (transaction.discount || 0) > 0;
+  const realTransactionFee =
+    (transaction.fee || 0) - (transaction.discount || 0);
 
   useEffect(() => {
     const { sessionId = "" } = user;
@@ -85,35 +92,53 @@ const Main = () => {
         <DappLogo url={dapp.logo || ""} />
       </TransactionInfo>
       <Box px="20px">
-        <Field
-          title="Message"
-          hidableInfo={
-            <TransactionContent verified>{transactionData}</TransactionContent>
-          }
-          icon={<Check width="16px" height="16px" />}
-        >
-          Hello Blocto !
-        </Field>
-        <FieldLine />
-        <Field
-          title="Message"
-          hidableInfo={
-            <TransactionContent>{transactionData}</TransactionContent>
-          }
-          icon={<CheckAlert width="16px" height="16px" />}
-        >
-          Hello Blocto !
-        </Field>
-        <FieldLine />
+        {!opIsVerified ? (
+          <>
+            <Field
+              title={<FormattedMessage {...messages.operation} />}
+              hidableInfo={
+                <TransactionContent verified>
+                  {transactionData}
+                </TransactionContent>
+              }
+              icon={<Check width="16px" height="16px" />}
+            >
+              {/* //TODO: add operation detection logic. */}
+              Operation Name
+            </Field>
+            <FieldLine />
+            <Field title={<FormattedMessage {...messages.transactionFee} />}>
+              <HStack>
+                <Flex
+                  bg="background.secondary"
+                  borderRadius="50%"
+                  width="20px"
+                  height="20px"
+                  justifyContent="center"
+                  alignItems="center"
+                  mr="space.3xs"
+                  p="4px"
+                >
+                  <Logo />
+                </Flex>
+                <Box>
+                  {`${realTransactionFee} Points`}
+                  {hasDiscount && <Box as="del">{transaction.fee} Points</Box>}
+                </Box>
+              </HStack>
+            </Field>
+            <FieldLine />
+          </>
+        ) : null}
       </Box>
 
       <Box>Dapp</Box>
       <Box px={4}>
         <Box>Dapp name: {dapp.name}</Box>
-        <Flex align="center">
+        {/* <Flex align="center">
           Dapp Logo: <Img width={8} height={8} src={dapp.logo} />
         </Flex>
-        <Box>Dapp URL: {dapp.url}</Box>
+        <Box>Dapp URL: {dapp.url}</Box> */}
       </Box>
       <Box>User</Box>
       <Box px={4}>

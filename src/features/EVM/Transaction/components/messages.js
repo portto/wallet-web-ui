@@ -5,6 +5,10 @@ export default defineMessages({
     id: "app.authz.operation",
     defaultMessage: "Operation",
   },
+  transactionFee: {
+    id: "app.authz.transactionFee",
+    defaultMessage: "Transaction Fee",
+  },
   operationVerified: {
     id: "app.authz.operationVerified",
     defaultMessage: "This transaction is verified.",
@@ -34,11 +38,6 @@ export default defineMessages({
   data: {
     id: "app.authz.data",
     defaultMessage: "Data",
-  },
-
-  transactionFee: {
-    id: "app.authz.transactionFee",
-    defaultMessage: "Transaction Fee",
   },
 
   free: {
