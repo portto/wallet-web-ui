@@ -161,8 +161,8 @@ const Header = ({
           <Box mr="space.s">
             <ArrowBack
               onClick={onLastStepClick}
-              width="space.l"
-              height="space.l"
+              width="20px"
+              height="20px"
               cursor="pointer"
             />
           </Box>
