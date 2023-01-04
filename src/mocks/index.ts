@@ -8,6 +8,7 @@ const initMocks = async () => {
   const settings = (await import("./config")).default;
   const getHandlers = settings.gets.map(({ url, response }) =>
     rest.get(url, (req, res, ctx) =>
+      // @ts-expect-error ignore this
       response instanceof Function
         ? (response as unknown as (...params: unknown[]) => void)(req, res, ctx)
         : res(ctx.json(response))
@@ -15,8 +16,9 @@ const initMocks = async () => {
   );
   const postHandlers = settings.posts.map(({ url, response }) =>
     rest.post(url, (req, res, ctx) =>
+      // @ts-expect-error ignore this
       response instanceof Function
-        ? response(req, res, ctx)
+        ? (response as unknown as (...params: unknown[]) => void)(req, res, ctx)
         : res(ctx.json(response))
     )
   );
