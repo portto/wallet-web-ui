@@ -35,6 +35,34 @@ const theme = extendTheme(
         },
         button: {
           textRendering: "geometricPrecision",
+          WebkitTapHighlightColor: "transparent",
+        },
+        "[role=button]": {
+          WebkitTapHighlightColor: "transparent",
+        },
+      },
+    },
+    components: {
+      Button: {
+        variants: {
+          primary: {
+            width: "100%",
+            height: "54px",
+            py: "space.m",
+            fontSize: "size.heading.5",
+            fontWeight: "weight.l",
+            lineHeight: "line.height.heading.4",
+            bg: "interaction.primary",
+            color: "font.inverse",
+            borderRadius: "12px",
+            _hover: { bg: { md: "interaction.primary.hovered" } },
+            _active: { bg: "interaction.primary.pressed" },
+            _disabled: {
+              bg: "interaction.primary.disabled",
+              cursor: "not-allowed",
+              _hover: { bg: "interaction.primary.disabled" },
+            },
+          },
         },
       },
     },
