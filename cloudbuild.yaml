@@ -19,7 +19,7 @@ steps:
     args: ['push', 'asia.gcr.io/$PROJECT_ID/wallet-web-ui:prod-$SHORT_SHA']
 
   - name: "asia.gcr.io/k8s-artifacts-prod/kustomize/kustomize:v4.5.5"
-    dir: kubernetes/dev
+    dir: kubernetes/prod
     args: ['edit', 'set', 'image', 'dummy=asia.gcr.io/$PROJECT_ID/wallet-web-ui:prod-$SHORT_SHA']
 
   - name: 'gcr.io/cloud-builders/kubectl'
