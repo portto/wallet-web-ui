@@ -5,8 +5,8 @@ ENV NODE_ENV=production
 
 RUN yarn global add serve
 
-COPY . /wallet-webapp
-WORKDIR /wallet-webapp
+COPY . /wallet-web-ui
+WORKDIR /wallet-web-ui
 
 
 CMD ["serve", "-s" ,"build", "-l", "80"]
