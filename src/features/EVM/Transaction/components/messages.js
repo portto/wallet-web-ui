@@ -17,7 +17,10 @@ export default defineMessages({
     id: "app.authz.operationNotVerified",
     defaultMessage: "This transaction is not verified.",
   },
-
+  transactionContainsScript: {
+    id: "app.authz.transactionContainsScript",
+    defaultMessage: "This transaction contains script",
+  },
   // original
   // TODO: remove unused string.
   confirmTransaction: {

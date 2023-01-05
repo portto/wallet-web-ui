@@ -35,9 +35,9 @@ const Field = ({
           {icon && <span>{icon}</span>}
         </Flex>
 
-        <Text color="font.primary" fontSize="size.body.3">
+        <Box color="font.primary" fontSize="size.body.3">
           {children}
-        </Text>
+        </Box>
       </Box>
 
       {hidableInfo && (

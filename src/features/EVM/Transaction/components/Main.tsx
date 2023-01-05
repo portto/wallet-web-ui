@@ -1,9 +1,11 @@
-import { Box, Button, Flex, HStack, Img } from "@chakra-ui/react";
+import { Box, Flex, HStack, Spinner } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { estimatePoint, getAuthorization, updateAuthorization } from "src/apis";
+import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
 import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
+import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
 import Header from "src/components/Header";
@@ -19,8 +21,10 @@ interface EvmTransaction {
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
-  // TODO: add verification logic for tx's operation
-  const [opIsVerified] = useState(false);
+  // TODO: add operation detection logic
+  const [recognizedTx] = useState(false);
+  // TODO: add operation verified logic
+  const [verifiedTx] = useState(false);
   const { user, transaction, dapp } = context;
   const dappDomain = new URL(dapp.url || "").host;
   const { rawObject } = transaction;
@@ -82,6 +86,42 @@ const Main = () => {
     } else send({ type: "reject", data: { failReason: reason } });
   }, [user, dapp, transaction]);
 
+  const getTransactionFeeField = useCallback(() => {
+    return (
+      <HStack>
+        {realTransactionFee ? (
+          <>
+            <Flex
+              bg="background.secondary"
+              borderRadius="50%"
+              width="20px"
+              height="20px"
+              justifyContent="center"
+              alignItems="center"
+              mr="space.3xs"
+              p="4px"
+            >
+              <Logo />
+            </Flex>
+            <Box>
+              <FormattedMessage
+                {...messages.transactionFeePoints}
+                values={{ points: realTransactionFee }}
+              />
+              {hasDiscount && (
+                <>
+                  &nbsp;(<Box as="del">{transaction.fee} Points</Box>)
+                </>
+              )}
+            </Box>
+          </>
+        ) : (
+          <Spinner width="15px" height="15px" color="icon.tertiary" />
+        )}
+      </HStack>
+    );
+  }, [realTransactionFee]);
+
   return (
     <Box fontSize={10}>
       <Header
@@ -92,55 +132,57 @@ const Main = () => {
         <DappLogo url={dapp.logo || ""} />
       </TransactionInfo>
       <Box px="20px">
-        {!opIsVerified ? (
+        {recognizedTx ? (
           <>
             <Field
               title={<FormattedMessage {...messages.operation} />}
               hidableInfo={
-                <TransactionContent verified>
+                <TransactionContent verified={verifiedTx}>
                   {transactionData}
                 </TransactionContent>
               }
-              icon={<Check width="16px" height="16px" />}
+              icon={
+                verifiedTx ? (
+                  <Check width="16px" height="16px" />
+                ) : (
+                  <CheckAlert width="16px" height="16px" />
+                )
+              }
             >
               {/* //TODO: add operation detection logic. */}
               Operation Name
             </Field>
             <FieldLine />
             <Field title={<FormattedMessage {...messages.transactionFee} />}>
-              <HStack>
-                <Flex
-                  bg="background.secondary"
-                  borderRadius="50%"
-                  width="20px"
-                  height="20px"
-                  justifyContent="center"
-                  alignItems="center"
-                  mr="space.3xs"
-                  p="4px"
-                >
-                  <Logo />
-                </Flex>
-                <Box>
-                  {`${realTransactionFee} Points`}
-                  {hasDiscount && <Box as="del">{transaction.fee} Points</Box>}
-                </Box>
-              </HStack>
+              {getTransactionFeeField()}
             </Field>
             <FieldLine />
           </>
-        ) : null}
+        ) : (
+          <>
+            <Field title={<FormattedMessage {...messages.transactionFee} />}>
+              {getTransactionFeeField()}
+            </Field>
+            <Box height="10px" bg="background.tertiary" mx="-20px" />
+            <Field
+              title={<FormattedMessage {...messages.operation} />}
+              hidableInfo={
+                <TransactionContent>{transactionData}</TransactionContent>
+              }
+              icon={<CheckAlert width="16px" height="16px" />}
+            >
+              <FormattedMessage {...messages.transactionContainsScript} />
+            </Field>
+            <FieldLine />
+          </>
+        )}
       </Box>
-
-      <Box>Dapp</Box>
+      {/* // TODO: remove testing data. */}
+      {/* <Box>Dapp</Box>
       <Box px={4}>
         <Box>Dapp name: {dapp.name}</Box>
-        {/* <Flex align="center">
-          Dapp Logo: <Img width={8} height={8} src={dapp.logo} />
-        </Flex>
-        <Box>Dapp URL: {dapp.url}</Box> */}
-      </Box>
-      <Box>User</Box>
+      </Box> */}
+      {/* <Box>User</Box>
       <Box px={4}>
         <Box>Points: {user.points}</Box>
         <Box>
@@ -154,12 +196,10 @@ const Main = () => {
       </Box>
       <Box>Transaction</Box>
       <Box px={4}>
-        <Box>Fee: {transaction.fee}</Box>
-        <Box>Discount: {transaction.discount}</Box>
         <Box>May Fail?: {transaction.mayFail ? "true" : "false"}</Box>
         <Box>Error: {transaction.error}</Box>
-      </Box>
-      <Flex justify="center">
+      </Box> */}
+      <Flex justify="center" p="20px" pos="absolute" bottom="0" width="100%">
         <Button onClick={approve}>Approve</Button>
       </Flex>
     </Box>
