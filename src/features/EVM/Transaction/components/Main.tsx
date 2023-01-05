@@ -165,7 +165,7 @@ const Main = () => {
             </Field>
             <Box height="10px" bg="background.tertiary" mx="-20px" />
             <Field
-              title={<FormattedMessage {...messages.operation} />}
+              title={<FormattedMessage {...messages.script} />}
               hidableInfo={
                 <TransactionContent>{transactionData}</TransactionContent>
               }
