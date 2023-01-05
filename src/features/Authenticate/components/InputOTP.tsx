@@ -127,7 +127,7 @@ const InputOTP = () => {
     removeItem(KEY_SESSION_ID);
     removeItem(KEY_USER_ID);
     removeItem(KEY_USER_TYPE);
-    send("switchAccount");
+    send("back");
   };
 
   const handleResend = () => {
