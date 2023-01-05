@@ -54,12 +54,18 @@ const theme = extendTheme(
             bg: "interaction.primary",
             color: "font.inverse",
             borderRadius: "12px",
-            _hover: { bg: { md: "interaction.primary.hovered" } },
-            _active: { bg: "interaction.primary.pressed" },
+            _hover: {
+              bg: { md: "interaction.primary.hovered" },
+              transform: "scale(0.98)",
+              _disabled: { bg: "interaction.primary.disabled" },
+            },
+            _active: {
+              bg: "interaction.primary.pressed",
+              transform: "scale(0.96)",
+            },
             _disabled: {
               bg: "interaction.primary.disabled",
               cursor: "not-allowed",
-              _hover: { bg: "interaction.primary.disabled" },
             },
           },
         },
