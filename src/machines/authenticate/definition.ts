@@ -1,3 +1,4 @@
+import merge from "lodash.merge";
 import { assign, createMachine } from "xstate";
 
 const defaultContext = {
@@ -30,6 +31,7 @@ export const machineStates = {
 
 export interface AuthenticateMachineContext {
   isThroughBackChannel?: boolean;
+  blockchainIcon?: string;
   error?: any;
   queue?: {
     queueId: number;
@@ -82,7 +84,8 @@ const machine = createMachine<AuthenticateMachineContext>(
     id: "authenticate",
     initial: machineStates.IDLE,
     predictableActionArguments: true,
-    context: defaultContext,
+    // Deep clone to prevent modify {defaultContext}
+    context: JSON.parse(JSON.stringify(defaultContext)),
     // default trigger actions
     on: {
       updateState: { actions: "updateState" },
@@ -143,11 +146,11 @@ const machine = createMachine<AuthenticateMachineContext>(
           },
           enableBlockchain: {
             target: machineStates.ENABLE_BLOCKCHAIN,
-            actions: "updateUser",
+            actions: "updateState",
           },
           accountReady: {
             target: machineStates.ACCOUNT_CONFIRM,
-            actions: "updateUser",
+            actions: "updateState",
           },
         },
         tags: ["System"],
@@ -190,7 +193,7 @@ const machine = createMachine<AuthenticateMachineContext>(
   },
   {
     actions: {
-      updateState: assign((_, event) => event.data),
+      updateState: assign((context, event) => merge(context, event.data)),
       updateQueue: assign({
         queue: (context, event) => ({ ...context.queue, ...event.data }),
       }),

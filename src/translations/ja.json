@@ -2,6 +2,8 @@
   "app.general.loading": "Connecting...",
   "app.general.loading.description": "It may take a few seconds.",
   "app.genaral.approve": "承認",
+  "app.genaral.email": "メールアドレス",
+  "app.genaral.address": "アドレス",
   "feature.authn.signInOrRegister": "Sign in / Register",
   "feature.authn.signIn.title": "Sign in",
   "feature.authn.signIn.description": "Request account with",
@@ -15,5 +17,7 @@
   "feature.authn.otp.description": "6桁のコードをメールに送信しました",
   "feature.authn.otp.resend": "再送",
   "feature.authn.2fa.title": "2段階認証",
-  "feature.authn.2fa.description": "Google 認証システムによって生成された認証コードを入力してください"
+  "feature.authn.2fa.description": "Google 認証システムによって生成された認証コードを入力してください",
+  "feature.authn.confirm.title": "Request account with",
+  "feature.authn.confirm.useAnotherAccount": "別のアカウントを使用する"
 }

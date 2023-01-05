@@ -146,6 +146,7 @@ export const getAccountAssets = () =>
       status: string;
       wallet_address: string;
       blockchain: string;
+      color_icon: string;
     }>;
   }>({
     url: "blocto/account/assets",

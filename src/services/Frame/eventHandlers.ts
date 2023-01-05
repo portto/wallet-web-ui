@@ -105,8 +105,8 @@ export const onChallengeResponse = ({
       f_vsn: "1.0.0",
       type: "user-signature",
       uid: "blocto#user-signature",
-      endpoint: `${window.location.origin}/user-signature`,
-      method: "IFRAME/RPC", // HTTP/POST | IFRAME/RPC | HTTP/RPC
+      endpoint: `${window.location.origin}/api/flow/user-signature`,
+      method: "HTTP/POST", // HTTP/POST | IFRAME/RPC | HTTP/RPC
       id: code, // wallets internal id for the user
       params: {
         sessionId: code, // data that will be sent to the endpoint along with the signable

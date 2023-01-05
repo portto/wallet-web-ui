@@ -3,6 +3,7 @@ import { onClose, onInternalConfirm, onResponse } from "src/services/Frame";
 import { KEY_EMAIL, KEY_USER_TYPE, setItem } from "src/services/LocalStorage";
 import checkBlockchainEnabled from "src/utils/checkBlockchainEnabled";
 import { EXP_TIME, INTERNAL_WL_DOMAINS } from "src/utils/constants";
+import getBlockchainIcon from "src/utils/getBlockchainIcon";
 import mapAssetsToAddresses from "src/utils/mapAssetsToAddresses";
 import { AuthenticateMachineContext } from "./definition";
 
@@ -30,8 +31,9 @@ export const verifyUser =
     // otherwise go to account confirm account UI
     const addresses = mapAssetsToAddresses(assets);
     const enabled = checkBlockchainEnabled(assets, blockchain);
+    const blockchainIcon = getBlockchainIcon(assets, blockchain);
 
-    const data = { ...userInfo, addresses };
+    const data = { user: { ...userInfo, addresses }, blockchainIcon };
 
     return callback({
       type: enabled ? "accountReady" : "enableBlockchain",

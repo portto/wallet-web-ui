@@ -2,6 +2,8 @@
   "app.general.loading": "Connecting...",
   "app.general.loading.description": "It may take a few seconds.",
   "app.genaral.approve": "同意",
+  "app.genaral.email": "電子郵件",
+  "app.genaral.address": "{chain} 地址",
   "feature.authn.signInOrRegister": "Sign in / Register",
   "feature.authn.signIn.title": "Sign in",
   "feature.authn.signIn.description": "Request account with",
@@ -15,5 +17,7 @@
   "feature.authn.otp.description": "我們已向您的電子郵件發送了 6 位代碼",
   "feature.authn.otp.resend": "重新發送",
   "feature.authn.2fa.title": "二階段驗證碼",
-  "feature.authn.2fa.description": "輸入由「Google 驗證器」生成的驗證代碼"
+  "feature.authn.2fa.description": "輸入由「Google 驗證器」生成的驗證代碼",
+  "feature.authn.confirm.title": "Request account with",
+  "feature.authn.confirm.useAnotherAccount": "使用另一個帳戶"
 }
