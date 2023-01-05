@@ -56,6 +56,7 @@ const Field = ({
             top="0"
             right="0"
             bottom="0"
+            zIndex={1}
             left={showHidableInfo ? "0" : "100%"}
             bg="white"
             overflowY="scroll"
