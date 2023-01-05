@@ -11,12 +11,16 @@ import Field, { FieldLine } from "src/components/Field";
 import Header from "src/components/Header";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
+import useTransactionDetail from "../hooks/useTransactionDetail";
 import messages from "./messages";
 import TransactionContent from "./TransactionContent";
 import TransactionInfo from "./TransactionInfo";
 
-interface EvmTransaction {
+export interface EvmTransaction {
   data: string;
+  from: string;
+  to: string;
+  value: string;
 }
 
 const Main = () => {
@@ -25,6 +29,7 @@ const Main = () => {
   const [recognizedTx] = useState(false);
   // TODO: add operation verified logic
   const [verifiedTx] = useState(false);
+
   const { user, transaction, dapp } = context;
   const dappDomain = new URL(dapp.url || "").host;
   const { rawObject } = transaction;
@@ -36,6 +41,8 @@ const Main = () => {
   const hasDiscount = (transaction.discount || 0) > 0;
   const realTransactionFee =
     (transaction.fee || 0) - (transaction.discount || 0);
+
+  useTransactionDetail(transaction);
 
   useEffect(() => {
     const { sessionId = "" } = user;
