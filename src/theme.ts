@@ -56,9 +56,13 @@ const theme = extendTheme(
             borderRadius: "12px",
             _hover: {
               bg: { md: "interaction.primary.hovered" },
+              transform: "scale(0.98)",
               _disabled: { bg: "interaction.primary.disabled" },
             },
-            _active: { bg: "interaction.primary.pressed" },
+            _active: {
+              bg: "interaction.primary.pressed",
+              transform: "scale(0.96)",
+            },
             _disabled: {
               bg: "interaction.primary.disabled",
               cursor: "not-allowed",
