@@ -9,6 +9,7 @@ import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { createHandshake } from "src/apis";
 import Button from "src/components/Button";
+import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
 import Header from "src/components/Header";
 import { useAuthenticateMachine } from "src/machines/authenticate";
@@ -88,6 +89,7 @@ const AccountConifrm = () => {
         pb="space.xl"
         bg="background.secondary"
       >
+        <DappLogo url={logo || ""} mb="space.s" />
         <Text fontSize="size.body.3" mb="space.2xs">
           <FormattedMessage id="feature.authn.confirm.title" />
         </Text>
