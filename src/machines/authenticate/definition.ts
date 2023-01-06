@@ -178,8 +178,14 @@ const machine = createMachine<AuthenticateMachineContext>(
       },
       [machineStates.ACCOUNT_CONFIRM]: {
         on: {
-          approve: machineStates.FINISH_PROCESS,
-          nonCustodialApprove: machineStates.RUN_INIT_SCRIPTS,
+          approve: {
+            target: machineStates.FINISH_PROCESS,
+            actions: "updateUser",
+          },
+          nonCustodialApprove: {
+            target: machineStates.RUN_INIT_SCRIPTS,
+            actions: "updateUser",
+          },
           switchAccount: machineStates.RESET_AUTH,
         },
       },
