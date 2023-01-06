@@ -1,10 +1,4 @@
-import {
-  Center,
-  Button as ChakraButton,
-  Flex,
-  Image,
-  Text,
-} from "@chakra-ui/react";
+import { Center, Button as ChakraButton, Flex, Text } from "@chakra-ui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import {
@@ -14,6 +8,7 @@ import {
 } from "src/apis";
 import Button from "src/components/Button";
 import Header from "src/components/Header";
+import LoadingLogo from "src/components/LoadingLogo";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { AssetStatus } from "src/types";
 import getBlockchainStatus from "src/utils/getBlockchainStatus";
@@ -87,6 +82,7 @@ const EnableBlockchain = () => {
         clearTimeout(timerRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const switchAccount = useCallback(async () => {
@@ -111,7 +107,7 @@ const EnableBlockchain = () => {
       >
         <Center height="100%">
           <Flex flexDirection="column" alignItems="center">
-            <Image
+            <LoadingLogo
               src={context.blockchainIcon}
               width="48px"
               height="48px"
