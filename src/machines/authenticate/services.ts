@@ -48,7 +48,11 @@ export const verifyUser =
     const enabled = checkBlockchainEnabled(assets, blockchain);
     const blockchainIcon = getBlockchainIcon(assets, blockchain);
 
-    const data = { user: { ...userInfo, addresses }, blockchainIcon };
+    const { point, ...restInfo } = userInfo;
+    const data = {
+      user: { ...restInfo, addresses, points: +point },
+      blockchainIcon,
+    };
 
     return callback({
       type: enabled ? "accountReady" : "enableBlockchain",

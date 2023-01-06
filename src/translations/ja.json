@@ -4,6 +4,8 @@
   "app.genaral.approve": "承認",
   "app.genaral.email": "メールアドレス",
   "app.genaral.address": "アドレス",
+  "app.general.itTakesSomeTimeToProceed": "続行するには時間がかかります",
+  "app.general.downloadBloctoApp": "Download Blocto App",
   "feature.authn.signInOrRegister": "Sign in / Register",
   "feature.authn.signIn.title": "Sign in",
   "feature.authn.signIn.description": "Request account with",
@@ -19,5 +21,8 @@
   "feature.authn.2fa.title": "2段階認証",
   "feature.authn.2fa.description": "Google 認証システムによって生成された認証コードを入力してください",
   "feature.authn.confirm.title": "Request account with",
-  "feature.authn.confirm.useAnotherAccount": "別のアカウントを使用する"
+  "feature.authn.confirm.useAnotherAccount": "別のアカウントを使用する",
+  "feature.authn.enable.title": "Creating {chain} Wallet...",
+  "feature.authn.insufficientEnable.title": "Insufficient Blocto points for creating {chain} Wallet",
+  "feature.authn.insufficientEnable.description": "Please go to Blocto App to purchase points and create wallet"
 }
