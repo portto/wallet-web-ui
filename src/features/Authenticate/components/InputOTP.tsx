@@ -157,6 +157,7 @@ const InputOTP = () => {
             py="space.3xs"
             fontSize="size.subheading.2"
             fontWeight="weight.m"
+            lineHeight="line.height.subheading.2"
             bg="background.primary"
             borderRadius="32px"
             cursor="pointer"

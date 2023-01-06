@@ -94,12 +94,11 @@ const AccountConifrm = () => {
           <FormattedMessage id="feature.authn.confirm.title" />
         </Text>
         <Text
-          display="flex"
-          alignItems="center"
           px="space.m"
           py="space.3xs"
           fontSize="size.subheading.2"
           fontWeight="weight.m"
+          lineHeight="line.height.subheading.2"
           bg="background.primary"
           borderRadius="32px"
         >
