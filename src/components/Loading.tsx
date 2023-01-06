@@ -1,14 +1,11 @@
-import { Box, Center, Flex, Image, Text } from "@chakra-ui/react";
+import { Center, Flex, Text } from "@chakra-ui/react";
 import { FormattedMessage } from "react-intl";
-import logo from "src/assets/images/icons/logo.svg";
+import LoadingLogo from "./LoadingLogo";
 
 const Loading = () => (
   <Center height="100%">
     <Flex flexDirection="column" alignItems="center">
-      <Box position="relative" mb="space.s">
-        {/* TODO: Add Loading animation */}
-        <Image src={logo} />
-      </Box>
+      <LoadingLogo mb="space.s" />
 
       <Text
         color="font.primary"
