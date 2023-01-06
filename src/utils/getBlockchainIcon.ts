@@ -1,14 +1,8 @@
+import { AccountAsset } from "src/types";
 import { CHAIN_ASSET_NAME_MAPPING } from "./constants";
 
 const getBlockchainIcon = (
-  assets: Array<{
-    name: string;
-    type: string;
-    status: string;
-    wallet_address: string;
-    blockchain: string;
-    color_icon: string;
-  }>,
+  assets: Array<AccountAsset>,
   chain: string
 ): string => {
   const assetName = CHAIN_ASSET_NAME_MAPPING[chain];

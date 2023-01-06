@@ -1,15 +1,10 @@
-const mapAssetsToAddresses = (
-  assets: Array<{
-    type: string;
-    status: string;
-    wallet_address: string;
-    blockchain: string;
-  }>
-) =>
+import { AccountAsset, AssetStatus } from "src/types";
+
+const mapAssetsToAddresses = (assets: Array<AccountAsset>) =>
   Object.fromEntries(
     assets
       .filter(({ type }) => type === "native")
-      .filter(({ status }) => status === "confirmed")
+      .filter(({ status }) => status === AssetStatus.CONFIRMED)
       .map(({ blockchain, wallet_address }) => [blockchain, wallet_address])
   );
 
