@@ -18,16 +18,21 @@ import mapAssetsToAddresses from "src/utils/mapAssetsToAddresses";
 import { AuthenticateMachineContext } from "./definition";
 
 export const verifyUser =
-  (context: AuthenticateMachineContext) =>
+  (context: AuthenticateMachineContext, event: AnyEventObject) =>
   async (callback: (args: any) => void) => {
+    if (event?.data?.accessToken && event.data?.deviceKey) {
+      setItem(KEY_ACCESS_TOKEN, event.data.accessToken);
+      setItem(KEY_DEVICE_KEY, event.data.deviceKey);
+    }
+
     // Try get user info with token
     let userInfo;
     try {
       userInfo = await getUserInfo({ jwt: context.user.accessToken });
-      const { email, type } = userInfo;
-
+      const { email, type, id } = userInfo;
       setItem(KEY_EMAIL, email);
       setItem(KEY_USER_TYPE, type);
+      setItem(KEY_USER_ID, id);
     } catch (e) {
       return callback("invalidToken");
     }
