@@ -11,6 +11,7 @@
   "feature.authn.signIn.description": "Request account with",
   "feature.authn.signIn.submit": "Sign in",
   "feature.authn.register.submit": "Register",
+  "feature.authn.register.termsOfUse": "註冊即表示您同意我們的<a>使用條款<\/a>",
   "feature.authn.input.invalidEmail": "請確認電子郵件格式。",
   "feature.authn.input.checkCasing": "Blocto 帳戶將大小寫英文視為不同的帳戶。請確定你輸入的是正確的 Blocto 帳戶信箱。",
   "feature.authn.queue.title": "Blocto 上的身分驗證請求過多",

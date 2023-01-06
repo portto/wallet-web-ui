@@ -5,6 +5,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Link,
   Text,
   keyframes,
 } from "@chakra-ui/react";
@@ -16,6 +17,7 @@ import check from "src/assets/images/icons/check.svg";
 import error from "src/assets/images/icons/error.svg";
 import inputLoading from "src/assets/images/icons/input-loading.svg";
 import Button from "src/components/Button";
+import DappLogo from "src/components/DappLogo";
 import Header from "src/components/Header";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { checkEmailCap, checkEmailFormat } from "src/utils/checkEmailFormat";
@@ -37,16 +39,25 @@ const InputEmail = () => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const {
     user: { action },
-    dapp: { name, blockchain },
+    dapp: { name, blockchain, logo },
   } = context;
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkEmail = useCallback(
     debounce((email) => {
+      if (!email) {
+        setIsChecking(false);
+        setHasError(false);
+        setHasWarning(false);
+        return;
+      }
+
       if (!checkEmailFormat(email)) {
         setIsChecking(false);
         setHasError(true);
         return;
       }
+
       setHasError(false);
       setHasWarning(!checkEmailCap(email));
       // @todo: regex check email validity before send request
@@ -65,11 +76,6 @@ const InputEmail = () => {
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setInput(event.target.value);
     setIsChecking(!!event.target.value);
-    if (!event.target.value) {
-      setHasError(false);
-      setHasWarning(false);
-      return;
-    }
     checkEmail(event.target.value);
   };
 
@@ -109,6 +115,7 @@ const InputEmail = () => {
           mt="space.s"
           mb="space.xl"
         >
+          <DappLogo url={logo || ""} mb="space.s" />
           <Text
             fontSize="size.heading.4"
             fontWeight="weight.l"
@@ -182,6 +189,30 @@ const InputEmail = () => {
           >
             {renderButtonText()}
           </Button>
+
+          {input && !hasError && !isChecking && !isEmailExistent && (
+            <Text
+              fontSize="size.help.1"
+              color="font.secondary"
+              textAlign="center"
+              mt="space.s"
+            >
+              <FormattedMessage
+                id="feature.authn.register.termsOfUse"
+                values={{
+                  a: (chunks) => (
+                    <Link
+                      href="https://portto.com/terms/"
+                      isExternal
+                      rel="noopener noreferrer"
+                    >
+                      {chunks}
+                    </Link>
+                  ),
+                }}
+              />
+            </Text>
+          )}
         </Box>
       </Box>
     </>

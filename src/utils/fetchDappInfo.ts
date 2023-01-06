@@ -1,6 +1,28 @@
 import { getDappInfo, getDappMetadata } from "src/apis";
 import { DEFAULT_APP_ID } from "./constants";
 
+const fetchFromURL = async (url?: string) => {
+  const redirectUrl = document.referrer
+    ? new URL(document.referrer).origin
+    : "";
+  const fetchingURL = url || redirectUrl;
+  const isFromLocalhost = !!fetchingURL?.includes("localhost");
+
+  if (fetchingURL && !isFromLocalhost) {
+    try {
+      const { result } = await getDappMetadata({ url: fetchingURL });
+      return {
+        logo: result.thumbnail,
+        name: result.title,
+      };
+    } catch (error) {
+      return {};
+    }
+  }
+
+  return {};
+};
+
 const fetchDappInfo = async ({
   id,
   url,
@@ -8,22 +30,20 @@ const fetchDappInfo = async ({
   id?: string;
   url?: string;
 }): Promise<{ logo?: string; name?: string; url?: string }> => {
-  const isFromLocalhost = !!url?.includes("localhost");
   if (id && id !== DEFAULT_APP_ID) {
-    const { logo, name, web } = await getDappInfo({ id });
-    return {
-      logo,
-      name,
-      url: url || web.web_domain,
-    };
-  } else if (url && !isFromLocalhost) {
-    const { result } = await getDappMetadata({ url });
-    return {
-      logo: result.thumbnail,
-      name: result.title,
-    };
+    try {
+      const { logo, name, web } = await getDappInfo({ id });
+      return {
+        logo,
+        name,
+        url: url || web.web_domain,
+      };
+    } catch (error) {
+      // pass on
+    }
   }
-  return {};
+
+  return fetchFromURL(url);
 };
 
 export default fetchDappInfo;
