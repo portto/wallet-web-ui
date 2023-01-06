@@ -11,9 +11,6 @@
 # production
 /build
 
-# mock config
-src/mocks/config.js
-
 # misc
 .DS_Store
 .env.local
