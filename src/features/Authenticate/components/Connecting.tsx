@@ -1,5 +1,7 @@
+import { Box } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { createAuthnQueue } from "src/apis";
+import Header from "src/components/Header";
 import Loading from "src/components/Loading";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import fetchDappInfo from "src/utils/fetchDappInfo";
@@ -24,7 +26,23 @@ const Connecting = () => {
     }
   }, [send, context]);
 
-  return <Loading />;
+  const handleClose = () => send("close");
+
+  return (
+    <Box height="100%" position="relative">
+      <Header blockchain={context.dapp.blockchain} onClose={handleClose} />
+      <Box
+        position="absolute"
+        top="0"
+        left="0"
+        zIndex={-1}
+        width="100%"
+        height="100%"
+      >
+        <Loading />
+      </Box>
+    </Box>
+  );
 };
 
 export default Connecting;
