@@ -6,7 +6,7 @@ const fetchFromURL = async (url?: string) => {
     ? new URL(document.referrer).origin
     : "";
   const fetchingURL = url || redirectUrl;
-  const isFromLocalhost = !!fetchingURL?.includes("localhost");
+  const isFromLocalhost = fetchingURL?.includes("localhost");
 
   if (fetchingURL && !isFromLocalhost) {
     try {
