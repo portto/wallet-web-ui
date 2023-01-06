@@ -28,6 +28,7 @@ const Main = () => {
   const { user, transaction, dapp } = context;
   const dappDomain = new URL(dapp.url || "").host;
   const { rawObject } = transaction;
+
   const transactionData = rawObject.transactions
     .filter(({ data }: EvmTransaction) => data)
     .map(({ data }: EvmTransaction) => data)
@@ -99,7 +100,7 @@ const Main = () => {
               justifyContent="center"
               alignItems="center"
               mr="space.3xs"
-              p="4px"
+              p="space.4xs"
             >
               <Logo />
             </Flex>
@@ -110,7 +111,14 @@ const Main = () => {
               />
               {hasDiscount && (
                 <Box as="span" pl="space.3xs">
-                  (<Box as="del">{transaction.fee} Points</Box>)
+                  (
+                  <Box as="del">
+                    <FormattedMessage
+                      {...messages.transactionFeePoints}
+                      values={{ points: transaction.fee }}
+                    />
+                  </Box>
+                  )
                 </Box>
               )}
             </Box>
@@ -120,18 +128,18 @@ const Main = () => {
         )}
       </HStack>
     );
-  }, [realTransactionFee]);
+  }, [transaction.fee, realTransactionFee]);
 
   return (
-    <Box fontSize={10}>
+    <Box>
       <Header
         onClose={() => send({ type: "close" })}
         blockchain={dapp?.blockchain}
       />
       <TransactionInfo host={dappDomain}>
-        <DappLogo url={dapp.logo || ""} />
+        <DappLogo url={dapp.logo || ""} mb="space.s" />
       </TransactionInfo>
-      <Box px="20px">
+      <Box px="space.l">
         {recognizedTx ? (
           <>
             <Field
@@ -199,8 +207,10 @@ const Main = () => {
         <Box>May Fail?: {transaction.mayFail ? "true" : "false"}</Box>
         <Box>Error: {transaction.error}</Box>
       </Box> */}
-      <Flex justify="center" p="20px" pos="absolute" bottom="0" width="100%">
-        <Button onClick={approve}>Approve</Button>
+      <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
+        <Button onClick={approve}>
+          <FormattedMessage {...messages.approve} />
+        </Button>
       </Flex>
     </Box>
   );

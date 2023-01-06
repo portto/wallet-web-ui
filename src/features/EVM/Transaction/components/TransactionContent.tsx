@@ -19,7 +19,7 @@ const TransactionContent = ({
       </Heading>
       {verified ? (
         <Flex
-          padding="16px"
+          padding="space.m"
           alignItems="center"
           bg="background.secondary"
           borderRadius="12px"

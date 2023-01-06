@@ -1,5 +1,7 @@
 import { Box, Text } from "@chakra-ui/react";
 import React, { ReactNode } from "react";
+import { FormattedMessage } from "react-intl";
+import messages from "./messages";
 
 const TransactionInfo = ({
   host,
@@ -12,7 +14,7 @@ const TransactionInfo = ({
     <Box bg="background.secondary" textAlign="center" pb="space.xl">
       <Box>{children}</Box>
       <Text fontSize={"size.body.3"} mb="space.2xs">
-        interacting
+        <FormattedMessage {...messages.interactWith} />
       </Text>
       <Text
         bg="white"
@@ -21,6 +23,7 @@ const TransactionInfo = ({
         py="space.3xs"
         borderRadius="32px"
         fontSize="size.subheading.2"
+        fontWeight="weight.m"
       >
         {host}
       </Text>

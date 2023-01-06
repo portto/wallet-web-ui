@@ -5,6 +5,10 @@ export default defineMessages({
     id: "app.authz.operation",
     defaultMessage: "Operation",
   },
+  interactWith: {
+    id: "app.authz.interactWith",
+    defaultMessage: "You are interacting with",
+  },
   transactionFee: {
     id: "app.authz.transactionFee",
     defaultMessage: "Transaction Fee",
@@ -17,6 +21,11 @@ export default defineMessages({
     id: "app.authz.operationNotVerified",
     defaultMessage: "This transaction is not verified.",
   },
+  approve: {
+    id: "app.authz.approve",
+    defaultMessage: "Approve",
+  },
+
   script: {
     id: "app.authz.script",
     defaultMessage: "Script",
@@ -30,11 +39,6 @@ export default defineMessages({
   confirmTransaction: {
     id: "app.authz.confirmTransaction",
     defaultMessage: "Confirm Transaction",
-  },
-
-  approve: {
-    id: "app.authz.approve",
-    defaultMessage: "Approve",
   },
 
   decline: {
