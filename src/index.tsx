@@ -13,7 +13,6 @@ import { IntlProvider } from "react-intl";
 import { BrowserRouter as Router } from "react-router-dom";
 
 // Import root app
-import initMocks from "src/mocks/index";
 import App from "./App";
 
 // Import i18n messages
@@ -36,7 +35,6 @@ initAmplitude();
 initSentry();
 
 initFontObserver();
-initMocks();
 
 const defaultLocale = getLocale();
 
