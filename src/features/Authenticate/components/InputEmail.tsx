@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   Image,
   Input,
@@ -16,6 +15,7 @@ import check from "src/images/icons/check.svg";
 import error from "src/images/icons/error.svg";
 import inputLoading from "src/images/icons/input-loading.svg";
 import { checkEmailExist, requestEmailAuth } from "src/apis";
+import Button from "src/components/Button";
 import Header from "src/components/Header";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { checkEmailCap, checkEmailFormat } from "src/utils/checkEmailFormat";
@@ -34,6 +34,7 @@ const InputEmail = () => {
   const [isEmailExistent, setIsEmailExistent] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [hasWarning, setHasWarning] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const {
     user: { action },
     dapp: { name, blockchain },
@@ -73,6 +74,7 @@ const InputEmail = () => {
   };
 
   const onConfirm = useCallback(async () => {
+    setHasSubmitted(true);
     const email = input;
     // get auth code id
     const { id } = await requestEmailAuth({ action, email });
@@ -82,6 +84,16 @@ const InputEmail = () => {
   }, [send, input, action]);
 
   const handleClose = () => send("close");
+
+  const renderButtonText = () => {
+    if (isChecking || !input) {
+      return <FormattedMessage id="feature.authn.signInOrRegister" />;
+    }
+    if (isEmailExistent) {
+      return <FormattedMessage id="feature.authn.signIn.submit" />;
+    }
+    return <FormattedMessage id="feature.authn.register.submit" />;
+  };
 
   return (
     <>
@@ -162,31 +174,9 @@ const InputEmail = () => {
           <Button
             onClick={onConfirm}
             disabled={!input || hasError}
-            width="100%"
-            height="auto"
-            py="space.m"
-            fontSize="size.heading.5"
-            fontWeight="weight.l"
-            lineHeight="line.height.heading.4"
-            bg="interaction.primary"
-            color="font.inverse"
-            borderRadius="12px"
-            _hover={{ bg: "interaction.primary.hovered" }}
-            _active={{ bg: "interaction.primary.pressed" }}
-            _disabled={{
-              bg: "interaction.primary.disabled",
-              cursor: "not-allowed",
-              _hover: { bg: "interaction.primary.disabled" },
-            }}
+            isLoading={hasSubmitted}
           >
-            {/* eslint-disable-next-line no-nested-ternary */}
-            {isChecking || !input ? (
-              <FormattedMessage id="feature.authn.signInOrRegister" />
-            ) : isEmailExistent ? (
-              <FormattedMessage id="feature.authn.signIn.submit" />
-            ) : (
-              <FormattedMessage id="feature.authn.register.submit" />
-            )}
+            {renderButtonText()}
           </Button>
         </Box>
       </Box>
