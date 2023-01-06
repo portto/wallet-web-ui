@@ -11,10 +11,10 @@ import {
 import debounce from "lodash/debounce";
 import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
-import check from "src/images/icons/check.svg";
-import error from "src/images/icons/error.svg";
-import inputLoading from "src/images/icons/input-loading.svg";
 import { checkEmailExist, requestEmailAuth } from "src/apis";
+import check from "src/assets/images/icons/check.svg";
+import error from "src/assets/images/icons/error.svg";
+import inputLoading from "src/assets/images/icons/input-loading.svg";
 import Button from "src/components/Button";
 import Header from "src/components/Header";
 import { useAuthenticateMachine } from "src/machines/authenticate";

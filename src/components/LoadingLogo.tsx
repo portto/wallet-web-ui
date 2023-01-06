@@ -1,5 +1,5 @@
 import { Box, ChakraProps, Image } from "@chakra-ui/react";
-import logo from "src/images/icons/logo.svg";
+import logo from "src/assets/images/icons/logo.svg";
 
 const LoadingLogo = (props: ChakraProps) => (
   <Box position="relative" {...props}>

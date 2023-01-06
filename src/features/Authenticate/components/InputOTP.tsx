@@ -9,10 +9,10 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { register, requestEmailAuth } from "src/apis";
+import switchAccountIcon from "src/assets/images/icons/switch.svg";
 import Button from "src/components/Button";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
-import switchAccountIcon from "src/images/icons/switch.svg";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { logLogin, logRegister } from "src/services/Amplitude";
 import loginAndAcquireToken from "src/utils/loginAndAcquireToken";
