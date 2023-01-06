@@ -38,7 +38,7 @@ export const verifyUser =
     }
 
     // Get account assets & update user info
-    const { blockchain = "Flow" } = context.dapp;
+    const { blockchain = "flow" } = context.dapp;
     const { assets } = await getAccountAssets();
 
     // Try get user enabled specific chain or not,
