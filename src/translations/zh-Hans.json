@@ -1,4 +1,11 @@
 {
   "app.general.loading": "Connecting...",
-  "app.general.loading.description": "It may take a few seconds."
+  "app.general.loading.description": "It may take a few seconds.",
+  "feature.authn.signInOrRegister": "Sign in / Register",
+  "feature.authn.signIn.title": "Sign in",
+  "feature.authn.signIn.description": "Request account with",
+  "feature.authn.signIn.submit": "Sign in",
+  "feature.authn.register.submit": "Register",
+  "feature.authn.input.invalidEmail": "请确认您的电子邮件格式",
+  "feature.authn.input.checkCasing": "Blocto 帐户将大小写英文视为不同的帐户。请确定你输入的是正确的 Blocto 帐户邮箱。"
 }

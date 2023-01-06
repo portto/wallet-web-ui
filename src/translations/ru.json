@@ -1,4 +1,11 @@
 {
   "app.general.loading": "Connecting...",
-  "app.general.loading.description": "It may take a few seconds."
+  "app.general.loading.description": "It may take a few seconds.",
+  "feature.authn.signInOrRegister": "Sign in / Register",
+  "feature.authn.signIn.title": "Sign in",
+  "feature.authn.signIn.description": "Request account with",
+  "feature.authn.signIn.submit": "Sign in",
+  "feature.authn.register.submit": "Register",
+  "feature.authn.input.invalidEmail": "Please confirm your email format",
+  "feature.authn.input.checkCasing": "Blocto accounts are case-sensitive, please make sure you have correct email."
 }

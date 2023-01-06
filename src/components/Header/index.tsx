@@ -1,4 +1,10 @@
-import { Box, Flex, keyframes, useBreakpointValue } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  FlexProps,
+  keyframes,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { ReactComponent as ArrowBack } from "src/assets/images/icons/arrow-back.svg";
 import { ReactComponent as CloseIcon } from "src/assets/images/icons/close.svg";
@@ -136,17 +142,19 @@ const Header = ({
   onClose,
   onLastStepClick,
   blockchain,
+  ...props
 }: {
   onClose?: () => void;
   onLastStepClick?: () => void;
   blockchain: string;
-}) => {
+} & FlexProps) => {
   return (
     <Flex
       px="space.l"
       py="space.s"
       justifyContent="space-between"
       alignItems="center"
+      {...props}
     >
       <Flex alignItems="center">
         {onLastStepClick && (

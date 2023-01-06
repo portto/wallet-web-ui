@@ -1,4 +1,11 @@
 {
   "app.general.loading": "Connecting...",
-  "app.general.loading.description": "It may take a few seconds."
+  "app.general.loading.description": "It may take a few seconds.",
+  "feature.authn.signInOrRegister": "Sign in / Register",
+  "feature.authn.signIn.title": "Sign in",
+  "feature.authn.signIn.description": "Request account with",
+  "feature.authn.signIn.submit": "Sign in",
+  "feature.authn.register.submit": "Register",
+  "feature.authn.input.invalidEmail": "メールアドレスのフォーマットを確認してください",
+  "feature.authn.input.checkCasing": "Blocto アカウントでは大文字と小文字が区別されます。正しいメールアドレスであることを確認してください。"
 }
