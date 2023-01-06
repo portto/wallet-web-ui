@@ -19,7 +19,7 @@ import { AuthenticateMachineContext } from "./definition";
 
 export const verifyUser =
   (context: AuthenticateMachineContext, event: AnyEventObject) =>
-  async (callback: (args: any) => void) => {
+  async (callback: (args: Event<AnyEventObject>) => void) => {
     if (event?.data?.accessToken && event.data?.deviceKey) {
       setItem(KEY_ACCESS_TOKEN, event.data.accessToken);
       setItem(KEY_DEVICE_KEY, event.data.deviceKey);

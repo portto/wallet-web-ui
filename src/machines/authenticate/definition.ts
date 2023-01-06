@@ -33,7 +33,7 @@ export const machineStates = {
 export interface AuthenticateMachineContext {
   isThroughBackChannel?: boolean;
   blockchainIcon?: string;
-  error?: any;
+  error?: unknown;
   queue?: {
     queueId: number;
     readyNumber: number;
@@ -75,7 +75,7 @@ export interface AuthenticateMachineContext {
       timestamp?: string;
     };
     signatures?: string[];
-    onConfirm: (arg: any) => void;
+    onConfirm: (arg: unknown) => void;
     onReject: () => void;
   };
 }
