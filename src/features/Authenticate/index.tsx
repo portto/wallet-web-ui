@@ -28,6 +28,7 @@ import RunInitScripts from "./components/RunInitScripts";
 const systemStatus = [
   machineStates.IDLE,
   machineStates.VERIFY_USER,
+  machineStates.RESET_AUTH,
   machineStates.FINISH_PROCESS,
   machineStates.CLOSE,
   machineStates.FINAL,

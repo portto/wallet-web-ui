@@ -22,6 +22,7 @@ export const machineStates = {
   ENABLE_BLOCKCHAIN: "enableBlockchain",
   ACCOUNT_CONFIRM: "accountConfirm",
   RUN_INIT_SCRIPTS: "runInitScripts",
+  RESET_AUTH: "resetAuth",
   FINISH_PROCESS: "finishProcess",
   MAINTENANCE: "maintenance",
   ERROR: "error",
@@ -128,22 +129,19 @@ const machine = createMachine<AuthenticateMachineContext>(
             target: machineStates.INPUT_2FA,
             actions: "updateUser",
           },
-          back: { target: machineStates.INPUT_EMAIL, actions: "resetAuth" },
+          back: machineStates.RESET_AUTH,
         },
       },
       [machineStates.INPUT_2FA]: {
         on: {
           next: { target: machineStates.VERIFY_USER, actions: "updateUser" },
-          back: { target: machineStates.INPUT_EMAIL, actions: "resetAuth" },
+          back: machineStates.RESET_AUTH,
         },
       },
       [machineStates.VERIFY_USER]: {
         invoke: { src: "verifyUser" },
         on: {
-          invalidToken: {
-            target: machineStates.INPUT_EMAIL,
-            actions: "resetAuth",
-          },
+          invalidToken: machineStates.RESET_AUTH,
           enableBlockchain: {
             target: machineStates.ENABLE_BLOCKCHAIN,
             actions: "updateState",
@@ -161,17 +159,25 @@ const machine = createMachine<AuthenticateMachineContext>(
             target: machineStates.ACCOUNT_CONFIRM,
             actions: "updateUser",
           },
+          switchAccount: machineStates.RESET_AUTH,
         },
       },
       [machineStates.ACCOUNT_CONFIRM]: {
         on: {
           approve: machineStates.FINISH_PROCESS,
           nonCustodialApprove: machineStates.RUN_INIT_SCRIPTS,
-          switchAccount: {
+          switchAccount: machineStates.RESET_AUTH,
+        },
+      },
+      [machineStates.RESET_AUTH]: {
+        invoke: { src: "cleanUpLocalStorage" },
+        on: {
+          restart: {
             target: machineStates.INPUT_EMAIL,
             actions: "resetAuth",
           },
         },
+        tags: ["System"],
       },
       [machineStates.RUN_INIT_SCRIPTS]: {
         on: { done: machineStates.FINISH_PROCESS },

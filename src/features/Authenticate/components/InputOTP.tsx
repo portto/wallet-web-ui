@@ -15,15 +15,6 @@ import LoadingLogo from "src/components/LoadingLogo";
 import switchAccountIcon from "src/images/icons/switch.svg";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { logLogin, logRegister } from "src/services/Amplitude";
-import {
-  KEY_ACCESS_TOKEN,
-  KEY_DEVICE_KEY,
-  KEY_EMAIL,
-  KEY_SESSION_ID,
-  KEY_USER_ID,
-  KEY_USER_TYPE,
-  removeItem,
-} from "src/services/LocalStorage";
 import loginAndAcquireToken from "src/utils/loginAndAcquireToken";
 
 const COOLDOWN_TIME = 60;
@@ -121,12 +112,6 @@ const InputOTP = () => {
   };
 
   const switchAccount = () => {
-    removeItem(KEY_ACCESS_TOKEN);
-    removeItem(KEY_DEVICE_KEY);
-    removeItem(KEY_EMAIL);
-    removeItem(KEY_SESSION_ID);
-    removeItem(KEY_USER_ID);
-    removeItem(KEY_USER_TYPE);
     send("back");
   };
 

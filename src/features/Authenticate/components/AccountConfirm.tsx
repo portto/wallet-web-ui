@@ -13,16 +13,7 @@ import Field, { FieldLine } from "src/components/Field";
 import Header from "src/components/Header";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { logAuthenticated } from "src/services/Amplitude";
-import {
-  KEY_ACCESS_TOKEN,
-  KEY_DEVICE_KEY,
-  KEY_EMAIL,
-  KEY_SESSION_ID,
-  KEY_USER_ID,
-  KEY_USER_TYPE,
-  removeItem,
-  setItem,
-} from "src/services/LocalStorage";
+import { KEY_SESSION_ID, setItem } from "src/services/LocalStorage";
 import formatAddress from "src/utils/formatAddress";
 
 const AccountConifrm = () => {
@@ -41,7 +32,7 @@ const AccountConifrm = () => {
     blockchainIcon,
   } = context;
 
-  const approve = useCallback(async () => {
+  const approve = async () => {
     setHasSubmitted(true);
     const domain = url ? new URL(url).host : "";
     // create session with api server
@@ -76,17 +67,11 @@ const AccountConifrm = () => {
         signatures,
       },
     });
-  }, []);
+  };
 
   const switchAccount = useCallback(async () => {
-    removeItem(KEY_ACCESS_TOKEN);
-    removeItem(KEY_DEVICE_KEY);
-    removeItem(KEY_EMAIL);
-    removeItem(KEY_SESSION_ID);
-    removeItem(KEY_USER_ID);
-    removeItem(KEY_USER_TYPE);
     send("switchAccount");
-  }, []);
+  }, [send]);
 
   const handleClose = () => send("close");
 

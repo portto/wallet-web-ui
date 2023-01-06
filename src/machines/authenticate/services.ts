@@ -1,6 +1,16 @@
+import { AnyEventObject, Event } from "xstate";
 import { getAccountAssets, getUserInfo, updateAuthentication } from "src/apis";
 import { onClose, onInternalConfirm, onResponse } from "src/services/Frame";
-import { KEY_EMAIL, KEY_USER_TYPE, setItem } from "src/services/LocalStorage";
+import {
+  KEY_ACCESS_TOKEN,
+  KEY_DEVICE_KEY,
+  KEY_EMAIL,
+  KEY_SESSION_ID,
+  KEY_USER_ID,
+  KEY_USER_TYPE,
+  removeItem,
+  setItem,
+} from "src/services/LocalStorage";
 import checkBlockchainEnabled from "src/utils/checkBlockchainEnabled";
 import { EXP_TIME, INTERNAL_WL_DOMAINS } from "src/utils/constants";
 import getBlockchainIcon from "src/utils/getBlockchainIcon";
@@ -103,6 +113,17 @@ export const finish = async (context: AuthenticateMachineContext) => {
   // try to call callback
   onConfirm(addresses?.[blockchain]);
 };
+
+export const cleanUpLocalStorage =
+  () => async (callback: (args: Event<AnyEventObject>) => void) => {
+    removeItem(KEY_ACCESS_TOKEN);
+    removeItem(KEY_DEVICE_KEY);
+    removeItem(KEY_EMAIL);
+    removeItem(KEY_SESSION_ID);
+    removeItem(KEY_USER_ID);
+    removeItem(KEY_USER_TYPE);
+    callback("restart");
+  };
 
 export const abort = async (context: AuthenticateMachineContext) => {
   const { isThroughBackChannel } = context;
