@@ -1,6 +1,7 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { getMaintenanceStatus } from "src/apis";
+import Layout from "src/components/Layout";
 import {
   machineStates,
   useAuthenticateMachine,
@@ -35,15 +36,18 @@ const systemStatus = [
 ];
 
 const stageComponentMapping = {
-  [machineStates.CONNECTING]: Connecting,
-  [machineStates.QUEUEING]: Queueing,
-  [machineStates.INPUT_EMAIL]: InputEmail,
-  [machineStates.INPUT_OTP]: InputOTP,
-  [machineStates.INPUT_2FA]: Input2FA,
-  [machineStates.ENABLE_BLOCKCHAIN]: EnableBlockchain,
-  [machineStates.ACCOUNT_CONFIRM]: AccountConfirm,
-  [machineStates.RUN_INIT_SCRIPTS]: RunInitScripts,
-  [machineStates.MAINTENANCE]: Maintenance,
+  [machineStates.CONNECTING]: { component: Connecting },
+  [machineStates.QUEUEING]: { component: Queueing },
+  [machineStates.INPUT_EMAIL]: { component: InputEmail },
+  [machineStates.INPUT_OTP]: { component: InputOTP },
+  [machineStates.INPUT_2FA]: { component: Input2FA },
+  [machineStates.ENABLE_BLOCKCHAIN]: { component: EnableBlockchain },
+  [machineStates.ACCOUNT_CONFIRM]: {
+    component: AccountConfirm,
+    compactView: false,
+  },
+  [machineStates.RUN_INIT_SCRIPTS]: { component: RunInitScripts },
+  [machineStates.MAINTENANCE]: { component: Maintenance },
 };
 
 const useDefaultStateFromProps = (props: any) => {
@@ -135,9 +139,13 @@ const Authenticate = withAuthenticateContext(
       }
     }, [value]);
 
-    const Component = stageComponentMapping[stage] ?? Noop;
+    const Component = stageComponentMapping[stage]?.component ?? Noop;
 
-    return <Component />;
+    return (
+      <Layout isCompact={stageComponentMapping[stage]?.compactView}>
+        <Component />
+      </Layout>
+    );
   })
 );
 

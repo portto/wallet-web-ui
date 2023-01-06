@@ -83,6 +83,7 @@ const AccountConifrm = () => {
         blockchain={blockchain}
         onClose={handleClose}
       />
+
       <Flex
         flexDirection="column"
         alignItems="center"
@@ -105,8 +106,9 @@ const AccountConifrm = () => {
           {url}
         </Text>
       </Flex>
-      <Box px="space.l">
-        <Box minHeight="262px">
+
+      <Flex flexDirection="column" justifyContent="space-between" px="space.l">
+        <Box>
           <Field title={<FormattedMessage id="app.genaral.email" />}>
             {email}
           </Field>
@@ -128,24 +130,26 @@ const AccountConifrm = () => {
           <FieldLine />
         </Box>
 
-        <Button isLoading={hasSubmitted} onClick={approve}>
-          <FormattedMessage id="app.genaral.approve" />
-        </Button>
-        <ChakraButton
-          onClick={switchAccount}
-          width="100%"
-          height="38px"
-          my="space.2xs"
-          bg="background.primary"
-          color="font.highlight"
-          fontSize="size.body.2"
-          fontWeight="weight.s"
-          _hover={{ bg: "none", transform: "scale(0.98)" }}
-          _active={{ bg: "none", transform: "scale(0.96)" }}
-        >
-          <FormattedMessage id="feature.authn.confirm.useAnotherAccount" />
-        </ChakraButton>
-      </Box>
+        <Box>
+          <Button isLoading={hasSubmitted} onClick={approve}>
+            <FormattedMessage id="app.genaral.approve" />
+          </Button>
+          <ChakraButton
+            onClick={switchAccount}
+            width="100%"
+            height="38px"
+            my="space.2xs"
+            bg="background.primary"
+            color="font.highlight"
+            fontSize="size.body.2"
+            fontWeight="weight.s"
+            _hover={{ bg: "none", transform: "scale(0.98)" }}
+            _active={{ bg: "none", transform: "scale(0.96)" }}
+          >
+            <FormattedMessage id="feature.authn.confirm.useAnotherAccount" />
+          </ChakraButton>
+        </Box>
+      </Flex>
     </>
   );
 };

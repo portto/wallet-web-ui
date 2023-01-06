@@ -1,6 +1,7 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getMaintenanceStatus } from "src/apis";
+import Layout from "src/components/Layout";
 import {
   machineStates,
   useTransactionMachine,
@@ -102,7 +103,11 @@ const Transaction = withTransactionContext(
 
     const Component = stageComponentMapping[stage] ?? Noop;
 
-    return <Component />;
+    return (
+      <Layout isCompact={false}>
+        <Component />
+      </Layout>
+    );
   })
 );
 

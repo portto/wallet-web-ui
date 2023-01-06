@@ -108,13 +108,14 @@ const InputEmail = () => {
         blockchain={blockchain}
         onClose={handleClose}
       />
-      <Box height="100%" px="space.l" pb="space.m" bg="background.secondary">
-        <Flex
-          flexDirection="column"
-          alignItems="center"
-          mt="space.s"
-          mb="space.xl"
-        >
+      <Flex
+        flexDirection="column"
+        justifyContent="space-between"
+        px="space.l"
+        pb="space.m"
+        bg="background.secondary"
+      >
+        <Flex flexDirection="column" alignItems="center">
           <DappLogo url={logo || ""} mb="space.s" />
           <Text
             fontSize="size.heading.4"
@@ -138,6 +139,7 @@ const InputEmail = () => {
             {name}
           </Text>
         </Flex>
+
         <Box>
           <InputGroup mb={hasError ? "space.xs" : "space.m"} height="54px">
             <Input
@@ -215,7 +217,7 @@ const InputEmail = () => {
             </Text>
           )}
         </Box>
-      </Box>
+      </Flex>
     </>
   );
 };

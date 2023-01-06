@@ -137,8 +137,14 @@ const InputOTP = () => {
         onLastStepClick={handleGoBack}
         onClose={handleClose}
       />
-      <Box height="100%" px="space.l" pb="space.m" bg="background.secondary">
-        <Flex flexDirection="column" alignItems="center" mb="space.3xl">
+      <Flex
+        flexDirection="column"
+        justifyContent="space-between"
+        px="space.l"
+        pb="space.m"
+        bg="background.secondary"
+      >
+        <Flex flexDirection="column" alignItems="center">
           <LoadingLogo mb="space.s" />
           <Text
             fontSize="size.heading.4"
@@ -168,30 +174,32 @@ const InputOTP = () => {
           </Text>
         </Flex>
 
-        <Flex justifyContent="space-between" mb="space.m">
-          <PinInput
-            otp
-            autoFocus
-            placeholder=""
-            onChange={handleChange}
-            onComplete={handleSubmit}
-            isInvalid={isWrongCode}
-          >
-            {Array.from({ length: 6 }).map((_, i) => (
-              <PinInputField key={i} />
-            ))}
-          </PinInput>
-        </Flex>
+        <Box>
+          <Flex justifyContent="space-between" mb="space.m">
+            <PinInput
+              otp
+              autoFocus
+              placeholder=""
+              onChange={handleChange}
+              onComplete={handleSubmit}
+              isInvalid={isWrongCode}
+            >
+              {Array.from({ length: 6 }).map((_, i) => (
+                <PinInputField key={i} />
+              ))}
+            </PinInput>
+          </Flex>
 
-        <Button
-          isLoading={hasSubmitted}
-          disabled={!!cooldown}
-          onClick={handleResend}
-        >
-          <FormattedMessage id="feature.authn.otp.resend" />
-          {!!cooldown && ` (${cooldown})`}
-        </Button>
-      </Box>
+          <Button
+            isLoading={hasSubmitted}
+            disabled={!!cooldown}
+            onClick={handleResend}
+          >
+            <FormattedMessage id="feature.authn.otp.resend" />
+            {!!cooldown && ` (${cooldown})`}
+          </Button>
+        </Box>
+      </Flex>
     </>
   );
 };

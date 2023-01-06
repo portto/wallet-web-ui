@@ -73,8 +73,14 @@ const Input2FA = () => {
         onLastStepClick={handleGoBack}
         onClose={handleClose}
       />
-      <Box height="100%" px="space.l" pb="space.m" bg="background.secondary">
-        <Flex flexDirection="column" alignItems="center" mb="space.4xl">
+      <Flex
+        flexDirection="column"
+        justifyContent="space-between"
+        px="space.l"
+        pb="space.m"
+        bg="background.secondary"
+      >
+        <Flex flexDirection="column" alignItems="center">
           <LoadingLogo mb="space.s" />
           <Text
             fontSize="size.heading.4"
@@ -88,28 +94,30 @@ const Input2FA = () => {
           </Text>
         </Flex>
 
-        <Flex justifyContent="space-between" mb="space.xl">
-          <PinInput
-            otp
-            autoFocus
-            placeholder=""
-            onChange={handleChange}
-            isInvalid={isWrongCode}
-          >
-            {Array.from({ length: 6 }).map((_, i) => (
-              <PinInputField key={i} />
-            ))}
-          </PinInput>
-        </Flex>
+        <Box>
+          <Flex justifyContent="space-between" mb="space.xl">
+            <PinInput
+              otp
+              autoFocus
+              placeholder=""
+              onChange={handleChange}
+              isInvalid={isWrongCode}
+            >
+              {Array.from({ length: 6 }).map((_, i) => (
+                <PinInputField key={i} />
+              ))}
+            </PinInput>
+          </Flex>
 
-        <Button
-          isLoading={hasSubmitted}
-          disabled={input.length !== 6}
-          onClick={handleSubmit}
-        >
-          <FormattedMessage id="app.genaral.approve" />
-        </Button>
-      </Box>
+          <Button
+            isLoading={hasSubmitted}
+            disabled={input.length !== 6}
+            onClick={handleSubmit}
+          >
+            <FormattedMessage id="app.genaral.approve" />
+          </Button>
+        </Box>
+      </Flex>
     </>
   );
 };

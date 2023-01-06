@@ -23,24 +23,28 @@ const App = () => {
   }, [location]);
 
   return (
-    <Layout>
-      <Suspense fallback={<Loading />}>
-        <Switch>
-          <Route
-            path="/:appId/:blockchain/authn/:userEmail?"
-            render={() => <Authenticate />}
-          />
-          <Route
-            path={`/:appId/:blockchain(${supportedEVMChains})/authz/:authorizationId?`}
-            render={() => <EVM.Transaction />}
-          />
-          <Route
-            path={`/:appId/:blockchain(${supportedEVMChains})/user-signature`}
-            render={() => <EVM.Signing />}
-          />
-        </Switch>
-      </Suspense>
-    </Layout>
+    <Suspense
+      fallback={
+        <Layout>
+          <Loading />
+        </Layout>
+      }
+    >
+      <Switch>
+        <Route
+          path="/:appId/:blockchain/authn/:userEmail?"
+          render={() => <Authenticate />}
+        />
+        <Route
+          path={`/:appId/:blockchain(${supportedEVMChains})/authz/:authorizationId?`}
+          render={() => <EVM.Transaction />}
+        />
+        <Route
+          path={`/:appId/:blockchain(${supportedEVMChains})/user-signature`}
+          render={() => <EVM.Signing />}
+        />
+      </Switch>
+    </Suspense>
   );
 };
 

@@ -99,7 +99,6 @@ const EnableBlockchain = () => {
     <>
       <Header blockchain={context.dapp.blockchain} onClose={handleClose} />
       <Flex
-        flex="1"
         flexDirection="column"
         justifyContent="space-between"
         px="space.l"

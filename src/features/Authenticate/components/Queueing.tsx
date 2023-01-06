@@ -33,7 +33,7 @@ const Queueing = () => {
   const handleClose = () => send("close");
 
   return (
-    <Box height="100%" position="relative">
+    <Box position="relative">
       <Header blockchain={context.dapp.blockchain} onClose={handleClose} />
       <Box
         position="absolute"
