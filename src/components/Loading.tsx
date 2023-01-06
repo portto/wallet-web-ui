@@ -11,6 +11,7 @@ const Loading = () => (
         color="font.primary"
         fontSize="size.heading.4"
         fontWeight="weight.l"
+        lineHeight="line.height.subheading.1"
         mb="space.2xs"
       >
         <FormattedMessage id="app.general.loading" />

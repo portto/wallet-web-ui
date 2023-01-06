@@ -109,7 +109,11 @@ const InputEmail = () => {
           mt="space.s"
           mb="space.xl"
         >
-          <Text fontSize="size.heading.4" fontWeight="weight.l">
+          <Text
+            fontSize="size.heading.4"
+            fontWeight="weight.l"
+            lineHeight="line.height.subheading.1"
+          >
             <FormattedMessage id="feature.authn.signIn.title" />
           </Text>
           <Text my="space.2xs">
