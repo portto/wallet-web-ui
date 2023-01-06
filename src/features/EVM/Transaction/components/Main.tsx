@@ -89,7 +89,7 @@ const Main = () => {
   const getTransactionFeeField = useCallback(() => {
     return (
       <HStack>
-        {realTransactionFee ? (
+        {transaction.fee ? (
           <>
             <Flex
               bg="background.secondary"
@@ -109,9 +109,9 @@ const Main = () => {
                 values={{ points: realTransactionFee }}
               />
               {hasDiscount && (
-                <>
-                  &nbsp;(<Box as="del">{transaction.fee} Points</Box>)
-                </>
+                <Box as="span" pl="space.3xs">
+                  (<Box as="del">{transaction.fee} Points</Box>)
+                </Box>
               )}
             </Box>
           </>

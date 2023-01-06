@@ -65,7 +65,7 @@ export default defineMessages({
   pointNotEnoughForTx: {
     id: "app.authz.pointNotEnoughForTx",
     defaultMessage:
-      "Blocto points not enough , Please go to the app to purchase and create a wallet.",
+      "Blocto points not enough, please go to the app to purchase and create a wallet.",
   },
 
   estimatingPoint: {
