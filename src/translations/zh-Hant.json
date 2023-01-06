@@ -10,4 +10,7 @@
   "feature.authn.input.checkCasing": "Blocto 帳戶將大小寫英文視為不同的帳戶。請確定你輸入的是正確的 Blocto 帳戶信箱。",
   "feature.authn.queue.title": "Blocto 上的身分驗證請求過多",
   "feature.authn.queue.description": "請稍等，很快就會輪到您進行身份驗證...",
+  "feature.authn.otp.title": "密碼",
+  "feature.authn.otp.description": "我們已向您的電子郵件發送了 6 位代碼",
+  "feature.authn.otp.resend": "重新發送"
 }

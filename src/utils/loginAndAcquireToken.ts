@@ -11,7 +11,13 @@ const loginAndAcquireToken = async ({
   authCodeId,
   totpCode,
   chain,
-}: any) => {
+}: {
+  email: string;
+  authCode: string;
+  authCodeId: string;
+  totpCode?: string;
+  chain: string;
+}) => {
   // login API returns a temp jwt and it has to be converted
   // to real user access token through acquireAccessToken PI
   const { jwt: tmpJWT } = await login({

@@ -10,4 +10,7 @@
   "feature.authn.input.checkCasing": "Blocto accounts are case-sensitive, please make sure you have correct email.",
   "feature.authn.queue.title": "There is too much activity on Blocto",
   "feature.authn.queue.description": "Please wait until it's your turn to proceed with authentication...",
+  "feature.authn.otp.title": "Passcode",
+  "feature.authn.otp.description":  "We have sent a 6-digit code to your email",
+  "feature.authn.otp.resend": "Resend"
 }

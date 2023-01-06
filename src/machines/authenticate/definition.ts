@@ -116,6 +116,10 @@ const machine = createMachine<AuthenticateMachineContext>(
       },
       [machineStates.INPUT_OTP]: {
         on: {
+          renewOTPCode: {
+            target: machineStates.INPUT_OTP,
+            actions: "updateUser",
+          },
           next: { target: machineStates.VERIFY_USER, actions: "updateUser" },
           require2fa: {
             target: machineStates.INPUT_2FA,
