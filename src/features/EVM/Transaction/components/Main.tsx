@@ -28,7 +28,6 @@ const Main = () => {
   const { user, transaction, dapp } = context;
   const dappDomain = new URL(dapp.url || "").host;
   const { rawObject } = transaction;
-
   const transactionData = rawObject.transactions
     .filter(({ data }: EvmTransaction) => data)
     .map(({ data }: EvmTransaction) => data)
