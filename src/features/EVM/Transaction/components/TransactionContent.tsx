@@ -14,7 +14,7 @@ const TransactionContent = ({
 }) => {
   return (
     <>
-      <Heading as="h3" fontSize="size.heading.3" fontWeight="600" mb="16px">
+      <Heading as="h3" fontSize="size.heading.3" fontWeight="600" mb="space.m">
         <FormattedMessage {...messages.operation} />
       </Heading>
       {verified ? (
@@ -25,24 +25,24 @@ const TransactionContent = ({
           borderRadius="12px"
         >
           <CheckVerified />
-          <Box ml="10px" fontSize="size.body.3">
+          <Box ml="space.xs" fontSize="size.body.3">
             <FormattedMessage {...messages.operationVerified} />
           </Box>
         </Flex>
       ) : (
         <Flex
-          padding="16px"
+          padding="space.m"
           alignItems="center"
           bg="background.alert"
           borderRadius="12px"
         >
           <CheckAlert />
-          <Box ml="10px" fontSize="size.body.3">
+          <Box ml="space.xs" fontSize="size.body.3">
             <FormattedMessage {...messages.operationNotVerified} />
           </Box>
         </Flex>
       )}
-      <Box mt="24px" wordBreak="break-all" fontSize="size.body.3">
+      <Box mt="space.xl" wordBreak="break-all" fontSize="size.body.3">
         {children}
       </Box>
     </>
