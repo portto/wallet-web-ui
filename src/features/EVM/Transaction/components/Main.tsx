@@ -144,6 +144,7 @@ const Main = () => {
             <Field
               title={<FormattedMessage {...messages.operation} />}
               hidableInfo={
+                // TODO: Only use transactionData if it's not a native transfer action.
                 <TransactionContent verified={verifiedTx}>
                   {transactionData}
                 </TransactionContent>

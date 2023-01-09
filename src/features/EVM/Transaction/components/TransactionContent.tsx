@@ -14,7 +14,12 @@ const TransactionContent = ({
 }) => {
   return (
     <>
-      <Heading as="h3" fontSize="size.heading.3" fontWeight="600" mb="space.m">
+      <Heading
+        as="h3"
+        fontSize="size.heading.3"
+        fontWeight="weight.l"
+        mb="space.m"
+      >
         <FormattedMessage {...messages.operation} />
       </Heading>
       {verified ? (
