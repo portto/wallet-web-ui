@@ -1,0 +1,7 @@
+{
+    "app.authz.estimatedWaitTime": "Расчетное время ожидания",
+    "app.authz.pleaseWaitUntilItsYourTurn": "Подождите, пока настанет ваша очередь отправлять транзакцию ...",
+    "app.authz.tooMuchAcvivityOnFlow": "В Flow слишком много активности",
+    "app.authz.waitTime": "{minute} мин {second} сек",
+    "app.authz.yourQueueId": "Ваш идентификатор очереди"
+}

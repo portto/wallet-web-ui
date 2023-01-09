@@ -1,0 +1,7 @@
+{
+    "app.authz.estimatedWaitTime": "예상 대기 시간",
+    "app.authz.pleaseWaitUntilItsYourTurn": "거래를 보낼 차례가 될 때까지 기다리세요...",
+    "app.authz.tooMuchAcvivityOnFlow": "Flow 에 너무 많은 활동이 있습니다.",
+    "app.authz.waitTime": "{minute} 분 {second} 초",
+    "app.authz.yourQueueId": "대기열 ID"
+}
