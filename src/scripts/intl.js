@@ -66,7 +66,7 @@ const createSnapshot = (id) =>
   });
 
 const importToLokalize = (id) => {
-  const filepath = "app/translations/en.json";
+  const filepath = "src/translations/en.json";
   return lokalizeAPI("files/upload", id, {
     data: readAndEncodeToBase64(filepath),
     filename: filepath,
@@ -108,7 +108,7 @@ async function processProjectUpload(id) {
 async function processProjectDownload(id) {
   const tmpRoot = ".tmp/lokalise";
   const exchangePathname = `${tmpRoot}/Exchange-locale`;
-  const dest = "app/translations";
+  const dest = "src/translations";
 
   try {
     const zipPathname = "exchangePathname.zip";
@@ -162,7 +162,7 @@ async function writeLocaleFile() {
   const localeNames = {};
 
   locales.forEach((locale) => {
-    const translationFileName = `app/translations/${locale}.json`;
+    const translationFileName = `src/translations/${locale}.json`;
     try {
       const messages = JSON.parse(fs.readFileSync(translationFileName));
 
@@ -178,10 +178,10 @@ async function writeLocaleFile() {
   });
 
   await writeFile(
-    "app/translations/localeNames.json",
+    "src/translations/localeNames.json",
     `${JSON.stringify(localeNames, null, 2)}\n`
   );
-  logger.log("Successfully added app/translations/localeNames.json");
+  logger.log("Successfully added src/translations/localeNames.json");
 }
 
 async function upload() {
