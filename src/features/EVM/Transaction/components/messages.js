@@ -7,7 +7,7 @@ export default defineMessages({
   },
   interactWith: {
     id: "app.authz.interactWith",
-    defaultMessage: "You are interacting with",
+    defaultMessage: "Confirm transaction from",
   },
   transactionFee: {
     id: "app.authz.transactionFee",
@@ -38,7 +38,7 @@ export default defineMessages({
   // TODO: remove unused string.
   confirmTransaction: {
     id: "app.authz.confirmTransaction",
-    defaultMessage: "Confirm transaction from ",
+    defaultMessage: "Confirm transaction",
   },
 
   decline: {
