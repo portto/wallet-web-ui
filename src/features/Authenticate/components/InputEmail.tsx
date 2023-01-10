@@ -101,6 +101,16 @@ const InputEmail = () => {
     return <FormattedMessage id="feature.authn.register.submit" />;
   };
 
+  const renderInputIcon = () => {
+    if (isChecking) {
+      return <Image src={inputLoading} animation={rotateAnimation} />;
+    }
+    if (hasError) {
+      return <Image src={error} />;
+    }
+    return input && <Image src={check} />;
+  };
+
   return (
     <>
       <Header
@@ -163,14 +173,7 @@ const InputEmail = () => {
               }}
             />
             <InputRightElement width="auto" height="100%" px="space.l">
-              {/* eslint-disable-next-line no-nested-ternary */}
-              {isChecking ? (
-                <Image src={inputLoading} animation={rotateAnimation} />
-              ) : hasError ? (
-                <Image src={error} />
-              ) : (
-                input && <Image src={check} />
-              )}
+              {renderInputIcon()}
             </InputRightElement>
           </InputGroup>
           {(hasError || hasWarning) && (
