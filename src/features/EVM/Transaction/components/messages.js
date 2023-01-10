@@ -38,7 +38,7 @@ export default defineMessages({
   // TODO: remove unused string.
   confirmTransaction: {
     id: "app.authz.confirmTransaction",
-    defaultMessage: "Confirm Transaction",
+    defaultMessage: "Confirm transaction from ",
   },
 
   decline: {
