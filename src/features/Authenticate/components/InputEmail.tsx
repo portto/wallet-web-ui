@@ -89,7 +89,7 @@ const InputEmail = () => {
     }
   }, [send, input, action]);
 
-  const handleClose = () => send("close");
+  const handleClose = useCallback(() => send("close"), [send]);
 
   const renderButtonText = () => {
     if (isChecking || !input) {

@@ -93,7 +93,7 @@ const EnableBlockchain = () => {
     window.open(OPEN_APP_LINK);
   };
 
-  const handleClose = () => send("close");
+  const handleClose = useCallback(() => send("close"), [send]);
 
   return (
     <>

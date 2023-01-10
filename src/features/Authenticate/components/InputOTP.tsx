@@ -6,7 +6,7 @@ import {
   PinInputField,
   Text,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { register, requestEmailAuth } from "src/apis";
 import switchAccountIcon from "src/assets/images/icons/switch.svg";
@@ -125,9 +125,9 @@ const InputOTP = () => {
     });
   };
 
-  const handleGoBack = () => send("back");
+  const handleGoBack = useCallback(() => send("back"), [send]);
 
-  const handleClose = () => send("close");
+  const handleClose = useCallback(() => send("close"), [send]);
 
   return (
     <>

@@ -1,5 +1,5 @@
 import { Box, Center, Flex, Text } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 import { getAuthnQueue } from "src/apis";
 import Header from "src/components/Header";
@@ -30,7 +30,7 @@ const Queueing = () => {
     return () => clearInterval(interval);
   }, [send, context.queue]);
 
-  const handleClose = () => send("close");
+  const handleClose = useCallback(() => send("close"), [send]);
 
   return (
     <Box position="relative">

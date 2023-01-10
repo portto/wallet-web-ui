@@ -5,7 +5,7 @@ import {
   keyframes,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { ReactComponent as ArrowBack } from "src/assets/images/icons/arrow-back.svg";
 import { ReactComponent as CloseIcon } from "src/assets/images/icons/close.svg";
 import { IS_LOCAL, IS_STAGING } from "src/services/Env";
@@ -138,44 +138,46 @@ const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
   return null;
 };
 
-const Header = ({
-  onClose,
-  onLastStepClick,
-  blockchain,
-  ...props
-}: {
-  onClose?: () => void;
-  onLastStepClick?: () => void;
-  blockchain: string;
-} & FlexProps) => {
-  return (
-    <Flex
-      px="space.l"
-      py="space.s"
-      justifyContent="space-between"
-      alignItems="center"
-      {...props}
-    >
-      <Flex alignItems="center">
-        {onLastStepClick && (
-          <Box mr="space.s">
-            <ArrowBack
-              onClick={onLastStepClick}
-              width="20px"
-              height="20px"
-              cursor="pointer"
-            />
+const Header = memo(
+  ({
+    onClose,
+    onLastStepClick,
+    blockchain,
+    ...props
+  }: {
+    onClose?: () => void;
+    onLastStepClick?: () => void;
+    blockchain: string;
+  } & FlexProps) => {
+    return (
+      <Flex
+        px="space.l"
+        py="space.s"
+        justifyContent="space-between"
+        alignItems="center"
+        {...props}
+      >
+        <Flex alignItems="center">
+          {onLastStepClick && (
+            <Box mr="space.s">
+              <ArrowBack
+                onClick={onLastStepClick}
+                width="20px"
+                height="20px"
+                cursor="pointer"
+              />
+            </Box>
+          )}
+          <NetworkLabel blockchain={blockchain} />
+        </Flex>
+        {onClose && (
+          <Box ml="auto" cursor="pointer" onClick={onClose}>
+            <CloseIcon width="15px" height="15px" />
           </Box>
         )}
-        <NetworkLabel blockchain={blockchain} />
       </Flex>
-      {onClose && (
-        <Box ml="auto" cursor="pointer" onClick={onClose}>
-          <CloseIcon width="15px" height="15px" />
-        </Box>
-      )}
-    </Flex>
-  );
-};
+    );
+  }
+);
 
 export default Header;

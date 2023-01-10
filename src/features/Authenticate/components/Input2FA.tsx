@@ -1,5 +1,5 @@
 import { Box, Flex, PinInput, PinInputField, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import Button from "src/components/Button";
 import Header from "src/components/Header";
@@ -61,9 +61,9 @@ const Input2FA = () => {
       });
   };
 
-  const handleGoBack = () => send("back");
+  const handleGoBack = useCallback(() => send("back"), [send]);
 
-  const handleClose = () => send("close");
+  const handleClose = useCallback(() => send("close"), [send]);
 
   return (
     <>

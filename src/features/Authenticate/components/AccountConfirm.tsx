@@ -74,7 +74,7 @@ const AccountConifrm = () => {
     send("switchAccount");
   }, [send]);
 
-  const handleClose = () => send("close");
+  const handleClose = useCallback(() => send("close"), [send]);
 
   return (
     <>
