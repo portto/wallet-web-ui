@@ -5,8 +5,8 @@ export default defineMessages({
     id: "app.authz.operation",
     defaultMessage: "Operation",
   },
-  interactWith: {
-    id: "app.authz.interactWith",
+  confirmTransactionFrom: {
+    id: "app.authz.confirmTransactionFrom",
     defaultMessage: "Confirm transaction from",
   },
   transactionFee: {

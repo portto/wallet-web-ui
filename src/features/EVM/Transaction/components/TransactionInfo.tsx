@@ -14,7 +14,7 @@ const TransactionInfo = ({
     <Box bg="background.secondary" textAlign="center" pb="space.xl">
       <Box>{children}</Box>
       <Text fontSize={"size.body.3"} mb="space.2xs">
-        <FormattedMessage {...messages.interactWith} />
+        <FormattedMessage {...messages.confirmTransactionFrom} />
       </Text>
       <Text
         bg="white"
