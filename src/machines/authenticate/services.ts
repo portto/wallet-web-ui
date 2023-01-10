@@ -17,14 +17,19 @@ import getBlockchainIcon from "src/utils/getBlockchainIcon";
 import mapAssetsToAddresses from "src/utils/mapAssetsToAddresses";
 import { AuthenticateMachineContext } from "./definition";
 
-export const verifyUser =
+export const setCredentials =
   (context: AuthenticateMachineContext, event: AnyEventObject) =>
   async (callback: (args: Event<AnyEventObject>) => void) => {
     if (event?.data?.accessToken && event.data?.deviceKey) {
       setItem(KEY_ACCESS_TOKEN, event.data.accessToken);
       setItem(KEY_DEVICE_KEY, event.data.deviceKey);
     }
+    callback("verifyUser");
+  };
 
+export const verifyUser =
+  (context: AuthenticateMachineContext) =>
+  async (callback: (args: Event<AnyEventObject>) => void) => {
     // Try get user info with token
     let userInfo;
     try {

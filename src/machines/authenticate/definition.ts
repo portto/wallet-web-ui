@@ -18,6 +18,7 @@ export const machineStates = {
   INPUT_EMAIL: "inputEmail",
   INPUT_OTP: "inputOTP",
   INPUT_2FA: "input2FA",
+  SET_CREDENTIALS: "setCredentials",
   VERIFY_USER: "systemProcessing",
   ENABLE_BLOCKCHAIN: "enableBlockchain",
   ACCOUNT_CONFIRM: "accountConfirm",
@@ -124,7 +125,10 @@ const machine = createMachine<AuthenticateMachineContext>(
             target: machineStates.INPUT_OTP,
             actions: "updateUser",
           },
-          next: { target: machineStates.VERIFY_USER, actions: "updateUser" },
+          next: {
+            target: machineStates.SET_CREDENTIALS,
+            actions: "updateUser",
+          },
           require2fa: {
             target: machineStates.INPUT_2FA,
             actions: "updateUser",
@@ -134,9 +138,19 @@ const machine = createMachine<AuthenticateMachineContext>(
       },
       [machineStates.INPUT_2FA]: {
         on: {
-          next: { target: machineStates.VERIFY_USER, actions: "updateUser" },
+          next: {
+            target: machineStates.SET_CREDENTIALS,
+            actions: "updateUser",
+          },
           back: machineStates.RESET_AUTH,
         },
+      },
+      [machineStates.SET_CREDENTIALS]: {
+        invoke: { src: "setCredentials" },
+        on: {
+          verifyUser: machineStates.VERIFY_USER,
+        },
+        tags: ["System"],
       },
       [machineStates.VERIFY_USER]: {
         invoke: { src: "verifyUser" },
