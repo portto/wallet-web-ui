@@ -1,5 +1,6 @@
 import { getReadableDeviceInfo } from "src/services/Device";
 import { KEY_ACCESS_TOKEN, getItem } from "src/services/LocalStorage";
+import { AccountAsset } from "src/types";
 import { apiGet, apiPost } from "../axios";
 
 export const checkEmailExist = (email = "") =>
@@ -140,13 +141,7 @@ export const setAccountSettings = (payload = {}) =>
 
 export const getAccountAssets = () =>
   apiGet<{
-    assets: Array<{
-      name: string;
-      type: string;
-      status: string;
-      wallet_address: string;
-      blockchain: string;
-    }>;
+    assets: Array<AccountAsset>;
   }>({
     url: "blocto/account/assets",
     isAuthorized: true,

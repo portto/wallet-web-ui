@@ -1,3 +1,4 @@
+import merge from "lodash.merge";
 import { assign, createMachine } from "xstate";
 
 const defaultContext = {
@@ -17,10 +18,12 @@ export const machineStates = {
   INPUT_EMAIL: "inputEmail",
   INPUT_OTP: "inputOTP",
   INPUT_2FA: "input2FA",
+  SET_CREDENTIALS: "setCredentials",
   VERIFY_USER: "systemProcessing",
   ENABLE_BLOCKCHAIN: "enableBlockchain",
   ACCOUNT_CONFIRM: "accountConfirm",
   RUN_INIT_SCRIPTS: "runInitScripts",
+  RESET_AUTH: "resetAuth",
   FINISH_PROCESS: "finishProcess",
   MAINTENANCE: "maintenance",
   ERROR: "error",
@@ -30,7 +33,8 @@ export const machineStates = {
 
 export interface AuthenticateMachineContext {
   isThroughBackChannel?: boolean;
-  error?: any;
+  blockchainIcon?: string;
+  error?: unknown;
   queue?: {
     queueId: number;
     readyNumber: number;
@@ -72,7 +76,7 @@ export interface AuthenticateMachineContext {
       timestamp?: string;
     };
     signatures?: string[];
-    onConfirm: (arg: any) => void;
+    onConfirm: (arg: unknown) => void;
     onReject: () => void;
   };
 }
@@ -82,7 +86,8 @@ const machine = createMachine<AuthenticateMachineContext>(
     id: "authenticate",
     initial: machineStates.IDLE,
     predictableActionArguments: true,
-    context: defaultContext,
+    // Deep clone to prevent modify {defaultContext}
+    context: JSON.parse(JSON.stringify(defaultContext)),
     // default trigger actions
     on: {
       updateState: { actions: "updateState" },
@@ -116,34 +121,48 @@ const machine = createMachine<AuthenticateMachineContext>(
       },
       [machineStates.INPUT_OTP]: {
         on: {
-          next: { target: machineStates.VERIFY_USER, actions: "updateUser" },
+          renewOTPCode: {
+            target: machineStates.INPUT_OTP,
+            actions: "updateUser",
+          },
+          next: {
+            target: machineStates.SET_CREDENTIALS,
+            actions: "updateUser",
+          },
           require2fa: {
             target: machineStates.INPUT_2FA,
             actions: "updateUser",
           },
-          back: { target: machineStates.INPUT_EMAIL, actions: "resetAuth" },
+          back: machineStates.RESET_AUTH,
         },
       },
       [machineStates.INPUT_2FA]: {
         on: {
-          next: { target: machineStates.VERIFY_USER, actions: "updateUser" },
-          back: { target: machineStates.INPUT_EMAIL, actions: "resetAuth" },
+          next: {
+            target: machineStates.SET_CREDENTIALS,
+            actions: "updateUser",
+          },
+          back: machineStates.RESET_AUTH,
         },
+      },
+      [machineStates.SET_CREDENTIALS]: {
+        invoke: { src: "setCredentials" },
+        on: {
+          verifyUser: machineStates.VERIFY_USER,
+        },
+        tags: ["System"],
       },
       [machineStates.VERIFY_USER]: {
         invoke: { src: "verifyUser" },
         on: {
-          invalidToken: {
-            target: machineStates.INPUT_EMAIL,
-            actions: "resetAuth",
-          },
+          invalidToken: machineStates.RESET_AUTH,
           enableBlockchain: {
             target: machineStates.ENABLE_BLOCKCHAIN,
-            actions: "updateUser",
+            actions: "updateState",
           },
           accountReady: {
             target: machineStates.ACCOUNT_CONFIRM,
-            actions: "updateUser",
+            actions: "updateState",
           },
         },
         tags: ["System"],
@@ -154,17 +173,25 @@ const machine = createMachine<AuthenticateMachineContext>(
             target: machineStates.ACCOUNT_CONFIRM,
             actions: "updateUser",
           },
+          switchAccount: machineStates.RESET_AUTH,
         },
       },
       [machineStates.ACCOUNT_CONFIRM]: {
         on: {
           approve: machineStates.FINISH_PROCESS,
           nonCustodialApprove: machineStates.RUN_INIT_SCRIPTS,
-          switchAccount: {
+          switchAccount: machineStates.RESET_AUTH,
+        },
+      },
+      [machineStates.RESET_AUTH]: {
+        invoke: { src: "cleanUpLocalStorage" },
+        on: {
+          restart: {
             target: machineStates.INPUT_EMAIL,
             actions: "resetAuth",
           },
         },
+        tags: ["System"],
       },
       [machineStates.RUN_INIT_SCRIPTS]: {
         on: { done: machineStates.FINISH_PROCESS },
@@ -186,7 +213,7 @@ const machine = createMachine<AuthenticateMachineContext>(
   },
   {
     actions: {
-      updateState: assign((_, event) => event.data),
+      updateState: assign((context, event) => merge(context, event.data)),
       updateQueue: assign({
         queue: (context, event) => ({ ...context.queue, ...event.data }),
       }),

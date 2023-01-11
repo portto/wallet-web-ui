@@ -1,28 +1,49 @@
+import { AnyEventObject, Event } from "xstate";
 import { getAccountAssets, getUserInfo, updateAuthentication } from "src/apis";
 import { onClose, onInternalConfirm, onResponse } from "src/services/Frame";
-import { KEY_EMAIL, KEY_USER_TYPE, setItem } from "src/services/LocalStorage";
+import {
+  KEY_ACCESS_TOKEN,
+  KEY_DEVICE_KEY,
+  KEY_EMAIL,
+  KEY_SESSION_ID,
+  KEY_USER_ID,
+  KEY_USER_TYPE,
+  removeItem,
+  setItem,
+} from "src/services/LocalStorage";
 import checkBlockchainEnabled from "src/utils/checkBlockchainEnabled";
 import { EXP_TIME, INTERNAL_WL_DOMAINS } from "src/utils/constants";
+import getBlockchainIcon from "src/utils/getBlockchainIcon";
 import mapAssetsToAddresses from "src/utils/mapAssetsToAddresses";
 import { AuthenticateMachineContext } from "./definition";
 
+export const setCredentials =
+  (context: AuthenticateMachineContext, event: AnyEventObject) =>
+  async (callback: (args: Event<AnyEventObject>) => void) => {
+    if (event?.data?.accessToken && event.data?.deviceKey) {
+      setItem(KEY_ACCESS_TOKEN, event.data.accessToken);
+      setItem(KEY_DEVICE_KEY, event.data.deviceKey);
+    }
+    callback("verifyUser");
+  };
+
 export const verifyUser =
   (context: AuthenticateMachineContext) =>
-  async (callback: (args: any) => void) => {
+  async (callback: (args: Event<AnyEventObject>) => void) => {
     // Try get user info with token
     let userInfo;
     try {
       userInfo = await getUserInfo({ jwt: context.user.accessToken });
-      const { email, type } = userInfo;
-
+      const { email, type, id } = userInfo;
       setItem(KEY_EMAIL, email);
       setItem(KEY_USER_TYPE, type);
+      setItem(KEY_USER_ID, id);
     } catch (e) {
       return callback("invalidToken");
     }
 
     // Get account assets & update user info
-    const { blockchain = "Flow" } = context.dapp;
+    const { blockchain = "flow" } = context.dapp;
     const { assets } = await getAccountAssets();
 
     // Try get user enabled specific chain or not,
@@ -30,8 +51,13 @@ export const verifyUser =
     // otherwise go to account confirm account UI
     const addresses = mapAssetsToAddresses(assets);
     const enabled = checkBlockchainEnabled(assets, blockchain);
+    const blockchainIcon = getBlockchainIcon(assets, blockchain);
 
-    const data = { ...userInfo, addresses };
+    const { point, ...restInfo } = userInfo;
+    const data = {
+      user: { ...restInfo, addresses, points: +point },
+      blockchainIcon,
+    };
 
     return callback({
       type: enabled ? "accountReady" : "enableBlockchain",
@@ -101,6 +127,17 @@ export const finish = async (context: AuthenticateMachineContext) => {
   // try to call callback
   onConfirm(addresses?.[blockchain]);
 };
+
+export const cleanUpLocalStorage =
+  () => async (callback: (args: Event<AnyEventObject>) => void) => {
+    removeItem(KEY_ACCESS_TOKEN);
+    removeItem(KEY_DEVICE_KEY);
+    removeItem(KEY_EMAIL);
+    removeItem(KEY_SESSION_ID);
+    removeItem(KEY_USER_ID);
+    removeItem(KEY_USER_TYPE);
+    callback("restart");
+  };
 
 export const abort = async (context: AuthenticateMachineContext) => {
   const { isThroughBackChannel } = context;

@@ -3,9 +3,7 @@ import { ReactNode, useState } from "react";
 import { ReactComponent as ArrowBack } from "src/assets/images/icons/arrow-back.svg";
 import { ReactComponent as ArrowNext } from "src/assets/images/icons/arrow-next.svg";
 
-export const FieldLine = () => (
-  <Box w="100%" h="0.5px" bg="background.tertiary" />
-);
+export const FieldLine = () => <Box w="100%" h="0.5px" bg="border.tertiary" />;
 
 const Field = ({
   title,
@@ -13,7 +11,7 @@ const Field = ({
   icon = null,
   hidableInfo = "",
 }: {
-  title: string;
+  title: string | ReactNode;
   hidableInfo?: ReactNode;
   children?: ReactNode;
   icon?: ReactNode;
@@ -27,10 +25,10 @@ const Field = ({
   const onCloseHidableInfo = () => setShowHidableInfo(false);
 
   return (
-    <Flex py="16px" alignItems="center">
+    <Flex py="space.m" alignItems="center">
       <Box>
-        <Flex alignItems="center" mb="6px">
-          <Text color="font.secondary" mr="6px" fontSize="size.body.3">
+        <Flex alignItems="center" mb="space.3xs">
+          <Text color="font.secondary" mr="space.3xs" fontSize="size.body.3">
             {title}
           </Text>
 
@@ -62,7 +60,7 @@ const Field = ({
             bg="white"
             overflowY="scroll"
           >
-            <Box padding="16px 20px">
+            <Box px="space.l" py="space.m">
               <ArrowBack
                 width="20px"
                 height="20px"
@@ -71,7 +69,9 @@ const Field = ({
               />
             </Box>
 
-            <Box padding="16px 20px">{hidableInfo}</Box>
+            <Box px="space.l" py="space.m">
+              {hidableInfo}
+            </Box>
           </Box>
         </>
       )}

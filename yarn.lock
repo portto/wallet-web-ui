@@ -1133,9 +1133,9 @@
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
 "@blocto/web-chakra-theme@^1.2.2":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@blocto/web-chakra-theme/-/web-chakra-theme-1.2.4.tgz#c13720713763f3c1f37139e05c3e8c49bd3b6382"
-  integrity sha512-t2JVsjGl1aodOl62HNRuseYm3jTFdwh8Gebzw2qGcuzP6e3s1Ll44YUNjeVnI0/CERjqwaeiUFfqbbthYEvFsQ==
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/@blocto/web-chakra-theme/-/web-chakra-theme-1.2.5.tgz#35d81ab45710c8f0328893cf648f5c5c9fe6135a"
+  integrity sha512-vkbMOVFQXUu2hBhtpx2S3LThggK6xsfP/qj3g+EuwJ/l4ueh2b56GfkqPvCXH07QuFuV/Q+nZ7zF8CRExj1uCA==
 
 "@chakra-ui/accordion@2.1.3":
   version "2.1.3"

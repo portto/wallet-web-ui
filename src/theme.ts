@@ -42,6 +42,39 @@ const theme = extendTheme(
       },
     },
     components: {
+      PinInput: {
+        sizes: {
+          md: {
+            w: "45px",
+            h: "45px",
+            borderRadius: "12px",
+          },
+        },
+        variants: {
+          blocto: {
+            color: "font.highlight",
+            fontSize: "size.heading.1",
+            fontWeight: "weight.l",
+            bg: "background.primary",
+            borderColor: "border.tertiary",
+            borderWidth: "width.m",
+            _hover: { borderColor: undefined },
+            "&:focus:not([aria-invalid=true])": {
+              borderWidth: "width.l",
+              borderColor: "rgba(0, 117, 255, 0.54)",
+            },
+            "&[aria-invalid=true]": {
+              color: "font.alert",
+              bg: "background.alert",
+              borderColor: "rgba(238, 241, 245, 0.54)",
+            },
+          },
+        },
+        defaultProps: {
+          size: "md",
+          variant: "blocto",
+        },
+      },
       Button: {
         variants: {
           primary: {

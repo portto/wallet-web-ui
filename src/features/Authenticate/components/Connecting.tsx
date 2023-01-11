@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { createAuthnQueue } from "src/apis";
 import Loading from "src/components/Loading";
 import { useAuthenticateMachine } from "src/machines/authenticate";
@@ -24,7 +24,9 @@ const Connecting = () => {
     }
   }, [send, context]);
 
-  return <Loading />;
+  const handleClose = useCallback(() => send("close"), [send]);
+
+  return <Loading blockchain={context.dapp.blockchain} onClose={handleClose} />;
 };
 
 export default Connecting;
