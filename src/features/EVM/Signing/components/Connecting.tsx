@@ -8,6 +8,7 @@ import fetchDappInfo from "src/utils/fetchDappInfo";
 
 const Connecting = () => {
   const { context, send } = useSigningMachine();
+  const { blockchain, url = "", name, logo, id } = context.dapp;
 
   const setMessage = useCallback(async (data: any) => {
     const { message, chain, method } = data;
@@ -85,7 +86,9 @@ const Connecting = () => {
     // intentionally run once
   }, []);
 
-  return <Loading />;
+  const handleClose = useCallback(() => send("close"), [send]);
+
+  return <Loading blockchain={blockchain} onClose={handleClose} />;
 };
 
 export default Connecting;

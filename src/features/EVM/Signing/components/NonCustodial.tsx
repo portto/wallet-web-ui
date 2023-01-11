@@ -1,9 +1,23 @@
-import { Box } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Box, Center, Flex, Text } from "@chakra-ui/react";
+import { useCallback, useEffect, useState } from "react";
+import { FormattedMessage, defineMessages } from "react-intl";
 import { createSigningRequest, getSigningRequest } from "src/apis";
+import Header from "src/components/Header";
+import LoadingLogo from "src/components/LoadingLogo";
 import { useSigningMachine } from "src/machines/signing";
 import { logSendTx } from "src/services/Amplitude";
 import { ERROR_MESSAGES } from "src/utils/constants";
+
+const messages = defineMessages({
+  title: {
+    id: "feature.sign.nonCustodial.title",
+    defaultMessage: "Please verify in Blocto app",
+  },
+  description: {
+    id: "feature.sign.nonCustodial.description",
+    defaultMessage: "Approve the signing request from Blocto app...",
+  },
+});
 
 const NonCustodial = () => {
   const { context, send } = useSigningMachine();
@@ -59,7 +73,38 @@ const NonCustodial = () => {
     return clearInterval(interval);
   }, []);
 
-  return <Box>Non-Custodial</Box>;
+  const handleClose = useCallback(() => send("close"), [send]);
+
+  return (
+    <Box position="relative">
+      <Header blockchain={context.dapp.blockchain} onClose={handleClose} />
+      <Box
+        position="absolute"
+        top="0"
+        left="0"
+        zIndex={-1}
+        width="100%"
+        height="100%"
+      >
+        <Center height="100%">
+          <Flex flexDirection="column" alignItems="center">
+            <LoadingLogo mb="space.s" />
+            <Text
+              fontSize="size.heading.4"
+              fontWeight="weight.l"
+              lineHeight="line.height.subheading.1"
+              mb="space.2xs"
+            >
+              <FormattedMessage {...messages.title} />
+            </Text>
+            <Text fontSize="size.body.3" textAlign="center">
+              <FormattedMessage {...messages.description} />
+            </Text>
+          </Flex>
+        </Center>
+      </Box>
+    </Box>
+  );
 };
 
 export default NonCustodial;
