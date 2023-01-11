@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import debounce from "lodash/debounce";
 import { useCallback, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, defineMessages } from "react-intl";
 import { checkEmailExist, requestEmailAuth } from "src/apis";
 import check from "src/assets/images/icons/check.svg";
 import error from "src/assets/images/icons/error.svg";
@@ -21,6 +21,42 @@ import DappLogo from "src/components/DappLogo";
 import Header from "src/components/Header";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { checkEmailCap, checkEmailFormat } from "src/utils/checkEmailFormat";
+
+const messages = defineMessages({
+  signInOrRegister: {
+    id: "feature.authn.signInOrRegister",
+    defaultMessage: "Sign in / Register",
+  },
+  signIn: {
+    id: "feature.authn.signIn.submit",
+    defaultMessage: "Sign in",
+  },
+  register: {
+    id: "feature.authn.register.submit",
+    defaultMessage: "Register",
+  },
+  title: {
+    id: "feature.authn.signIn.title",
+    defaultMessage: "Sign in",
+  },
+  description: {
+    id: "feature.authn.signIn.description",
+    defaultMessage: "Request account with",
+  },
+  invalidEmail: {
+    id: "feature.authn.input.invalidEmail",
+    defaultMessage: "Please confirm your email format",
+  },
+  checkCasing: {
+    id: "feature.authn.input.checkCasing",
+    defaultMessage:
+      "Blocto accounts are case-sensitive, please make sure you have correct email.",
+  },
+  termsOfUse: {
+    id: "feature.authn.register.termsOfUse",
+    defaultMessage: "By registering, you agree to our <a>Terms of Use</a>",
+  },
+});
 
 const rotate = keyframes`
 from { transform: rotate(0); }
@@ -93,12 +129,12 @@ const InputEmail = () => {
 
   const renderButtonText = () => {
     if (isChecking || !input) {
-      return <FormattedMessage id="feature.authn.signInOrRegister" />;
+      return <FormattedMessage {...messages.signInOrRegister} />;
     }
     if (isEmailExistent) {
-      return <FormattedMessage id="feature.authn.signIn.submit" />;
+      return <FormattedMessage {...messages.signIn} />;
     }
-    return <FormattedMessage id="feature.authn.register.submit" />;
+    return <FormattedMessage {...messages.register} />;
   };
 
   const renderInputIcon = () => {
@@ -132,10 +168,10 @@ const InputEmail = () => {
             fontWeight="weight.l"
             lineHeight="line.height.subheading.1"
           >
-            <FormattedMessage id="feature.authn.signIn.title" />
+            <FormattedMessage {...messages.title} />
           </Text>
           <Text my="space.2xs">
-            <FormattedMessage id="feature.authn.signIn.description" />
+            <FormattedMessage {...messages.description} />
           </Text>
           <Text
             px="space.m"
@@ -179,11 +215,7 @@ const InputEmail = () => {
           {(hasError || hasWarning) && (
             <Text fontSize="size.body.3" color="font.alert" mb="space.xs">
               <FormattedMessage
-                id={
-                  hasError
-                    ? "feature.authn.input.invalidEmail"
-                    : "feature.authn.input.checkCasing"
-                }
+                {...(hasError ? messages.invalidEmail : messages.checkCasing)}
               />
             </Text>
           )}
@@ -204,7 +236,7 @@ const InputEmail = () => {
               mt="space.s"
             >
               <FormattedMessage
-                id="feature.authn.register.termsOfUse"
+                {...messages.termsOfUse}
                 values={{
                   a: (chunks) => (
                     <Link

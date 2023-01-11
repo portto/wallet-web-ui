@@ -1,6 +1,6 @@
 import { Center, Button as ChakraButton, Flex, Text } from "@chakra-ui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, defineMessages } from "react-intl";
 import {
   enableBlockchain,
   estimateEnableBlockchain,
@@ -13,6 +13,34 @@ import { useAuthenticateMachine } from "src/machines/authenticate";
 import { AssetStatus } from "src/types";
 import getBlockchainStatus from "src/utils/getBlockchainStatus";
 import mapAssetsToAddresses from "src/utils/mapAssetsToAddresses";
+
+const messages = defineMessages({
+  enable: {
+    id: "feature.authn.enable.title",
+    defaultMessage: "Creating {chain} Wallet...",
+  },
+  insufficientEnable: {
+    id: "feature.authn.insufficientEnable.title",
+    defaultMessage: "Insufficient Blocto points for creating {chain} Wallet",
+  },
+  itTakesSomeTimeToProceed: {
+    id: "app.general.itTakesSomeTimeToProceed",
+    defaultMessage: "It takes some time to proceed",
+  },
+  insufficientEnableDesc: {
+    id: "feature.authn.insufficientEnable.description",
+    defaultMessage:
+      "Please go to Blocto App to purchase points and create wallet",
+  },
+  downloadBloctoApp: {
+    id: "app.general.downloadBloctoApp",
+    defaultMessage: "Download Blocto App",
+  },
+  useAnotherAccount: {
+    id: "feature.authn.confirm.useAnotherAccount",
+    defaultMessage: "Use Another Account",
+  },
+});
 
 const OPEN_APP_LINK =
   process.env.REACT_APP_NETWORK === "mainnet"
@@ -119,11 +147,7 @@ const EnableBlockchain = () => {
               mb="space.2xs"
             >
               <FormattedMessage
-                id={
-                  isEnough
-                    ? "feature.authn.enable.title"
-                    : "feature.authn.insufficientEnable.title"
-                }
+                {...(isEnough ? messages.enable : messages.insufficientEnable)}
                 values={{
                   chain:
                     blockchain.charAt(0).toUpperCase() + blockchain.slice(1),
@@ -132,18 +156,16 @@ const EnableBlockchain = () => {
             </Text>
             <Text fontSize="size.body.3" textAlign="center">
               <FormattedMessage
-                id={
-                  isEnough
-                    ? "app.general.itTakesSomeTimeToProceed"
-                    : "feature.authn.insufficientEnable.description"
-                }
+                {...(isEnough
+                  ? messages.itTakesSomeTimeToProceed
+                  : messages.insufficientEnableDesc)}
               />
             </Text>
           </Flex>
         </Center>
         {!isEnough && (
           <Button onClick={redirect}>
-            <FormattedMessage id="app.general.downloadBloctoApp" />
+            <FormattedMessage {...messages.downloadBloctoApp} />
           </Button>
         )}
         <ChakraButton
@@ -159,7 +181,7 @@ const EnableBlockchain = () => {
           _hover={{ bg: "none", transform: "scale(0.98)" }}
           _active={{ bg: "none", transform: "scale(0.96)" }}
         >
-          <FormattedMessage id="feature.authn.confirm.useAnotherAccount" />
+          <FormattedMessage {...messages.useAnotherAccount} />
         </ChakraButton>
       </Flex>
     </>
