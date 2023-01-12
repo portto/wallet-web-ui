@@ -47,7 +47,7 @@ const Main = () => {
   const handleClose = useCallback(() => send("close"), [send]);
 
   return (
-    <>
+    <Flex flexDirection="column">
       <Header
         bg="background.secondary"
         blockchain={context.dapp.blockchain}
@@ -77,26 +77,24 @@ const Main = () => {
         </Text>
       </Flex>
 
-      <Flex
-        flexDirection="column"
-        justifyContent="space-between"
-        px="space.l"
-        pb="space.m"
-      >
-        <Box>
-          <Field title={<FormattedMessage {...messages.message} />}>
-            {message.toBeSigned}
-          </Field>
-          <FieldLine />
-        </Box>
+      <Box flex="1 0 0" px="space.l" overflow="auto">
+        <Field title={<FormattedMessage {...messages.message} />}>
+          {message.toBeSigned}
+        </Field>
+        <FieldLine />
+      </Box>
 
-        <Box>
-          <Button onClick={approve}>
-            <FormattedMessage {...messages.approve} />
-          </Button>
-        </Box>
-      </Flex>
-    </>
+      <Box
+        flex="0 0 auto"
+        px="space.l"
+        py="space.m"
+        boxShadow="0px 0px 10px rgba(35, 37, 40, 0.05)"
+      >
+        <Button onClick={approve}>
+          <FormattedMessage {...messages.approve} />
+        </Button>
+      </Box>
+    </Flex>
   );
 };
 
