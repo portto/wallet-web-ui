@@ -35,9 +35,9 @@ const Field = ({
           {icon && <span>{icon}</span>}
         </Flex>
 
-        <Text color="font.primary" fontSize="size.body.3">
+        <Box color="font.primary" fontSize="size.body.3">
           {children}
-        </Text>
+        </Box>
       </Box>
 
       {hidableInfo && (
@@ -56,6 +56,7 @@ const Field = ({
             top="0"
             right="0"
             bottom="0"
+            zIndex={1}
             left={showHidableInfo ? "0" : "100%"}
             bg="white"
             overflowY="scroll"
