@@ -118,7 +118,7 @@ export default function useTransactionDetail(
     };
   }
 
-  if (!isERC20Transfering) return null;
+  if (!isERC20Transfering) return;
 
   const web3 = new Web3();
   const transferParams =

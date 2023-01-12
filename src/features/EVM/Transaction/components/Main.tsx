@@ -42,8 +42,7 @@ const Main = () => {
   const realTransactionFee =
     (transaction.fee || 0) - (transaction.discount || 0);
 
-  const txDetail = useTransactionDetail(transaction, user.balance);
-  console.log("txDetail :", txDetail);
+  const txDetailData = useTransactionDetail(transaction, user.balance);
 
   useEffect(() => {
     const { sessionId = "" } = user;
@@ -144,7 +143,7 @@ const Main = () => {
         onClose={() => send({ type: "close" })}
         blockchain={dapp?.blockchain}
       />
-      <TransactionInfo host={dappDomain}>
+      <TransactionInfo host={dappDomain} transactionDetail={txDetailData}>
         <DappLogo url={dapp.logo || ""} mb="space.s" />
       </TransactionInfo>
       <Box px="space.l">
