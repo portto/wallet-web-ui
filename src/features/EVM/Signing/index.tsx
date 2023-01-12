@@ -24,9 +24,9 @@ const systemStatus = [
 ];
 
 const stageComponentMapping = {
-  [machineStates.CONNECTING]: Connecting,
-  [machineStates.MAIN]: Main,
-  [machineStates.NON_CUSTODIAL]: NonCustodial,
+  [machineStates.CONNECTING]: { component: Connecting },
+  [machineStates.MAIN]: { component: Main, compactView: false },
+  [machineStates.NON_CUSTODIAL]: { component: NonCustodial },
 };
 
 const useDefaultStateFromProps = (props: any) => {
@@ -94,10 +94,10 @@ const Signing = withSigningContext(
       }
     }, [value]);
 
-    const Component = stageComponentMapping[stage] ?? Noop;
+    const Component = stageComponentMapping[stage]?.component ?? Noop;
 
     return (
-      <Layout isCompact={false}>
+      <Layout isCompact={stageComponentMapping[stage]?.compactView}>
         <Component />
       </Layout>
     );

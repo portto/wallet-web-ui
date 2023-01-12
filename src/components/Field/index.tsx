@@ -26,7 +26,7 @@ const Field = ({
 
   return (
     <Flex py="space.m" alignItems="center">
-      <Box>
+      <Box maxWidth="100%">
         <Flex alignItems="center" mb="space.3xs">
           <Text color="font.secondary" mr="space.3xs" fontSize="size.body.3">
             {title}
@@ -35,7 +35,7 @@ const Field = ({
           {icon && <span>{icon}</span>}
         </Flex>
 
-        <Box color="font.primary" fontSize="size.body.3">
+        <Box color="font.primary" fontSize="size.body.3" whiteSpace="pre-wrap">
           {children}
         </Box>
       </Box>
