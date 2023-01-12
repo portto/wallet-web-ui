@@ -42,6 +42,7 @@ export interface TransactionMachineContext {
     sessionId?: string;
     points?: number;
     assets?: any[];
+    balance?: number;
     onApprove: (arg: any) => void;
     onReject: (arg: any) => void;
   };

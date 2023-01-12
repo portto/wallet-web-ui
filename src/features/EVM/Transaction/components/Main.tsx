@@ -42,11 +42,12 @@ const Main = () => {
   const realTransactionFee =
     (transaction.fee || 0) - (transaction.discount || 0);
 
-  useTransactionDetail(transaction);
+  const txDetail = useTransactionDetail(transaction, user.balance);
+  console.log("txDetail :", txDetail);
 
   useEffect(() => {
     const { sessionId = "" } = user;
-    const { rawObject } = transaction;
+
     const { blockchain } = dapp;
 
     estimatePoint({ rawObject, sessionId, blockchain }).then(
@@ -61,7 +62,7 @@ const Main = () => {
           },
         })
     );
-  }, [user.sessionId, transaction.rawObject, dapp.blockchain]);
+  }, [user.sessionId, rawObject, dapp.blockchain, send, dapp, user]);
 
   const approve = useCallback(async () => {
     const { sessionId, authorizationId = "" } = user;
@@ -91,7 +92,7 @@ const Main = () => {
         dAppId: id,
       });
     } else send({ type: "reject", data: { failReason: reason } });
-  }, [user, dapp, transaction]);
+  }, [user, dapp, transaction, dappDomain, send]);
 
   const getTransactionFeeField = useCallback(() => {
     return (
@@ -134,11 +135,12 @@ const Main = () => {
         )}
       </HStack>
     );
-  }, [transaction.fee, realTransactionFee]);
+  }, [transaction.fee, realTransactionFee, hasDiscount]);
 
   return (
     <Box>
       <Header
+        bg="background.secondary"
         onClose={() => send({ type: "close" })}
         blockchain={dapp?.blockchain}
       />

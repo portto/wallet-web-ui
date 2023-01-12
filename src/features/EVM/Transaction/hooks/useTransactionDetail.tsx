@@ -47,7 +47,35 @@ const getNativeCoinSymbol = (blockchain: Partial<Chains>) => {
   );
 };
 
-export default function useTransactionDetail(transaction: Transaction) {
+const isNativeBalanceEnough = (
+  transactions: [EvmTransaction],
+  userBalance: number
+) => {
+  if (!transactions.length) {
+    return false;
+  }
+
+  if (
+    transactions.every(
+      ({ value }) => !value || hexToNumberString(value) === "0"
+    )
+  ) {
+    return true;
+  }
+
+  const transactionValueBN = transactions
+    .map(({ value }) => toBN(hexToNumberString(value)))
+    .reduce((acc, cur) => acc.add(cur), toBN(0));
+
+  const userBalanceBN = toBN(userBalance);
+
+  return userBalanceBN.gte(transactionValueBN);
+};
+
+export default function useTransactionDetail(
+  transaction: Transaction,
+  userBalance = 0
+) {
   const { context } = useTransactionMachine();
   const { dapp } = context;
   const { assets = [] } = context.user;
@@ -55,9 +83,13 @@ export default function useTransactionDetail(transaction: Transaction) {
     assets.map((asset) => [asset.symbol, asset])
   );
 
-  const { rawObject: { transactions = [] } = {}, txHash } = transaction;
-  // from, to,
-  const [{ value }] = transactions || [{}];
+  const {
+    rawObject: { transactions } = {
+      transactions: [{ value: "", to: "", from: "", data: "" }],
+    },
+    txHash,
+  } = transaction;
+  const [{ value }] = transactions;
 
   const txContractAddress = transactions[0].to;
   const isNativeTransfering = !txHash && !!value;
@@ -74,6 +106,7 @@ export default function useTransactionDetail(transaction: Transaction) {
     );
 
     const nativeTokenValue = nativeToken ? nativeToken.usd_price : 0;
+
     return {
       isSupportedTokenTransfering: !!nativeToken,
       tokenName: nativeTokenName,
@@ -81,7 +114,7 @@ export default function useTransactionDetail(transaction: Transaction) {
       usdValue: (
         parseFloat(nativeTokenAmount) * parseFloat(nativeTokenValue)
       ).toFixed(2),
-      // hasEnoughBalance: this.isNativeBalanceEnough(),
+      hasEnoughBalance: isNativeBalanceEnough(transactions, userBalance),
     };
   }
 

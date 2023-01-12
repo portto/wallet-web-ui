@@ -1,5 +1,10 @@
 import { useEffect } from "react";
-import { getAccountAssets, getAuthorization, getUserInfo } from "src/apis";
+import {
+  getAccountAsset,
+  getAccountAssets,
+  getAuthorization,
+  getUserInfo,
+} from "src/apis";
 import Loading from "src/components/Loading";
 import { useTransactionMachine } from "src/machines/transaction";
 import fetchDappInfo from "src/utils/fetchDappInfo";
@@ -27,8 +32,12 @@ const Connecting = () => {
         authorizationId,
         blockchain,
       });
-      const [{ point, type, email, id }, { assets: allAssets }] =
-        await Promise.all([getUserInfo(), getAccountAssets()]);
+      const [{ point, type, email, id }, { assets: allAssets }, { value }] =
+        await Promise.all([
+          getUserInfo(),
+          getAccountAssets(),
+          getAccountAsset({ blockchain }),
+        ]);
       const assets = allAssets.filter(
         (asset: any) => asset.blockchain === blockchain
       );
@@ -39,6 +48,7 @@ const Connecting = () => {
         points: point,
         assets,
         sessionId,
+        balance: value,
       };
       if (type === "security")
         return send({ type: "nonCustodial", data: userData });
