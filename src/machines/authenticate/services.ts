@@ -20,9 +20,9 @@ import { AuthenticateMachineContext } from "./definition";
 export const setCredentials =
   (context: AuthenticateMachineContext, event: AnyEventObject) =>
   async (callback: (args: Event<AnyEventObject>) => void) => {
-    if (event?.data?.accessToken && event.data?.deviceKey) {
+    if (event?.data?.accessToken) {
       setItem(KEY_ACCESS_TOKEN, event.data.accessToken);
-      setItem(KEY_DEVICE_KEY, event.data.deviceKey);
+      setItem(KEY_DEVICE_KEY, event.data?.deviceKey);
     }
     callback("verifyUser");
   };
