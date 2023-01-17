@@ -44,11 +44,10 @@ const Main = () => {
 
   const txDetailData = useTransactionDetail(transaction, user.balance);
 
+  const { sessionId = "" } = user;
+  const { blockchain } = dapp;
+
   useEffect(() => {
-    const { sessionId = "" } = user;
-
-    const { blockchain } = dapp;
-
     estimatePoint({ rawObject, sessionId, blockchain }).then(
       ({ cost, discount, error_code, chain_error_msg }) =>
         send({
@@ -61,7 +60,7 @@ const Main = () => {
           },
         })
     );
-  }, [user.sessionId, rawObject, dapp.blockchain, send, dapp, user]);
+  }, [sessionId, rawObject, blockchain, send]);
 
   const approve = useCallback(async () => {
     const { sessionId, authorizationId = "" } = user;
