@@ -1,6 +1,6 @@
 import Web3 from "web3";
 import { useTransactionMachine } from "src/machines/transaction";
-import { Chains } from "src/utils/constants";
+import { Chains } from "src/types";
 import { EvmTransaction } from "../components/Main";
 
 const { toBN, hexToNumberString, fromWei } = Web3.utils;

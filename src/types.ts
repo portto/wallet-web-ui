@@ -13,3 +13,13 @@ export interface AccountAsset {
   color_icon: string;
   value: number;
 }
+
+export enum Chains {
+  ethereum = "ethereum",
+  bsc = "bsc",
+  polygon = "polygon",
+  avalanche = "avalanche",
+  aptos = "aptos",
+  flow = "flow",
+  solana = "solana",
+}

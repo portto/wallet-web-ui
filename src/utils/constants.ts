@@ -8,16 +8,6 @@ export const CHAIN_ASSET_NAME_MAPPING: { [key in string]: string } = {
   avalanche: "Avalanche",
 };
 
-export enum Chains {
-  ethereum = "ethereum",
-  bsc = "bsc",
-  polygon = "polygon",
-  avalanche = "avalanche",
-  aptos = "aptos",
-  flow = "flow",
-  solana = "solana",
-}
-
 export const EXP_TIME = 86400 * 14 * 1000; // 14 days
 
 export const INTERNAL_WL_DOMAINS = [

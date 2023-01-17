@@ -1,7 +1,6 @@
 import { getReadableDeviceInfo } from "src/services/Device";
 import { KEY_ACCESS_TOKEN, getItem } from "src/services/LocalStorage";
-import { AccountAsset } from "src/types";
-import { Chains } from "src/utils/constants";
+import { AccountAsset, Chains } from "src/types";
 import { apiGet, apiPost } from "../axios";
 
 export const checkEmailExist = (email = "") =>

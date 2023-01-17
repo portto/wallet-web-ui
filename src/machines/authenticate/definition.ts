@@ -1,6 +1,6 @@
 import merge from "lodash.merge";
 import { assign, createMachine } from "xstate";
-import { Chains } from "src/utils/constants";
+import { Chains } from "src/types";
 
 const defaultContext = {
   dapp: {
