@@ -1,3 +1,4 @@
+import { EvmTransaction } from "src/types";
 import { apiGet, apiPost, apiPut } from "./axios";
 
 export const getMaintenanceStatus = (chain: string) =>
@@ -129,15 +130,6 @@ export const updateSignatureDetails = ({
     isAuthorized: true,
   });
 
-interface EvmTx {
-  from: string;
-  to: string;
-  value?: string;
-  maxPriorityFeePerGas?: string;
-  maxFeePerGas?: string;
-  gas?: number | string;
-}
-
 export const getAuthorization = ({
   authorizationId,
   blockchain = "flow",
@@ -150,7 +142,7 @@ export const getAuthorization = ({
     status: "PENDING" | "APPROVED" | "DECLINED";
     reason: string | null;
     transactionHash: string | null;
-    transactions?: EvmTx[];
+    transactions?: EvmTransaction[];
   }>({
     url: `api/${blockchain}/authzDetails`,
     request: {

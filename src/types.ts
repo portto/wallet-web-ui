@@ -23,3 +23,13 @@ export enum Chains {
   flow = "flow",
   solana = "solana",
 }
+
+export interface EvmTransaction {
+  from: string;
+  to: string;
+  value?: string;
+  maxPriorityFeePerGas?: string;
+  maxFeePerGas?: string;
+  gas?: number | string;
+  data?: string;
+}

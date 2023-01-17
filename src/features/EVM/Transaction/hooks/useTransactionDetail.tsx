@@ -1,8 +1,7 @@
 import { useMemo } from "react";
 import Web3 from "web3";
 import { useTransactionMachine } from "src/machines/transaction";
-import { Chains } from "src/types";
-import { EvmTransaction } from "../components/Main";
+import { Chains, EvmTransaction } from "src/types";
 
 const { toBN, hexToNumberString, fromWei } = Web3.utils;
 
@@ -65,7 +64,7 @@ const isNativeBalanceEnough = (
   }
 
   const transactionValueBN = transactions
-    .map(({ value }) => toBN(hexToNumberString(value)))
+    .map(({ value }) => toBN(hexToNumberString(value || "0")))
     .reduce((acc, cur) => acc.add(cur), toBN(0));
 
   const userBalanceBN = toBN(userBalance);
@@ -77,6 +76,7 @@ export default function useTransactionDetail(
   transaction: Transaction,
   userBalance = 0
 ) {
+  console.log("transaction :", transaction);
   const { context } = useTransactionMachine();
   const { dapp } = context;
   const { assets = [] } = context.user;
@@ -103,7 +103,7 @@ export default function useTransactionDetail(
       const nativeToken = ethAssets && ethAssets[nativeTokenName];
       const nativeTokenAmount = fromWei(
         transactions
-          .map(({ value }) => toBN(hexToNumberString(value)))
+          .map(({ value }) => toBN(hexToNumberString(value || "0")))
           .reduce((acc, cur) => acc.add(cur), toBN(0))
       );
 
