@@ -37,6 +37,7 @@ const Main = () => {
     (transaction.fee || 0) - (transaction.discount || 0);
 
   const txDetailData = useTransactionDetail(transaction, user.balance);
+  const { isNativeTransferring } = txDetailData || {};
 
   const { sessionId = "" } = user;
   const { blockchain } = dapp;
@@ -145,10 +146,11 @@ const Main = () => {
             <Field
               title={<FormattedMessage {...messages.operation} />}
               hidableInfo={
-                // TODO: Only use transactionData if it's not a native transfer action.
-                <TransactionContent verified={verifiedTx}>
-                  {transactionData}
-                </TransactionContent>
+                !isNativeTransferring && (
+                  <TransactionContent verified={verifiedTx}>
+                    {transactionData}
+                  </TransactionContent>
+                )
               }
               icon={
                 verifiedTx ? (
@@ -176,7 +178,9 @@ const Main = () => {
             <Field
               title={<FormattedMessage {...messages.script} />}
               hidableInfo={
-                <TransactionContent>{transactionData}</TransactionContent>
+                !isNativeTransferring && (
+                  <TransactionContent>{transactionData}</TransactionContent>
+                )
               }
               icon={<CheckAlert width="16px" height="16px" />}
             >

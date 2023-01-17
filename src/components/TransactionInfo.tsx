@@ -12,7 +12,8 @@ import messages from "../features/EVM/Transaction/components/messages";
 
 interface TransactionDetail {
   hasEnoughBalance: boolean;
-  isSupportedTokenTransfering: boolean;
+  isNativeTransferring: boolean;
+  isSupportedTokenTransferring: boolean;
   tokenName: string;
   tokenAmount: string;
   usdValue: string;

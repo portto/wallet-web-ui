@@ -76,7 +76,6 @@ export default function useTransactionDetail(
   transaction: Transaction,
   userBalance = 0
 ) {
-  console.log("transaction :", transaction);
   const { context } = useTransactionMachine();
   const { dapp } = context;
   const { assets = [] } = context.user;
@@ -93,13 +92,13 @@ export default function useTransactionDetail(
   const [{ value }] = transactions;
 
   const txContractAddress = transactions[0].to;
-  const isNativeTransfering = !txHash && !!value;
-  const isERC20Transfering =
+  const isNativeTransferring = !txHash && !!value;
+  const isERC20Transferring =
     txHash && txHash.startsWith(TRANSFER_FUNCTION_HASH);
   const nativeTokenName = getNativeCoinSymbol(dapp.blockchain);
 
   return useMemo(() => {
-    if (isNativeTransfering) {
+    if (isNativeTransferring) {
       const nativeToken = ethAssets && ethAssets[nativeTokenName];
       const nativeTokenAmount = fromWei(
         transactions
@@ -110,7 +109,8 @@ export default function useTransactionDetail(
       const nativeTokenValue = nativeToken ? nativeToken.usd_price : 0;
 
       return {
-        isSupportedTokenTransfering: !!nativeToken,
+        isNativeTransferring,
+        isSupportedTokenTransferring: !!nativeToken,
         tokenName: nativeTokenName,
         tokenAmount: nativeTokenAmount,
         usdValue: (
@@ -120,7 +120,7 @@ export default function useTransactionDetail(
       };
     }
 
-    if (!isERC20Transfering) return;
+    if (!isERC20Transferring) return;
 
     const web3 = new Web3();
     const transferParams =
@@ -138,7 +138,8 @@ export default function useTransactionDetail(
     const { usd_price: usdPrice, value: tokenBalance } = tokenDetail || {};
 
     return {
-      isSupportedTokenTransfering: !!tokenDetail && isERC20Transfering,
+      isNativeTransferring,
+      isSupportedTokenTransferring: !!tokenDetail && isERC20Transferring,
       tokenName,
       tokenAmount,
       usdValue: (parseFloat(usdPrice) * parseFloat(tokenAmount)).toFixed(2),
@@ -146,8 +147,8 @@ export default function useTransactionDetail(
     };
   }, [
     ethAssets,
-    isERC20Transfering,
-    isNativeTransfering,
+    isERC20Transferring,
+    isNativeTransferring,
     transactions,
     txContractAddress,
     txHash,
