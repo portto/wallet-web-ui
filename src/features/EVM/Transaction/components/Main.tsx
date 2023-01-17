@@ -9,13 +9,13 @@ import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
 import Header from "src/components/Header";
+import TransactionContent from "src/components/TransactionContent";
+import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { EvmTransaction } from "src/types";
 import useTransactionDetail from "../hooks/useTransactionDetail";
 import messages from "./messages";
-import TransactionContent from "./TransactionContent";
-import TransactionInfo from "./TransactionInfo";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
