@@ -11,4 +11,5 @@ export interface AccountAsset {
   wallet_address: string;
   blockchain: string;
   color_icon: string;
+  value: number;
 }
