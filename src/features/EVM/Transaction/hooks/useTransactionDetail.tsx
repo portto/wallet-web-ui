@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import Web3 from "web3";
 import { useTransactionMachine } from "src/machines/transaction";
 import { Chains } from "src/types";
@@ -97,49 +98,60 @@ export default function useTransactionDetail(
     txHash && txHash.startsWith(TRANSFER_FUNCTION_HASH);
   const nativeTokenName = getNativeCoinSymbol(dapp.blockchain);
 
-  if (isNativeTransfering) {
-    const nativeToken = ethAssets && ethAssets[nativeTokenName];
-    const nativeTokenAmount = fromWei(
-      transactions
-        .map(({ value }) => toBN(hexToNumberString(value)))
-        .reduce((acc, cur) => acc.add(cur), toBN(0))
-    );
+  return useMemo(() => {
+    if (isNativeTransfering) {
+      const nativeToken = ethAssets && ethAssets[nativeTokenName];
+      const nativeTokenAmount = fromWei(
+        transactions
+          .map(({ value }) => toBN(hexToNumberString(value)))
+          .reduce((acc, cur) => acc.add(cur), toBN(0))
+      );
 
-    const nativeTokenValue = nativeToken ? nativeToken.usd_price : 0;
+      const nativeTokenValue = nativeToken ? nativeToken.usd_price : 0;
+
+      return {
+        isSupportedTokenTransfering: !!nativeToken,
+        tokenName: nativeTokenName,
+        tokenAmount: nativeTokenAmount,
+        usdValue: (
+          parseFloat(nativeTokenAmount) * parseFloat(nativeTokenValue)
+        ).toFixed(2),
+        hasEnoughBalance: isNativeBalanceEnough(transactions, userBalance),
+      };
+    }
+
+    if (!isERC20Transfering) return;
+
+    const web3 = new Web3();
+    const transferParams =
+      txHash &&
+      web3.eth.abi.decodeParameters(["address", "uint256"], txHash.slice(10));
+    const tokenAmount = transferParams ? fromWei(transferParams[1]) : "0";
+
+    const tokenName =
+      ethAssets &&
+      Object.keys(ethAssets).find(
+        (key) => ethAssets[key].contract_address === txContractAddress
+      );
+    const tokenDetail = ethAssets && ethAssets[tokenName];
+
+    const { usd_price: usdPrice, value: tokenBalance } = tokenDetail || {};
 
     return {
-      isSupportedTokenTransfering: !!nativeToken,
-      tokenName: nativeTokenName,
-      tokenAmount: nativeTokenAmount,
-      usdValue: (
-        parseFloat(nativeTokenAmount) * parseFloat(nativeTokenValue)
-      ).toFixed(2),
-      hasEnoughBalance: isNativeBalanceEnough(transactions, userBalance),
+      isSupportedTokenTransfering: !!tokenDetail && isERC20Transfering,
+      tokenName,
+      tokenAmount,
+      usdValue: (parseFloat(usdPrice) * parseFloat(tokenAmount)).toFixed(2),
+      hasEnoughBalance: tokenBalance >= tokenAmount,
     };
-  }
-
-  if (!isERC20Transfering) return;
-
-  const web3 = new Web3();
-  const transferParams =
-    txHash &&
-    web3.eth.abi.decodeParameters(["address", "uint256"], txHash.slice(10));
-  const tokenAmount = transferParams ? fromWei(transferParams[1]) : "0";
-
-  const tokenName =
-    ethAssets &&
-    Object.keys(ethAssets).find(
-      (key) => ethAssets[key].contract_address === txContractAddress
-    );
-  const tokenDetail = ethAssets && ethAssets[tokenName];
-
-  const { usd_price: usdPrice, value: tokenBalance } = tokenDetail || {};
-
-  return {
-    isSupportedTokenTransfering: !!tokenDetail && isERC20Transfering,
-    tokenName,
-    tokenAmount,
-    usdValue: (parseFloat(usdPrice) * parseFloat(tokenAmount)).toFixed(2),
-    hasEnoughBalance: tokenBalance >= tokenAmount,
-  };
+  }, [
+    ethAssets,
+    isERC20Transfering,
+    isNativeTransfering,
+    transactions,
+    txContractAddress,
+    txHash,
+    userBalance,
+    nativeTokenName,
+  ]);
 }
