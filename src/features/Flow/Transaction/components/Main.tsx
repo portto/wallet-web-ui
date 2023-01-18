@@ -13,6 +13,7 @@ import Header from "src/components/Header";
 import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
+// import { getFlowScriptWithTemplate } from "src/services/Flow";
 // import { EvmTransaction } from "src/types";
 
 const messages = {

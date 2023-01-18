@@ -33,3 +33,34 @@ export interface EvmTransaction {
   gas?: number | string;
   data?: string;
 }
+
+export interface FlowTransaction {
+  addr: string;
+  interaction: {
+    arguments: {
+      [key: string]: {
+        value: string;
+      };
+    };
+    params: {
+      [key: string]: {
+        key: string;
+        value: string;
+      };
+    };
+    message: {
+      params: string[];
+      arguments: string[];
+      cadence: string;
+    };
+  };
+  voucher: {
+    cadence: string;
+    arguments: [
+      {
+        type: string;
+        value: string;
+      }
+    ];
+  };
+}
