@@ -69,11 +69,11 @@ const Connecting = () => {
   }, []);
 
   // notify parant frame ready
+  const { blockchain, url = "" } = context.dapp;
   useEffect(() => {
-    const { blockchain, url = "" } = context.dapp;
     if (!url) return;
     onReady({ l6n: url, blockchain });
-  }, [context.dapp.blockchain, context.dapp.url]);
+  }, [blockchain, url]);
 
   // gather current dapp info
   useEffect(() => {

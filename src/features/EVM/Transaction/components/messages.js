@@ -25,6 +25,10 @@ export default defineMessages({
     id: "app.authz.transactionContainsScript",
     defaultMessage: "This transaction contains script",
   },
+  transactionFeePoints: {
+    id: "app.authz.transactionFeePoints",
+    defaultMessage: "{points} Points",
+  },
   // original
   // TODO: remove unused string.
   confirmTransaction: {
@@ -45,11 +49,6 @@ export default defineMessages({
   free: {
     id: "app.authz.free",
     defaultMessage: "Free",
-  },
-
-  transactionFeePoints: {
-    id: "app.authz.transactionFeePoints",
-    defaultMessage: "{points} Points",
   },
 
   transactionMayFail: {

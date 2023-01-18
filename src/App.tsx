@@ -12,6 +12,10 @@ const EVM = {
   Signing: React.lazy(() => import("src/features/EVM/Signing")),
 };
 
+const Flow = {
+  Transaction: React.lazy(() => import("src/features/Flow/Transaction")),
+};
+
 const supportedEVMChains = EVM_CHAINS.join("|");
 
 const App = () => {
@@ -42,6 +46,10 @@ const App = () => {
         <Route
           path={`/:appId/:blockchain(${supportedEVMChains})/user-signature`}
           render={() => <EVM.Signing />}
+        />
+        <Route
+          path={`/:appId/:blockchain(flow)/authz/:authorizationId?`}
+          render={() => <Flow.Transaction />}
         />
       </Switch>
     </Suspense>
