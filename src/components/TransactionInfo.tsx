@@ -11,10 +11,6 @@ import measureTextWidth from "src/utils/measureTextWidth";
 import messages from "../features/EVM/Transaction/components/messages";
 
 interface TransactionDetail {
-  hasEnoughBalance: boolean;
-  isNativeTransferring: boolean;
-  isSupportedTokenTransferring: boolean;
-  tokenName: string;
   tokenAmount: string;
   usdValue: string;
 }
@@ -28,11 +24,7 @@ const TransactionInfo = ({
   children: ReactNode;
   transactionDetail?: TransactionDetail;
 }) => {
-  const {
-    usdValue = "",
-    tokenName = "",
-    tokenAmount = "",
-  } = transactionDetail || {};
+  const { usdValue = "", tokenAmount = "" } = transactionDetail || {};
   const [showTokenAmount, setShowTokenAmount] = useState(false);
   const [urlFontSize, setUrlFontSize] = useState(0);
   const [tokenFontSize, setTokenFontSize] = useState(0);
@@ -102,7 +94,7 @@ const TransactionInfo = ({
             fontSize={`${tokenFontSize}px`}
             lineHeight="line.height.heading.2"
           >
-            {showTokenAmount && `${tokenAmount} ${tokenName}`}
+            {showTokenAmount && `${tokenAmount}`}
           </Box>
           {showTokenAmount && (
             <Box color="font.secondary">≈ {usdValue} USD</Box>

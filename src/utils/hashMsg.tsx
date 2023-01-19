@@ -1,3 +1,4 @@
+import { Buffer } from "buffer";
 import { SHA3 } from "sha3";
 
 export default function hashMsg(msg: string) {

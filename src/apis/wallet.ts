@@ -1,4 +1,4 @@
-import { EvmTransaction } from "src/types";
+import { EvmTransaction, FlowTransaction } from "src/types";
 import { apiGet, apiPost, apiPut } from "./axios";
 
 export const getMaintenanceStatus = (chain: string) =>
@@ -143,6 +143,7 @@ export const getAuthorization = ({
     reason: string | null;
     transactionHash: string | null;
     transactions?: EvmTransaction[];
+    transaction?: FlowTransaction;
   }>({
     url: `api/${blockchain}/authzDetails`,
     request: {

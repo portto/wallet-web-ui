@@ -13,8 +13,7 @@ import Header from "src/components/Header";
 import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
-// import { getFlowScriptWithTemplate } from "src/services/Flow";
-// import { EvmTransaction } from "src/types";
+import useTransactionDetail from "../hooks/useTransactionDetail";
 
 const messages = {
   operation: {
@@ -56,26 +55,23 @@ const messages = {
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
-  // TODO: add operation detection logic
-  const [recognizedTx] = useState(false);
   // TODO: add operation verified logic
   const [verifiedTx] = useState(false);
 
-  const { user, transaction, dapp } = context;
+  const {
+    user,
+    transaction: { rawObject },
+    dapp,
+  } = context;
+  const { transaction } = rawObject;
   const dappDomain = new URL(dapp.url || "").host;
-  // const { rawObject } = transaction;
 
   // TODO: add tx detail related logic
-  // const txDetailData = useTransactionDetail(transaction, user.balance);
   // const isNativeTransferring = false;
-  const txDetailData = {
-    hasEnoughBalance: true,
-    isNativeTransferring: true,
-    isSupportedTokenTransferring: true,
-    tokenName: "FLOWW",
-    tokenAmount: "100",
-    usdValue: "xx",
-  };
+  const { usdValue, tokenAmount, isRecognizedTx } = useTransactionDetail(
+    transaction
+    // user.balance
+  );
 
   const approve = useCallback(async () => {
     const { sessionId, authorizationId = "" } = user;
@@ -107,26 +103,24 @@ const Main = () => {
     } else send({ type: "reject", data: { failReason: reason } });
   }, [user, dapp, transaction, dappDomain, send]);
 
-  const getTransactionFeeField = useCallback(() => {
-    return (
-      <HStack>
-        <Flex
-          bg="background.secondary"
-          borderRadius="50%"
-          width="20px"
-          height="20px"
-          justifyContent="center"
-          alignItems="center"
-          p="space.4xs"
-        >
-          <Logo />
-        </Flex>
-        <Box>
-          <FormattedMessage {...messages.free} />
-        </Box>
-      </HStack>
-    );
-  }, []);
+  const getTransactionFeeField = () => (
+    <HStack>
+      <Flex
+        bg="background.secondary"
+        borderRadius="50%"
+        width="20px"
+        height="20px"
+        justifyContent="center"
+        alignItems="center"
+        p="space.4xs"
+      >
+        <Logo />
+      </Flex>
+      <Box>
+        <FormattedMessage {...messages.free} />
+      </Box>
+    </HStack>
+  );
 
   return (
     <Box>
@@ -135,11 +129,14 @@ const Main = () => {
         onClose={() => send({ type: "close" })}
         blockchain={dapp?.blockchain}
       />
-      <TransactionInfo host={dappDomain} transactionDetail={txDetailData}>
+      <TransactionInfo
+        host={dappDomain}
+        transactionDetail={{ usdValue, tokenAmount }}
+      >
         <DappLogo url={dapp.logo || ""} mb="space.s" />
       </TransactionInfo>
       <Box px="space.l">
-        {recognizedTx ? (
+        {isRecognizedTx ? (
           <>
             <Field
               title={<FormattedMessage {...messages.operation} />}

@@ -1,8 +1,8 @@
 import transactionsMainnet from "@blocto/flow-transactions/build/messages.mainnet.sha3.json";
 import transactionsTestnet from "@blocto/flow-transactions/build/messages.testnet.sha3.json";
 import { IS_LOCAL, IS_PRODUCTION, IS_STAGING } from "src/services/Env";
-import { FlowTransaction } from "src/types";
-import hashMsg from "src/utils/hasMsg";
+import { FlowTransaction, RecognizedFlowTx } from "src/types";
+import hashMsg from "src/utils/hashMsg";
 
 // TODO: Get recognized transactions from @blocto/flow-transactions for sandboxnet
 const transactions = (): { [key: string]: any } => {
@@ -11,8 +11,9 @@ const transactions = (): { [key: string]: any } => {
   return {};
 };
 
-const recognizeTx = (transaction: FlowTransaction) => {
-  // Check required fields
+export const recognizeTx = (
+  transaction: FlowTransaction
+): RecognizedFlowTx | null => {
   if (!transaction) {
     return null;
   }
@@ -54,5 +55,3 @@ const recognizeTx = (transaction: FlowTransaction) => {
     args,
   };
 };
-
-export default recognizeTx;

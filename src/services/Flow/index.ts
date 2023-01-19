@@ -1,3 +1,3 @@
-export * from "../../utils/hasMsg";
+export * from "../../utils/hashMsg";
 export * from "./recognizeTx";
 export * from "./getFlowScriptWithTemplate";

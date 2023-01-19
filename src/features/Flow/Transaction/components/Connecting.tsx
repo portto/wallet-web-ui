@@ -24,7 +24,7 @@ const Connecting = () => {
     const { authorizationId = "" } = context.user;
     const { blockchain } = context.dapp;
     const fetchTransaction = async () => {
-      const { sessionId, transactions } = await getAuthorization({
+      const { sessionId, transaction } = await getAuthorization({
         authorizationId,
         blockchain,
       });
@@ -54,7 +54,7 @@ const Connecting = () => {
         type: "ready",
         data: {
           user: userData,
-          transaction: { rawObject: { transactions } },
+          transaction: { rawObject: { transaction } },
         },
       });
     };

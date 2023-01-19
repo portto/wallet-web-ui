@@ -34,6 +34,13 @@ export interface EvmTransaction {
   data?: string;
 }
 
+export interface RecognizedFlowTx {
+  args: { [key: string]: string };
+  hash: string;
+  balances?: { amount: string };
+  arguments?: string[];
+}
+
 export interface FlowTransaction {
   addr: string;
   interaction: {
