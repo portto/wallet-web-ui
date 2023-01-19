@@ -38,13 +38,7 @@ const NonCustodial = () => {
       type: "tx",
       txs: rawObject.transactions,
     }).then(({ id }) => setSigningRequestId(id));
-  }, [
-    user.sessionId,
-    transaction.rawObject,
-    dapp.blockchain,
-    dapp,
-    transaction,
-  ]);
+  }, [user.sessionId, transaction.rawObject, dapp, transaction]);
 
   // check signing request status
   useEffect(() => {
