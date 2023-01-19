@@ -134,6 +134,14 @@ const InputEmail = () => {
 
   const handleClose = useCallback(() => send("close"), [send]);
 
+  const clearInput = () => {
+    setInput("");
+    setIsChecking(false);
+    setIsChecking(false);
+    setHasError(false);
+    setHasWarning(false);
+  };
+
   const renderButtonText = () => {
     if (isChecking || !input) {
       return <FormattedMessage {...messages.signInOrRegister} />;
@@ -149,7 +157,19 @@ const InputEmail = () => {
       return <Image src={inputLoading} animation={rotateAnimation} />;
     }
     if (hasError) {
-      return <Image src={error} />;
+      return (
+        <Button
+          onClick={clearInput}
+          minWidth="max-content"
+          p="0"
+          borderRadius="0"
+          bg="none"
+          _hover={{}}
+          _active={{}}
+        >
+          <Image src={error} />
+        </Button>
+      );
     }
     return input && <Image src={check} />;
   };
