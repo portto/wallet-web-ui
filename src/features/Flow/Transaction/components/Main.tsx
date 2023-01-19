@@ -1,4 +1,4 @@
-import { Box, Flex, HStack } from "@chakra-ui/react";
+import { Box, Flex, HStack, Text } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { getAuthorization, updateAuthorization } from "src/apis";
@@ -9,10 +9,12 @@ import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
 import Header from "src/components/Header";
-// import TransactionContent from "src/components/TransactionContent";
+import TransactionContent from "src/components/TransactionContent";
 import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
+import { getFlowScriptWithTemplate } from "src/services/Flow";
+import { getTransactionLocale } from "src/utils/locales";
 import useTransactionDetail from "../hooks/useTransactionDetail";
 
 const messages = {
@@ -56,7 +58,7 @@ const messages = {
 const Main = () => {
   const { context, send } = useTransactionMachine();
   // TODO: add operation verified logic
-  const [verifiedTx] = useState(false);
+  const [verifiedTx] = useState(true);
 
   const {
     user,
@@ -65,13 +67,11 @@ const Main = () => {
   } = context;
   const { transaction } = rawObject;
   const dappDomain = new URL(dapp.url || "").host;
+  const scriptInfo = getFlowScriptWithTemplate(transaction);
 
-  // TODO: add tx detail related logic
   // const isNativeTransferring = false;
-  const { usdValue, tokenAmount, isRecognizedTx } = useTransactionDetail(
-    transaction
-    // user.balance
-  );
+  const { usdValue, tokenAmount, recognizedTx } =
+    useTransactionDetail(transaction);
 
   const approve = useCallback(async () => {
     const { sessionId, authorizationId = "" } = user;
@@ -136,17 +136,25 @@ const Main = () => {
         <DappLogo url={dapp.logo || ""} mb="space.s" />
       </TransactionInfo>
       <Box px="space.l">
-        {isRecognizedTx ? (
+        {recognizedTx ? (
           <>
             <Field
               title={<FormattedMessage {...messages.operation} />}
-              // hidableInfo={
-              //   !isNativeTransferring && (
-              //     <TransactionContent verified={verifiedTx}>
-              //       {transactionData}
-              //     </TransactionContent>
-              //   )
-              // }
+              hidableInfo={
+                <TransactionContent verified={verifiedTx}>
+                  <Text
+                    whiteSpace="pre"
+                    wordBreak="break-word"
+                    overflowX="auto"
+                  >
+                    {scriptInfo.arguments}
+                    {/* temporarily remove params field, as it's deprecated on flow end */}
+                    {/* but some dapps are still using them so leave it here until we can safely remove 'em */}
+                    {/* scriptInfo.params */}
+                    {scriptInfo.script}
+                  </Text>
+                </TransactionContent>
+              }
               icon={
                 verifiedTx ? (
                   <Check width="16px" height="16px" />
@@ -155,8 +163,14 @@ const Main = () => {
                 )
               }
             >
-              {/* //TODO: add operation detection logic. */}
-              Operation Name
+              <FormattedMessage
+                id={`transaction-${recognizedTx.hash}`}
+                defaultMessage={
+                  recognizedTx.messages[getTransactionLocale()] ||
+                  recognizedTx.messages.en
+                }
+                values={recognizedTx.args}
+              />
             </Field>
             <FieldLine />
             <Field title={<FormattedMessage {...messages.transactionFee} />}>
@@ -172,11 +186,21 @@ const Main = () => {
             <Box height="10px" bg="background.tertiary" mx="-20px" />
             <Field
               title={<FormattedMessage {...messages.script} />}
-              // hidableInfo={
-              //   !isNativeTransferring && (
-              //     <TransactionContent>{transactionData}</TransactionContent>
-              //   )
-              // }
+              hidableInfo={
+                <TransactionContent>
+                  <Text
+                    whiteSpace="pre"
+                    wordBreak="break-word"
+                    overflowX="auto"
+                  >
+                    {scriptInfo.arguments}
+                    {/* temporarily remove params field, as it's deprecated on flow end */}
+                    {/* but some dapps are still using them so leave it here until we can safely remove 'em */}
+                    {/* scriptInfo.params */}
+                    {scriptInfo.script}
+                  </Text>
+                </TransactionContent>
+              }
               icon={<CheckAlert width="16px" height="16px" />}
             >
               <FormattedMessage {...messages.transactionContainsScript} />

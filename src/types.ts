@@ -37,8 +37,9 @@ export interface EvmTransaction {
 export interface RecognizedFlowTx {
   args: { [key: string]: string };
   hash: string;
-  balances?: { amount: string };
+  balances?: { amount: string; buyPrice: string; maxAmountIn: string };
   arguments?: string[];
+  messages: { [key: string]: string };
 }
 
 export interface FlowTransaction {

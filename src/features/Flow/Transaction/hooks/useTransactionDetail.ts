@@ -3,10 +3,7 @@ import { useTransactionMachine } from "src/machines/transaction";
 import { recognizeTx } from "src/services/Flow";
 import { FlowTransaction, RecognizedFlowTx } from "src/types";
 
-export default function useTransactionDetail(
-  transaction: FlowTransaction
-  // userBalance = 0
-) {
+export default function useTransactionDetail(transaction: FlowTransaction) {
   const [recognizedTx, setRecognizedTx] = useState<RecognizedFlowTx | null>(
     null
   );
@@ -54,10 +51,11 @@ export default function useTransactionDetail(
       !!recognizedTokens && Object.entries(recognizedTokens);
 
     return {
-      // hasEnoughBalance: true,
       // isNativeTransferring: true,
-      // isSupportedTokenTransferring: true,
+      // TODO: add balance checking logic.
+      // hasEnoughBalance: true,
       tokenNames: tokenValuePair.map(([tokenName]) => tokenName),
+      // for displaying multiple tokens in the tx.
       tokenAmount: tokenValuePair
         .map(
           ([tokenName, tokenInfo]) => `${tokenInfo.tokenAmount} ${tokenName}`
@@ -67,7 +65,7 @@ export default function useTransactionDetail(
         (acc, [, tokenInfo]) => acc + tokenInfo.usdValue,
         0
       )}`,
-      isRecognizedTx: !!recognizedTx,
+      recognizedTx,
     };
   }, [getRecognizedTokens, recognizedTx]);
 }

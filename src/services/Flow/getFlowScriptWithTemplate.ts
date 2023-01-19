@@ -1,8 +1,6 @@
 import { FlowTransaction } from "../../types";
 // use flow transaction object to generate script info.
-export default function getFlowScriptWithTemplate(
-  transaction: FlowTransaction
-) {
+export function getFlowScriptWithTemplate(transaction: FlowTransaction) {
   const interaction = transaction && transaction.interaction;
   const message = (interaction && interaction.message) || {};
   const params = message.params || [];
