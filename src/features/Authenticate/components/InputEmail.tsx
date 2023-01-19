@@ -21,7 +21,7 @@ import DappLogo from "src/components/DappLogo";
 import Header from "src/components/Header";
 import { useLayoutContext } from "src/context/layout";
 import { useAuthenticateMachine } from "src/machines/authenticate";
-import { checkEmailCap, checkEmailFormat } from "src/utils/checkEmailFormat";
+import checkEmailFormat from "src/utils/checkEmailFormat";
 
 const messages = defineMessages({
   signInOrRegister: {
@@ -48,11 +48,6 @@ const messages = defineMessages({
     id: "feature.authn.input.invalidEmail",
     defaultMessage: "Please confirm your email format",
   },
-  checkCasing: {
-    id: "feature.authn.input.checkCasing",
-    defaultMessage:
-      "Blocto accounts are case-sensitive, please make sure you have correct email.",
-  },
   termsOfUse: {
     id: "feature.authn.register.termsOfUse",
     defaultMessage: "By registering, you agree to our <a>Terms of Use</a>",
@@ -72,7 +67,6 @@ const InputEmail = () => {
   const [isChecking, setIsChecking] = useState(false);
   const [isEmailExistent, setIsEmailExistent] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [hasWarning, setHasWarning] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const { setLayoutSize } = useLayoutContext();
   const {
@@ -91,7 +85,6 @@ const InputEmail = () => {
       if (!email) {
         setIsChecking(false);
         setHasError(false);
-        setHasWarning(false);
         return;
       }
 
@@ -102,7 +95,6 @@ const InputEmail = () => {
       }
 
       setHasError(false);
-      setHasWarning(!checkEmailCap(email));
       // @todo: regex check email validity before send request
       checkEmailExist(email).then(({ exist }) => {
         setIsChecking(false);
@@ -139,7 +131,6 @@ const InputEmail = () => {
     setIsChecking(false);
     setIsChecking(false);
     setHasError(false);
-    setHasWarning(false);
   };
 
   const renderButtonText = () => {
@@ -239,11 +230,9 @@ const InputEmail = () => {
               {renderInputIcon()}
             </InputRightElement>
           </InputGroup>
-          {(hasError || hasWarning) && (
+          {hasError && (
             <Text fontSize="size.body.3" color="font.alert" mb="space.4xl">
-              <FormattedMessage
-                {...(hasError ? messages.invalidEmail : messages.checkCasing)}
-              />
+              <FormattedMessage {...messages.invalidEmail} />
             </Text>
           )}
 

@@ -13,7 +13,6 @@
   "feature.authn.register.submit": "Register",
   "feature.authn.register.termsOfUse": "By registering, you agree to our <a>Terms of Use<\/a>",
   "feature.authn.input.invalidEmail": "Please confirm your email format",
-  "feature.authn.input.checkCasing": "Blocto accounts are case-sensitive, please make sure you have correct email.",
   "feature.authn.queue.title": "There is too much activity on Blocto",
   "feature.authn.queue.description": "Please wait until it's your turn to proceed with authentication...",
   "feature.authn.otp.title": "Passcode",
