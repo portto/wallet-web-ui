@@ -24,11 +24,10 @@ const NonCustodial = () => {
   const [signingRequestId, setSigningRequestId] = useState<string>("");
 
   const { user, transaction, dapp } = context;
-
+  const { rawObject } = transaction;
   // create non custodial signing request
   useEffect(() => {
     const { blockchain, url = "", name = "", logo = "" } = dapp;
-    const { rawObject } = transaction;
 
     createSigningRequest({
       title: name,
@@ -38,7 +37,7 @@ const NonCustodial = () => {
       type: "tx",
       txs: rawObject.transactions,
     }).then(({ id }) => setSigningRequestId(id));
-  }, [user.sessionId, transaction.rawObject, dapp, transaction]);
+  }, [user.sessionId, dapp, rawObject]);
 
   // check signing request status
   useEffect(() => {
