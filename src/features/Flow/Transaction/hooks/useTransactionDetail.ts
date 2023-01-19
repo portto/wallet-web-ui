@@ -51,7 +51,6 @@ export default function useTransactionDetail(transaction: FlowTransaction) {
       !!recognizedTokens && Object.entries(recognizedTokens);
 
     return {
-      // isNativeTransferring: true,
       // TODO: add balance checking logic.
       // hasEnoughBalance: true,
       tokenNames: tokenValuePair.map(([tokenName]) => tokenName),

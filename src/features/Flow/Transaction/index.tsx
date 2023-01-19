@@ -28,6 +28,7 @@ const systemStatus = [
 const stageComponentMapping = {
   [machineStates.CONNECTING]: Connecting,
   [machineStates.MAIN]: Main,
+  // TODO: add non-custodial view.
   // [machineStates.NON_CUSTODIAL]: NonCustodial,
 };
 

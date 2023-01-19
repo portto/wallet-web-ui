@@ -52,9 +52,6 @@ const messages = {
   },
 };
 
-// const FLOW_MAX_DIGITS = 100000000;
-// const CHAIN_FLOW = "flow";
-
 const Main = () => {
   const { context, send } = useTransactionMachine();
   // TODO: add operation verified logic
@@ -69,7 +66,6 @@ const Main = () => {
   const dappDomain = new URL(dapp.url || "").host;
   const scriptInfo = getFlowScriptWithTemplate(transaction);
 
-  // const isNativeTransferring = false;
   const { usdValue, tokenAmount, recognizedTx } =
     useTransactionDetail(transaction);
 
