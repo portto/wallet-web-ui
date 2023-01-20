@@ -1,13 +1,13 @@
 import transactionsMainnet from "@blocto/flow-transactions/build/messages.mainnet.sha3.json";
 import transactionsTestnet from "@blocto/flow-transactions/build/messages.testnet.sha3.json";
-import { IS_LOCAL, IS_PRODUCTION, IS_STAGING } from "src/services/Env";
+import { IS_DEVNET, IS_MAINNET, IS_SANDBOXNET } from "src/services/Env";
 import { FlowTransaction, RecognizedFlowTx } from "src/types";
 import hashMsg from "src/utils/hashMsg";
 
 // TODO: Get recognized transactions from @blocto/flow-transactions for sandboxnet
 const transactions = (): { [key: string]: any } => {
-  if (IS_LOCAL || IS_STAGING) return transactionsTestnet;
-  if (IS_PRODUCTION) return transactionsMainnet;
+  if (IS_SANDBOXNET || IS_DEVNET) return transactionsTestnet;
+  if (IS_MAINNET) return transactionsMainnet;
   return {};
 };
 
