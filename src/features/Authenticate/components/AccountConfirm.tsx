@@ -6,39 +6,16 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
-import { FormattedMessage, defineMessages } from "react-intl";
 import { createHandshake } from "src/apis";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
+import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { logAuthenticated } from "src/services/Amplitude";
 import { KEY_SESSION_ID, setItem } from "src/services/LocalStorage";
 import formatAddress from "src/utils/formatAddress";
-
-const messages = defineMessages({
-  title: {
-    id: "feature.authn.confirm.title",
-    defaultMessage: "Request account with",
-  },
-  email: {
-    id: "app.genaral.email",
-    defaultMessage: "Email",
-  },
-  address: {
-    id: "app.genaral.address",
-    defaultMessage: "{chain} Address",
-  },
-  approve: {
-    id: "app.genaral.approve",
-    defaultMessage: "Approve",
-  },
-  useAnotherAccount: {
-    id: "feature.authn.confirm.useAnotherAccount",
-    defaultMessage: "Use Another Account",
-  },
-});
 
 const AccountConifrm = () => {
   const { context, send } = useAuthenticateMachine();
@@ -115,7 +92,7 @@ const AccountConifrm = () => {
       >
         <DappLogo url={logo || ""} mb="space.s" />
         <Text fontSize="size.body.3" mb="space.2xs">
-          <FormattedMessage {...messages.title} />
+          <FormattedMessage intlKey="feature.authn.confirm.title" />
         </Text>
         <Text
           px="space.m"
@@ -132,14 +109,14 @@ const AccountConifrm = () => {
 
       <Flex flexDirection="column" justifyContent="space-between" px="space.l">
         <Box>
-          <Field title={<FormattedMessage {...messages.email} />}>
+          <Field title={<FormattedMessage intlKey="app.genaral.email" />}>
             {email}
           </Field>
           <FieldLine />
           <Field
             title={
               <FormattedMessage
-                {...messages.address}
+                intlKey="app.genaral.address"
                 values={{
                   chain:
                     blockchain.charAt(0).toUpperCase() + blockchain.slice(1),
@@ -155,7 +132,7 @@ const AccountConifrm = () => {
 
         <Box>
           <Button isLoading={hasSubmitted} onClick={approve}>
-            <FormattedMessage {...messages.approve} />
+            <FormattedMessage intlKey="app.genaral.approve" />
           </Button>
           <ChakraButton
             onClick={switchAccount}
@@ -169,7 +146,7 @@ const AccountConifrm = () => {
             _hover={{ bg: "none", transform: "scale(0.98)" }}
             _active={{ bg: "none", transform: "scale(0.96)" }}
           >
-            <FormattedMessage {...messages.useAnotherAccount} />
+            <FormattedMessage intlKey="feature.authn.confirm.useAnotherAccount" />
           </ChakraButton>
         </Box>
       </Flex>

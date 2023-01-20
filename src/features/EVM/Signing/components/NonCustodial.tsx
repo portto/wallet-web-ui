@@ -1,23 +1,13 @@
 import { Box, Center, Flex, Text } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
-import { FormattedMessage, defineMessages } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import { createSigningRequest, getSigningRequest } from "src/apis";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useSigningMachine } from "src/machines/signing";
+import { getDescriptor } from "src/messages";
 import { logSendTx } from "src/services/Amplitude";
 import { ERROR_MESSAGES } from "src/utils/constants";
-
-const messages = defineMessages({
-  title: {
-    id: "feature.sign.nonCustodial.title",
-    defaultMessage: "Please verify in Blocto app",
-  },
-  description: {
-    id: "feature.sign.nonCustodial.description",
-    defaultMessage: "Approve the signing request from Blocto app...",
-  },
-});
 
 const NonCustodial = () => {
   const { context, send } = useSigningMachine();
@@ -95,10 +85,14 @@ const NonCustodial = () => {
               lineHeight="line.height.subheading.1"
               mb="space.2xs"
             >
-              <FormattedMessage {...messages.title} />
+              <FormattedMessage
+                {...getDescriptor("feature.sign.nonCustodial.title")}
+              />
             </Text>
             <Text fontSize="size.body.3" textAlign="center">
-              <FormattedMessage {...messages.description} />
+              <FormattedMessage
+                {...getDescriptor("feature.sign.nonCustodial.description")}
+              />
             </Text>
           </Flex>
         </Center>
