@@ -142,7 +142,9 @@ export const getAuthorization = ({
     reason: string | null;
     transactionHash: string | null;
     transactions?: EvmTransaction[];
-    transaction?: FlowTransaction;
+    transaction?: string | FlowTransaction;
+    convertedTx?: string;
+    extraSignatures?: object;
   }>({
     url: `api/${blockchain}/authzDetails`,
     request: {
