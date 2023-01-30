@@ -1,15 +1,17 @@
-import { MessageDescriptor } from "react-intl";
 import { ERROR_MESSAGES } from "src/utils/constants";
-import descriptors from "./descriptors";
+import defaultMessages from "./defaultMessages";
 
 export interface Message {
-  [key: string]: MessageDescriptor;
+  [key: string]: string;
 }
 type MessageKey = keyof Message;
 
 export const getDescriptor = (key: MessageKey) => {
-  if (!descriptors[key]) {
+  if (!defaultMessages[key]) {
     console.error(ERROR_MESSAGES.INVALID_MESSAGE_KEY);
   }
-  return descriptors[key];
+  return {
+    id: `${key}`,
+    defaultMessage: defaultMessages[key],
+  };
 };
