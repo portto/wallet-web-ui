@@ -72,3 +72,10 @@ export interface FlowTransaction {
     ];
   };
 }
+
+export interface AptosTransaction {
+  arguments: string[];
+  function: string;
+  type: string;
+  type_arguments: string[];
+}

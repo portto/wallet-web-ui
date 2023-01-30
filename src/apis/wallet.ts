@@ -1,4 +1,4 @@
-import { EvmTransaction, FlowTransaction } from "src/types";
+import { AptosTransaction, EvmTransaction, FlowTransaction } from "src/types";
 import { apiGet, apiPost, apiPut } from "./axios";
 
 export const getMaintenanceStatus = (chain: string) =>
@@ -142,7 +142,7 @@ export const getAuthorization = ({
     reason: string | null;
     transactionHash: string | null;
     transactions?: EvmTransaction[];
-    transaction?: string | FlowTransaction;
+    transaction?: string | FlowTransaction | AptosTransaction;
     convertedTx?: string;
     extraSignatures?: object;
   }>({
