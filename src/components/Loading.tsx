@@ -1,18 +1,8 @@
 import { Box, Center, Flex, Text } from "@chakra-ui/react";
-import { FormattedMessage, defineMessages } from "react-intl";
+import { defineMessages } from "react-intl";
+import FormattedMessage from "src/components/FormattedMessage";
 import Header from "./Header";
 import LoadingLogo from "./LoadingLogo";
-
-const messages = defineMessages({
-  loading: {
-    id: "app.general.loading",
-    defaultMessage: "Connecting...",
-  },
-  loadingDesc: {
-    id: "app.general.loading.description",
-    defaultMessage: "It may take a few seconds.",
-  },
-});
 
 const Loading = ({
   blockchain,
@@ -45,14 +35,14 @@ const Loading = ({
               lineHeight="line.height.subheading.1"
               mb="space.2xs"
             >
-              <FormattedMessage {...messages.loading} />
+              <FormattedMessage intlKey="app.general.loading" />
             </Text>
             <Text
               color="font.primary"
               fontSize="size.body.3"
               fontWeight="weight.s"
             >
-              <FormattedMessage {...messages.loadingDesc} />
+              <FormattedMessage intlKey="app.general.loading.description" />
             </Text>
           </Flex>
         </Center>

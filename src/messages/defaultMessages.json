@@ -1,0 +1,16 @@
+{
+  "feature.authn.confirm.title": "Request account with",
+  "app.general.email": "Email",
+  "app.general.address": "{chain} Address",
+  "app.general.approve": "Approve",
+  "app.general.loading": "Connecting...",
+  "app.general.loading.description": "It may take a few seconds.",
+  "app.general.itTakesSomeTimeToProceed": "It takes some time to proceed",
+  "app.general.downloadBloctoApp": "Download Blocto App",
+  "feature.authn.confirm.useAnotherAccount": "Use Another Account",
+  "feature.authn.enable.title": "Creating {chain} Wallet...",
+  "feature.authn.insufficientEnable.title": "Insufficient Blocto points for creating {chain} Wallet",
+  "feature.authn.insufficientEnable.description": "Please go to Blocto App to purchase points and create wallet",
+  "feature.sign.nonCustodial.title": "Please verify in Blocto app",
+  "feature.sign.nonCustodial.description": "Approve the signing request from Blocto app..."
+}

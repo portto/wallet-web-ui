@@ -15,11 +15,11 @@ const messages = defineMessages({
     defaultMessage: "You are signing for",
   },
   message: {
-    id: "app.genaral.message",
+    id: "app.general.message",
     defaultMessage: "Message",
   },
   approve: {
-    id: "app.genaral.approve",
+    id: "app.general.approve",
     defaultMessage: "Approve",
   },
 });

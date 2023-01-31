@@ -1,46 +1,19 @@
 import { Center, Button as ChakraButton, Flex, Text } from "@chakra-ui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FormattedMessage, defineMessages } from "react-intl";
+import { defineMessages } from "react-intl";
 import {
   enableBlockchain,
   estimateEnableBlockchain,
   getAccountAssets,
 } from "src/apis";
 import Button from "src/components/Button";
+import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { AssetStatus } from "src/types";
 import getBlockchainStatus from "src/utils/getBlockchainStatus";
 import mapAssetsToAddresses from "src/utils/mapAssetsToAddresses";
-
-const messages = defineMessages({
-  enable: {
-    id: "feature.authn.enable.title",
-    defaultMessage: "Creating {chain} Wallet...",
-  },
-  insufficientEnable: {
-    id: "feature.authn.insufficientEnable.title",
-    defaultMessage: "Insufficient Blocto points for creating {chain} Wallet",
-  },
-  itTakesSomeTimeToProceed: {
-    id: "app.general.itTakesSomeTimeToProceed",
-    defaultMessage: "It takes some time to proceed",
-  },
-  insufficientEnableDesc: {
-    id: "feature.authn.insufficientEnable.description",
-    defaultMessage:
-      "Please go to Blocto App to purchase points and create wallet",
-  },
-  downloadBloctoApp: {
-    id: "app.general.downloadBloctoApp",
-    defaultMessage: "Download Blocto App",
-  },
-  useAnotherAccount: {
-    id: "feature.authn.confirm.useAnotherAccount",
-    defaultMessage: "Use Another Account",
-  },
-});
 
 const OPEN_APP_LINK =
   process.env.REACT_APP_NETWORK === "mainnet"
@@ -147,7 +120,11 @@ const EnableBlockchain = () => {
               mb="space.2xs"
             >
               <FormattedMessage
-                {...(isEnough ? messages.enable : messages.insufficientEnable)}
+                intlKey={
+                  isEnough
+                    ? "feature.authn.enable.title"
+                    : "feature.authn.insufficientEnable.title"
+                }
                 values={{
                   chain:
                     blockchain.charAt(0).toUpperCase() + blockchain.slice(1),
@@ -156,16 +133,18 @@ const EnableBlockchain = () => {
             </Text>
             <Text fontSize="size.body.3" textAlign="center">
               <FormattedMessage
-                {...(isEnough
-                  ? messages.itTakesSomeTimeToProceed
-                  : messages.insufficientEnableDesc)}
+                intlKey={
+                  isEnough
+                    ? "app.general.itTakesSomeTimeToProceed"
+                    : "feature.authn.insufficientEnable.description"
+                }
               />
             </Text>
           </Flex>
         </Center>
         {!isEnough && (
           <Button onClick={redirect}>
-            <FormattedMessage {...messages.downloadBloctoApp} />
+            <FormattedMessage intlKey="app.general.downloadBloctoApp" />
           </Button>
         )}
         <ChakraButton
@@ -181,7 +160,7 @@ const EnableBlockchain = () => {
           _hover={{ bg: "none", transform: "scale(0.98)" }}
           _active={{ bg: "none", transform: "scale(0.96)" }}
         >
-          <FormattedMessage {...messages.useAnotherAccount} />
+          <FormattedMessage intlKey="feature.authn.confirm.useAnotherAccount" />
         </ChakraButton>
       </Flex>
     </>

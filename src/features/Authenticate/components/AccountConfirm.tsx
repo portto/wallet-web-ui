@@ -109,14 +109,14 @@ const AccountConifrm = () => {
 
       <Flex flexDirection="column" justifyContent="space-between" px="space.l">
         <Box>
-          <Field title={<FormattedMessage intlKey="app.genaral.email" />}>
+          <Field title={<FormattedMessage intlKey="app.general.email" />}>
             {email}
           </Field>
           <FieldLine />
           <Field
             title={
               <FormattedMessage
-                intlKey="app.genaral.address"
+                intlKey="app.general.address"
                 values={{
                   chain:
                     blockchain.charAt(0).toUpperCase() + blockchain.slice(1),
@@ -132,7 +132,7 @@ const AccountConifrm = () => {
 
         <Box>
           <Button isLoading={hasSubmitted} onClick={approve}>
-            <FormattedMessage intlKey="app.genaral.approve" />
+            <FormattedMessage intlKey="app.general.approve" />
           </Button>
           <ChakraButton
             onClick={switchAccount}

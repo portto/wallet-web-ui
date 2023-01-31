@@ -1,17 +1,15 @@
 import { ERROR_MESSAGES } from "src/utils/constants";
-import defaultMessages from "./defaultMessages";
+import defaultMessages from "./defaultMessages.json";
 
-export interface Message {
-  [key: string]: string;
-}
-type MessageKey = keyof Message;
+type MessageKey = keyof typeof defaultMessages;
 
-export const getDescriptor = (key: MessageKey) => {
+export const getDescriptor = (key: MessageKey, options: object) => {
   if (!defaultMessages[key]) {
     console.error(ERROR_MESSAGES.INVALID_MESSAGE_KEY);
   }
   return {
     id: `${key}`,
     defaultMessage: defaultMessages[key],
+    ...options,
   };
 };
