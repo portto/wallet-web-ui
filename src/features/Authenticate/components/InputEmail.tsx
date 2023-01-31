@@ -82,15 +82,9 @@ const InputEmail = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkEmail = useCallback(
     debounce((email) => {
-      if (!email) {
+      if (!email || !checkEmailFormat(email)) {
         setIsChecking(false);
-        setHasError(false);
-        return;
-      }
-
-      if (!checkEmailFormat(email)) {
-        setIsChecking(false);
-        setHasError(true);
+        setHasError(!!email);
         return;
       }
 
@@ -128,7 +122,6 @@ const InputEmail = () => {
 
   const clearInput = () => {
     setInput("");
-    setIsChecking(false);
     setIsChecking(false);
     setHasError(false);
   };
