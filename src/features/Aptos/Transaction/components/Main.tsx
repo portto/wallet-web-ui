@@ -13,43 +13,7 @@ import TransactionContent from "src/components/TransactionContent";
 import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
-import { EvmTransaction } from "src/types";
 import useTransactionDetail from "../hooks/useTransactionDetail";
-
-const messages = {
-  operation: {
-    id: "app.authz.operation",
-    defaultMessage: "Operation",
-  },
-  confirmTransactionFrom: {
-    id: "app.authz.confirmTransactionFrom",
-    defaultMessage: "Confirm transaction from",
-  },
-  transactionFee: {
-    id: "app.authz.transactionFee",
-    defaultMessage: "Transaction Fee",
-  },
-  approve: {
-    id: "app.authz.approve",
-    defaultMessage: "Approve",
-  },
-  script: {
-    id: "app.authz.script",
-    defaultMessage: "Script",
-  },
-  transactionContainsScript: {
-    id: "app.authz.transactionContainsScript",
-    defaultMessage: "This transaction contains script",
-  },
-  transactionFeePoints: {
-    id: "app.authz.transactionFeePoints",
-    defaultMessage: "{points} Points",
-  },
-  free: {
-    id: "app.authz.free",
-    defaultMessage: "Free (subsidized by Blocto)",
-  },
-};
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
@@ -61,17 +25,20 @@ const Main = () => {
   const { user, transaction, dapp } = context;
   const dappDomain = new URL(dapp.url || "").host;
   const { rawObject } = transaction;
-  const transactionData = rawObject.transactions
-    .filter(({ data }: EvmTransaction) => data)
-    .map(({ data }: EvmTransaction) => data)
-    .join("\n\n");
+  const {
+    type,
+    arguments: args = [],
+    function: functionName = "",
+    type_arguments: typeArgs = [],
+    code,
+  } = rawObject.transaction;
 
   const hasDiscount = (transaction.discount || 0) > 0;
   const realTransactionFee =
     (transaction.fee || 0) - (transaction.discount || 0);
 
-  const txDetailData = useTransactionDetail(transaction, user.balance);
-  const { isNativeTransferring } = txDetailData || {};
+  const txDetailData = useTransactionDetail(rawObject.transaction);
+  const { tokenAmount = "", usdValue = "" } = txDetailData || {};
 
   const { sessionId = "" } = user;
   const { blockchain } = dapp;
@@ -164,6 +131,51 @@ const Main = () => {
     );
   }, [transaction.fee, realTransactionFee, hasDiscount]);
 
+  const getTransactionData = () => {
+    if (functionName) {
+      return (
+        <>
+          {/* @todo: support other tx type */}
+          Type: entry_function_payload
+          <br />
+          {!!typeArgs.length && (
+            <>
+              Type Arguments: [{typeArgs.join(", ")}]<br />
+            </>
+          )}
+          {!!args.length && (
+            <>
+              Arguments: [{args.join(", ")}]<br />
+            </>
+          )}
+          <br />
+          {functionName}
+        </>
+      );
+    }
+    if (code) {
+      /* @todo: support other tx type */
+      return (
+        <>
+          Type: {type}
+          <br />
+          {!!typeArgs.length && (
+            <>
+              Type Arguments: [{typeArgs.join(", ")}]<br />
+            </>
+          )}
+          {!!args.length && (
+            <>
+              Arguments: [{args.join(", ")}]<br />
+            </>
+          )}
+          <br />
+          {functionName || (code && code.bytecode)}
+        </>
+      );
+    }
+    return null;
+  };
   return (
     <Box>
       <Header
@@ -171,7 +183,10 @@ const Main = () => {
         onClose={() => send({ type: "close" })}
         blockchain={dapp?.blockchain}
       />
-      <TransactionInfo host={dappDomain} transactionDetail={txDetailData}>
+      <TransactionInfo
+        host={dappDomain}
+        transactionDetail={{ tokenAmount, usdValue }}
+      >
         <DappLogo url={dapp.logo || ""} mb="space.s" />
       </TransactionInfo>
       <Box px="space.l">
@@ -180,11 +195,9 @@ const Main = () => {
             <Field
               title={<FormattedMessage intlKey="app.authz.operation" />}
               hidableInfo={
-                !isNativeTransferring && (
-                  <TransactionContent verified={verifiedTx}>
-                    {transactionData}
-                  </TransactionContent>
-                )
+                <TransactionContent verified={verifiedTx}>
+                  {getTransactionData()}
+                </TransactionContent>
               }
               icon={
                 verifiedTx ? (
@@ -216,9 +229,7 @@ const Main = () => {
             <Field
               title={<FormattedMessage intlKey="app.authz.script" />}
               hidableInfo={
-                !isNativeTransferring && (
-                  <TransactionContent>{transactionData}</TransactionContent>
-                )
+                <TransactionContent>{getTransactionData()}</TransactionContent>
               }
               icon={<CheckAlert width="16px" height="16px" />}
             >
