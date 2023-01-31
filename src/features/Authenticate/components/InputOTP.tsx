@@ -7,30 +7,15 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FormattedMessage, defineMessages } from "react-intl";
 import { register, requestEmailAuth } from "src/apis";
 import switchAccountIcon from "src/assets/images/icons/switch.svg";
 import Button from "src/components/Button";
+import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { logLogin, logRegister } from "src/services/Amplitude";
 import loginAndAcquireToken from "src/utils/loginAndAcquireToken";
-
-const messages = defineMessages({
-  title: {
-    id: "feature.authn.otp.title",
-    defaultMessage: "Passcode",
-  },
-  description: {
-    id: "feature.authn.otp.description",
-    defaultMessage: "We have sent a 6-digit code to your email",
-  },
-  resend: {
-    id: "feature.authn.otp.resend",
-    defaultMessage: "Resend",
-  },
-});
 
 const COOLDOWN_TIME = 60;
 
@@ -166,10 +151,10 @@ const InputOTP = () => {
             fontWeight="weight.l"
             lineHeight="line.height.subheading.1"
           >
-            <FormattedMessage {...messages.title} />
+            <FormattedMessage intlKey="feature.authn.otp.title" />
           </Text>
           <Text fontSize="size.body.3" textAlign="center" my="space.2xs">
-            <FormattedMessage {...messages.description} />
+            <FormattedMessage intlKey="feature.authn.otp.description" />
           </Text>
           <Text
             display="flex"
@@ -210,7 +195,7 @@ const InputOTP = () => {
             disabled={!!cooldown}
             onClick={handleResend}
           >
-            <FormattedMessage {...messages.resend} />
+            <FormattedMessage intlKey="feature.authn.otp.resend" />
             {!!cooldown && ` (${cooldown})`}
           </Button>
         </Box>

@@ -23,5 +23,17 @@
   "feature.authn.input.invalidEmail": "Please confirm your email format",
   "feature.authn.input.checkCasing": "Blocto accounts are case-sensitive, please make sure you have correct email.",
   "feature.authn.register.termsOfUse": "By registering, you agree to our <a>Terms of Use</a>",
-  "app.authz.confirmTransactionFrom": "Confirm transaction from"
+  "app.authz.confirmTransactionFrom": "Confirm transaction from",
+  "app.authz.operationVerified": "This transaction is verified.",
+  "app.authz.operation": "Operation",
+  "app.authz.operationNotVerified": "This transaction is not verified.",
+  "feature.authn.otp.title": "Passcode",
+  "feature.authn.otp.description": "We have sent a 6-digit code to your email",
+  "feature.authn.otp.resend": "Resend",
+  "feature.authn.queue.title": "There is too much activity on Blocto",
+  "feature.authn.queue.description": "Please wait until it's your turn to proceed with authentication...",
+  "feature.sign.title": "You are signing for",
+  "app.general.message": "Message",
+  "feature.transaction.nonCustodial.title": "Please verify in Blocto app",
+  "feature.transaction.nonCustodial.description": "Approve the transaction from Blocto app..."
 }

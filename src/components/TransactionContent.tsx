@@ -1,23 +1,8 @@
 import { Box, Flex, Heading } from "@chakra-ui/react";
 import { ReactNode } from "react";
-import { FormattedMessage } from "react-intl";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as CheckVerified } from "src/assets/images/icons/check-verified.svg";
-
-const messages = {
-  operation: {
-    id: "app.authz.operation",
-    defaultMessage: "Operation",
-  },
-  operationVerified: {
-    id: "app.authz.operationVerified",
-    defaultMessage: "This transaction is verified.",
-  },
-  operationNotVerified: {
-    id: "app.authz.operationNotVerified",
-    defaultMessage: "This transaction is not verified.",
-  },
-};
+import FormattedMessage from "src/components/FormattedMessage";
 
 const TransactionContent = ({
   children,
@@ -34,7 +19,7 @@ const TransactionContent = ({
         fontWeight="weight.l"
         mb="space.m"
       >
-        <FormattedMessage {...messages.operation} />
+        <FormattedMessage intlKey="app.authz.operation" />
       </Heading>
       {verified ? (
         <Flex
@@ -45,7 +30,7 @@ const TransactionContent = ({
         >
           <CheckVerified />
           <Box ml="space.xs" fontSize="size.body.3">
-            <FormattedMessage {...messages.operationVerified} />
+            <FormattedMessage intlKey="app.authz.operationVerified" />
           </Box>
         </Flex>
       ) : (
@@ -57,7 +42,7 @@ const TransactionContent = ({
         >
           <CheckAlert />
           <Box ml="space.xs" fontSize="size.body.3">
-            <FormattedMessage {...messages.operationNotVerified} />
+            <FormattedMessage intlKey="app.authz.operationNotVerified" />
           </Box>
         </Flex>
       )}
