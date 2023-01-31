@@ -1,4 +1,4 @@
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, defineMessage } from "react-intl";
 import { getDescriptor } from "src/messages";
 
 interface Props {
@@ -9,5 +9,5 @@ interface Props {
 export default ({ intlKey, ...props }: Props) => {
   const descriptor = getDescriptor(intlKey);
   if (!descriptor) return null;
-  return <FormattedMessage {...descriptor} {...props} />;
+  return <FormattedMessage {...defineMessage(descriptor)} {...props} />;
 };
