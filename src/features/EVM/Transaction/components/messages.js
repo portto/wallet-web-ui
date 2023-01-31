@@ -1,50 +1,11 @@
 import { defineMessages } from "react-intl";
 
 export default defineMessages({
-  operation: {
-    id: "app.authz.operation",
-    defaultMessage: "Operation",
-  },
-  transactionFee: {
-    id: "app.authz.transactionFee",
-    defaultMessage: "Transaction Fee",
-  },
-  approve: {
-    id: "app.authz.approve",
-    defaultMessage: "Approve",
-  },
-  script: {
-    id: "app.authz.script",
-    defaultMessage: "Script",
-  },
-  transactionContainsScript: {
-    id: "app.authz.transactionContainsScript",
-    defaultMessage: "This transaction contains script",
-  },
-  transactionFeePoints: {
-    id: "app.authz.transactionFeePoints",
-    defaultMessage: "{points} Points",
-  },
   // original
   // TODO: remove unused string.
   confirmTransaction: {
     id: "app.authz.confirmTransaction",
     defaultMessage: "Confirm transaction",
-  },
-
-  decline: {
-    id: "app.authz.decline",
-    defaultMessage: "Decline",
-  },
-
-  data: {
-    id: "app.authz.data",
-    defaultMessage: "Data",
-  },
-
-  free: {
-    id: "app.authz.free",
-    defaultMessage: "Free",
   },
 
   transactionMayFail: {
