@@ -1,9 +1,10 @@
 import merge from "lodash.merge";
 import { assign, createMachine } from "xstate";
+import { Chains } from "src/types";
 
 const defaultContext = {
   dapp: {
-    blockchain: "flow",
+    blockchain: Chains.flow,
   },
   user: {
     onConfirm: () => undefined,
@@ -45,7 +46,7 @@ export interface AuthenticateMachineContext {
     id?: string;
     name?: string;
     logo?: string;
-    blockchain: string;
+    blockchain: Chains;
     chainLogo?: string;
     url?: string;
   };

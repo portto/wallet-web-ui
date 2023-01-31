@@ -9,15 +9,13 @@ import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
 import Header from "src/components/Header";
+import TransactionContent from "src/components/TransactionContent";
+import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
+import { EvmTransaction } from "src/types";
+import useTransactionDetail from "../hooks/useTransactionDetail";
 import messages from "./messages";
-import TransactionContent from "./TransactionContent";
-import TransactionInfo from "./TransactionInfo";
-
-interface EvmTransaction {
-  data: string;
-}
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
@@ -25,6 +23,7 @@ const Main = () => {
   const [recognizedTx] = useState(false);
   // TODO: add operation verified logic
   const [verifiedTx] = useState(false);
+
   const { user, transaction, dapp } = context;
   const dappDomain = new URL(dapp.url || "").host;
   const { rawObject } = transaction;
@@ -37,11 +36,13 @@ const Main = () => {
   const realTransactionFee =
     (transaction.fee || 0) - (transaction.discount || 0);
 
-  useEffect(() => {
-    const { sessionId = "" } = user;
-    const { rawObject } = transaction;
-    const { blockchain } = dapp;
+  const txDetailData = useTransactionDetail(transaction, user.balance);
+  const { isNativeTransferring } = txDetailData || {};
 
+  const { sessionId = "" } = user;
+  const { blockchain } = dapp;
+
+  useEffect(() => {
     estimatePoint({ rawObject, sessionId, blockchain }).then(
       ({ cost, discount, error_code, chain_error_msg }) =>
         send({
@@ -54,7 +55,7 @@ const Main = () => {
           },
         })
     );
-  }, [user.sessionId, transaction.rawObject, dapp.blockchain]);
+  }, [sessionId, rawObject, blockchain, send]);
 
   const approve = useCallback(async () => {
     const { sessionId, authorizationId = "" } = user;
@@ -84,7 +85,7 @@ const Main = () => {
         dAppId: id,
       });
     } else send({ type: "reject", data: { failReason: reason } });
-  }, [user, dapp, transaction]);
+  }, [user, dapp, transaction, dappDomain, send]);
 
   const getTransactionFeeField = useCallback(() => {
     return (
@@ -127,15 +128,16 @@ const Main = () => {
         )}
       </HStack>
     );
-  }, [transaction.fee, realTransactionFee]);
+  }, [transaction.fee, realTransactionFee, hasDiscount]);
 
   return (
     <Box>
       <Header
+        bg="background.secondary"
         onClose={() => send({ type: "close" })}
         blockchain={dapp?.blockchain}
       />
-      <TransactionInfo host={dappDomain}>
+      <TransactionInfo host={dappDomain} transactionDetail={txDetailData}>
         <DappLogo url={dapp.logo || ""} mb="space.s" />
       </TransactionInfo>
       <Box px="space.l">
@@ -144,10 +146,11 @@ const Main = () => {
             <Field
               title={<FormattedMessage {...messages.operation} />}
               hidableInfo={
-                // TODO: Only use transactionData if it's not a native transfer action.
-                <TransactionContent verified={verifiedTx}>
-                  {transactionData}
-                </TransactionContent>
+                !isNativeTransferring && (
+                  <TransactionContent verified={verifiedTx}>
+                    {transactionData}
+                  </TransactionContent>
+                )
               }
               icon={
                 verifiedTx ? (
@@ -175,7 +178,9 @@ const Main = () => {
             <Field
               title={<FormattedMessage {...messages.script} />}
               hidableInfo={
-                <TransactionContent>{transactionData}</TransactionContent>
+                !isNativeTransferring && (
+                  <TransactionContent>{transactionData}</TransactionContent>
+                )
               }
               icon={<CheckAlert width="16px" height="16px" />}
             >

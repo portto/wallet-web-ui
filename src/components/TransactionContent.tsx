@@ -3,7 +3,21 @@ import { ReactNode } from "react";
 import { FormattedMessage } from "react-intl";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as CheckVerified } from "src/assets/images/icons/check-verified.svg";
-import messages from "./messages";
+
+const messages = {
+  operation: {
+    id: "app.authz.operation",
+    defaultMessage: "Operation",
+  },
+  operationVerified: {
+    id: "app.authz.operationVerified",
+    defaultMessage: "This transaction is verified.",
+  },
+  operationNotVerified: {
+    id: "app.authz.operationNotVerified",
+    defaultMessage: "This transaction is not verified.",
+  },
+};
 
 const TransactionContent = ({
   children,

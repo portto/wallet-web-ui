@@ -1,6 +1,6 @@
 import { getReadableDeviceInfo } from "src/services/Device";
 import { KEY_ACCESS_TOKEN, getItem } from "src/services/LocalStorage";
-import { AccountAsset } from "src/types";
+import { AccountAsset, Chains } from "src/types";
 import { apiGet, apiPost } from "../axios";
 
 export const checkEmailExist = (email = "") =>
@@ -151,10 +151,10 @@ export const getAccountAsset = ({
   blockchain,
   force = false,
 }: {
-  blockchain: string;
-  force: boolean;
+  blockchain: Chains;
+  force?: boolean;
 }) =>
-  apiGet({
+  apiGet<{ value: string }>({
     url: "blocto/account/asset",
     request: {
       blockchain,
@@ -167,7 +167,7 @@ export const getAccountFlowAsset = () =>
   apiGet({
     url: "blocto/account/asset",
     request: {
-      blockchain: "flow",
+      blockchain: Chains.flow,
     },
     isAuthorized: true,
   });
@@ -176,7 +176,7 @@ export const getAccountSolanaAsset = () =>
   apiGet({
     url: "blocto/account/asset",
     request: {
-      blockchain: "solana",
+      blockchain: Chains.solana,
     },
     isAuthorized: true,
   });
@@ -184,7 +184,7 @@ export const getAccountSolanaAsset = () =>
 export const estimateEnableBlockchain = ({
   blockchain,
 }: {
-  blockchain: string;
+  blockchain: Chains;
 }) =>
   apiPost<{ point_cost: string; point_discount: string }>({
     url: "blocto/account/estimateEnableBlockchain",
@@ -199,7 +199,7 @@ export const enableBlockchain = ({
   pointCost,
   pointDiscount,
 }: {
-  blockchain: string;
+  blockchain: Chains;
   pointCost: string;
   pointDiscount: string;
 }) =>
@@ -217,7 +217,7 @@ export const enableSolana = () =>
   apiPost({
     url: "blocto/account/enableBlockchain",
     request: {
-      blockchain: "solana",
+      blockchain: Chains.solana,
     },
     isAuthorized: true,
   });
@@ -297,7 +297,10 @@ export const signPayer = ({
     isAuthorized: true,
   });
 
-export const createSigningRequest = ({ blockchain = "flow", ...payload }) =>
+export const createSigningRequest = ({
+  blockchain = Chains.flow,
+  ...payload
+}) =>
   apiPost<{ id: string }>({
     url: `blocto/nonCustodial/signingRequest/${blockchain}`,
     request: payload,
@@ -305,10 +308,10 @@ export const createSigningRequest = ({ blockchain = "flow", ...payload }) =>
   });
 
 export const getSigningRequest = ({
-  blockchain = "flow",
+  blockchain = Chains.flow,
   id,
 }: {
-  blockchain: string;
+  blockchain: Chains;
   id: string;
 }) =>
   apiGet<{

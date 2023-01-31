@@ -1,8 +1,9 @@
 import { assign, createMachine } from "xstate";
+import { Chains } from "src/types";
 
 const defaultContext = {
   dapp: {
-    blockchain: "flow",
+    blockchain: Chains.flow,
   },
   user: {
     onApprove: () => undefined,
@@ -29,7 +30,7 @@ export interface SigningMachineContext {
     id?: string;
     name?: string;
     logo?: string;
-    blockchain: string;
+    blockchain: Chains;
     chainLogo?: string;
     url?: string;
   };

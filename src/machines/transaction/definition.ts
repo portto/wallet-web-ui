@@ -1,8 +1,9 @@
 import { assign, createMachine } from "xstate";
+import { Chains } from "src/types";
 
 const defaultContext = {
   dapp: {
-    blockchain: "flow",
+    blockchain: Chains.flow,
   },
   user: {
     onApprove: () => undefined,
@@ -29,7 +30,7 @@ export interface TransactionMachineContext {
     id?: string;
     name?: string;
     logo?: string;
-    blockchain: string;
+    blockchain: Chains;
     chainLogo?: string;
     url?: string;
   };
@@ -41,6 +42,7 @@ export interface TransactionMachineContext {
     sessionId?: string;
     points?: number;
     assets?: any[];
+    balance?: number;
     onApprove: (arg: any) => void;
     onReject: (arg: any) => void;
   };
