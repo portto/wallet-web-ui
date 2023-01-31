@@ -10,7 +10,7 @@ import {
   keyframes,
 } from "@chakra-ui/react";
 import debounce from "lodash/debounce";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FormattedMessage, defineMessages } from "react-intl";
 import { checkEmailExist, requestEmailAuth } from "src/apis";
 import check from "src/assets/images/icons/check.svg";
@@ -19,6 +19,7 @@ import inputLoading from "src/assets/images/icons/input-loading.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Header from "src/components/Header";
+import { useLayoutContext } from "src/context/layout";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { checkEmailCap, checkEmailFormat } from "src/utils/checkEmailFormat";
 
@@ -73,10 +74,16 @@ const InputEmail = () => {
   const [hasError, setHasError] = useState(false);
   const [hasWarning, setHasWarning] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const { setLayoutSize } = useLayoutContext();
   const {
     user: { action },
     dapp: { name, blockchain, logo },
   } = context;
+  const isRegistering = input && !hasError && !isChecking && !isEmailExistent;
+
+  useEffect(() => {
+    if (setLayoutSize) setLayoutSize(isRegistering || hasError ? "md" : "sm");
+  }, [isRegistering, hasError, setLayoutSize]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkEmail = useCallback(
@@ -213,7 +220,7 @@ const InputEmail = () => {
             </InputRightElement>
           </InputGroup>
           {(hasError || hasWarning) && (
-            <Text fontSize="size.body.3" color="font.alert" mb="space.xs">
+            <Text fontSize="size.body.3" color="font.alert" mb="space.4xl">
               <FormattedMessage
                 {...(hasError ? messages.invalidEmail : messages.checkCasing)}
               />
@@ -228,12 +235,13 @@ const InputEmail = () => {
             {renderButtonText()}
           </Button>
 
-          {input && !hasError && !isChecking && !isEmailExistent && (
+          {isRegistering && (
             <Text
               fontSize="size.help.1"
               color="font.secondary"
               textAlign="center"
-              mt="space.s"
+              mt="space.3xl"
+              mb="space.4xs"
             >
               <FormattedMessage
                 {...messages.termsOfUse}

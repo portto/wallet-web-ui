@@ -1,8 +1,16 @@
 import { Box, FlexProps } from "@chakra-ui/react";
 import { FC } from "react";
 
-const Layout: FC<{ isCompact?: boolean } & FlexProps> = ({
-  isCompact = true,
+export type LayoutSizeType = "sm" | "md" | "lg";
+
+const LAYOUT_SIZE: Record<LayoutSizeType, string> = {
+  sm: "390px",
+  md: "444px",
+  lg: "584px",
+};
+
+const Layout: FC<{ size?: LayoutSizeType } & FlexProps> = ({
+  size = "sm",
   children,
   ...rest
 }) => (
@@ -12,7 +20,7 @@ const Layout: FC<{ isCompact?: boolean } & FlexProps> = ({
     left={{ base: 0, md: "50%" }}
     bottom={{ base: 0, md: "unset" }}
     width={{ base: "100vw", md: "375px" }}
-    height={{ base: "100%", md: isCompact ? "390px" : "584px" }}
+    height={{ base: "100%", md: LAYOUT_SIZE[size] }}
     maxH="580px"
     transform={{ base: "none", md: "translate(-50%, -50%)" }}
     display="flex"
