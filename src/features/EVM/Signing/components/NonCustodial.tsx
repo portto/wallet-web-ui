@@ -1,11 +1,10 @@
 import { Box, Center, Flex, Text } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
-import { FormattedMessage } from "react-intl";
 import { createSigningRequest, getSigningRequest } from "src/apis";
+import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useSigningMachine } from "src/machines/signing";
-import { getDescriptor } from "src/messages";
 import { logSendTx } from "src/services/Amplitude";
 import { ERROR_MESSAGES } from "src/utils/constants";
 
@@ -85,14 +84,10 @@ const NonCustodial = () => {
               lineHeight="line.height.subheading.1"
               mb="space.2xs"
             >
-              <FormattedMessage
-                {...getDescriptor("feature.sign.nonCustodial.title")}
-              />
+              <FormattedMessage intlKey="feature.sign.nonCustodial.title" />
             </Text>
             <Text fontSize="size.body.3" textAlign="center">
-              <FormattedMessage
-                {...getDescriptor("feature.sign.nonCustodial.description")}
-              />
+              <FormattedMessage intlKey="feature.sign.nonCustodial.description" />
             </Text>
           </Flex>
         </Center>
