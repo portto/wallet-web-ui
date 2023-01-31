@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getMaintenanceStatus } from "src/apis";
-import Layout from "src/components/Layout";
+import { useLayoutContext } from "src/context/layout";
 import {
   machineStates,
   useSigningMachine,
@@ -23,10 +23,13 @@ const systemStatus = [
   machineStates.FINAL,
 ];
 
-const stageComponentMapping = {
-  [machineStates.CONNECTING]: { component: Connecting },
-  [machineStates.MAIN]: { component: Main, compactView: false },
-  [machineStates.NON_CUSTODIAL]: { component: NonCustodial },
+const stageComponentMapping: Record<
+  string,
+  { component: () => JSX.Element; layoutSize: "sm" | "lg" }
+> = {
+  [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
+  [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
+  [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "lg" },
 };
 
 const useDefaultStateFromProps = (props: any) => {
@@ -72,6 +75,7 @@ const Signing = withSigningContext(
     const state = useDefaultStateFromProps(props);
     const { value, send } = useSigningMachine();
     const [stage, setStage] = useState(machineStates.IDLE);
+    const { setLayoutSize } = useLayoutContext();
 
     // initialization
     useEffect(() => {
@@ -94,13 +98,14 @@ const Signing = withSigningContext(
       }
     }, [value]);
 
+    useEffect(() => {
+      if (setLayoutSize && stageComponentMapping[stage]?.layoutSize)
+        setLayoutSize(stageComponentMapping[stage]?.layoutSize);
+    }, [stage, setLayoutSize]);
+
     const Component = stageComponentMapping[stage]?.component ?? Noop;
 
-    return (
-      <Layout isCompact={stageComponentMapping[stage]?.compactView}>
-        <Component />
-      </Layout>
-    );
+    return <Component />;
   })
 );
 

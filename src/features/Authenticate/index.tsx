@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { getMaintenanceStatus } from "src/apis";
-import Layout from "src/components/Layout";
+import { useLayoutContext } from "src/context/layout";
 import {
   machineStates,
   useAuthenticateMachine,
@@ -36,19 +36,28 @@ const systemStatus = [
   machineStates.FINAL,
 ];
 
-const stageComponentMapping = {
-  [machineStates.CONNECTING]: { component: Connecting },
-  [machineStates.QUEUEING]: { component: Queueing },
-  [machineStates.INPUT_EMAIL]: { component: InputEmail },
-  [machineStates.INPUT_OTP]: { component: InputOTP },
-  [machineStates.INPUT_2FA]: { component: Input2FA },
-  [machineStates.ENABLE_BLOCKCHAIN]: { component: EnableBlockchain },
+const stageComponentMapping: Record<
+  string,
+  { component: () => JSX.Element; layoutSize: "sm" | "lg" }
+> = {
+  [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
+  [machineStates.QUEUEING]: { component: Queueing, layoutSize: "sm" },
+  [machineStates.INPUT_EMAIL]: { component: InputEmail, layoutSize: "sm" },
+  [machineStates.INPUT_OTP]: { component: InputOTP, layoutSize: "sm" },
+  [machineStates.INPUT_2FA]: { component: Input2FA, layoutSize: "sm" },
+  [machineStates.ENABLE_BLOCKCHAIN]: {
+    component: EnableBlockchain,
+    layoutSize: "sm",
+  },
   [machineStates.ACCOUNT_CONFIRM]: {
     component: AccountConfirm,
-    compactView: false,
+    layoutSize: "lg",
   },
-  [machineStates.RUN_INIT_SCRIPTS]: { component: RunInitScripts },
-  [machineStates.MAINTENANCE]: { component: Maintenance },
+  [machineStates.RUN_INIT_SCRIPTS]: {
+    component: RunInitScripts,
+    layoutSize: "sm",
+  },
+  [machineStates.MAINTENANCE]: { component: Maintenance, layoutSize: "sm" },
 };
 
 const useDefaultStateFromProps = (props: any) => {
@@ -118,6 +127,7 @@ const Authenticate = withAuthenticateContext(
     const state = useDefaultStateFromProps(props);
     const { value, send } = useAuthenticateMachine();
     const [stage, setStage] = useState(machineStates.IDLE);
+    const { setLayoutSize } = useLayoutContext();
 
     // initialization
     useEffect(() => {
@@ -140,13 +150,14 @@ const Authenticate = withAuthenticateContext(
       }
     }, [value]);
 
+    useEffect(() => {
+      if (setLayoutSize && stageComponentMapping[stage]?.layoutSize)
+        setLayoutSize(stageComponentMapping[stage]?.layoutSize);
+    }, [stage, setLayoutSize]);
+
     const Component = stageComponentMapping[stage]?.component ?? Noop;
 
-    return (
-      <Layout isCompact={stageComponentMapping[stage]?.compactView}>
-        <Component />
-      </Layout>
-    );
+    return <Component />;
   })
 );
 

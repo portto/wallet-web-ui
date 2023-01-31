@@ -14,6 +14,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 // Import root app
 import App from "./App";
+import { LayoutProvider } from "./context/layout";
 
 // Import i18n messages
 import translationMessages from "./i18n";
@@ -38,7 +39,7 @@ initFontObserver();
 
 const defaultLocale = getLocale();
 
-const root = createRoot(document.getElementById("root")!);
+const root = createRoot(document.getElementById("root") as Element);
 
 const render = (messages: any) => {
   root.render(
@@ -49,7 +50,9 @@ const render = (messages: any) => {
         messages={messages[defaultLocale]}
       >
         <Router>
-          <App />
+          <LayoutProvider>
+            <App />
+          </LayoutProvider>
         </Router>
       </IntlProvider>
     </ChakraProvider>

@@ -13,7 +13,6 @@
   "feature.authn.register.submit": "Register",
   "feature.authn.register.termsOfUse": "登録して、<a>利用規約<\/a>に同意します。",
   "feature.authn.input.invalidEmail": "メールアドレスのフォーマットを確認してください",
-  "feature.authn.input.checkCasing": "Blocto アカウントでは大文字と小文字が区別されます。正しいメールアドレスであることを確認してください。",
   "feature.authn.queue.title": "There is too much activity on Blocto",
   "feature.authn.queue.description": "Please wait until it's your turn to proceed with authentication...",
   "feature.authn.otp.title": "パスコード",

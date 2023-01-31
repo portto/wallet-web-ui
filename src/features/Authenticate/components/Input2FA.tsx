@@ -26,7 +26,6 @@ const messages = defineMessages({
 
 const Input2FA = () => {
   const { context, send } = useAuthenticateMachine();
-  const [input, setInput] = useState("");
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [isWrongCode, setIsWrongCode] = useState(false);
   const {
@@ -35,13 +34,12 @@ const Input2FA = () => {
   } = context;
 
   const handleChange = (value: string) => {
-    setInput(value);
     if (!value) {
       setIsWrongCode(false);
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (input: string) => {
     if (
       (context.user.accessToken && context.user.deviceKey) ||
       !email ||
@@ -117,6 +115,7 @@ const Input2FA = () => {
               autoFocus
               placeholder=""
               onChange={handleChange}
+              onComplete={handleSubmit}
               isInvalid={isWrongCode}
             >
               {Array.from({ length: 6 }).map((_, i) => (
@@ -125,11 +124,7 @@ const Input2FA = () => {
             </PinInput>
           </Flex>
 
-          <Button
-            isLoading={hasSubmitted}
-            disabled={input.length !== 6}
-            onClick={handleSubmit}
-          >
+          <Button isLoading={hasSubmitted} disabled={!hasSubmitted}>
             <FormattedMessage {...messages.approve} />
           </Button>
         </Box>

@@ -1,6 +1,5 @@
 import React, { Suspense, useEffect } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
-import Layout from "src/components/Layout";
 import Loading from "src/components/Loading";
 import { logPageView } from "src/services/Amplitude";
 import { sendPageView } from "src/services/GoogleAnalytics";
@@ -23,13 +22,7 @@ const App = () => {
   }, [location]);
 
   return (
-    <Suspense
-      fallback={
-        <Layout>
-          <Loading />
-        </Layout>
-      }
-    >
+    <Suspense fallback={<Loading />}>
       <Switch>
         <Route
           path="/:appId/:blockchain/authn/:userEmail?"

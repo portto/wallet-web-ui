@@ -10,7 +10,7 @@ import {
   keyframes,
 } from "@chakra-ui/react";
 import debounce from "lodash/debounce";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FormattedMessage, defineMessages } from "react-intl";
 import { checkEmailExist, requestEmailAuth } from "src/apis";
 import check from "src/assets/images/icons/check.svg";
@@ -19,8 +19,9 @@ import inputLoading from "src/assets/images/icons/input-loading.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Header from "src/components/Header";
+import { useLayoutContext } from "src/context/layout";
 import { useAuthenticateMachine } from "src/machines/authenticate";
-import { checkEmailCap, checkEmailFormat } from "src/utils/checkEmailFormat";
+import checkEmailFormat from "src/utils/checkEmailFormat";
 
 const messages = defineMessages({
   signInOrRegister: {
@@ -47,11 +48,6 @@ const messages = defineMessages({
     id: "feature.authn.input.invalidEmail",
     defaultMessage: "Please confirm your email format",
   },
-  checkCasing: {
-    id: "feature.authn.input.checkCasing",
-    defaultMessage:
-      "Blocto accounts are case-sensitive, please make sure you have correct email.",
-  },
   termsOfUse: {
     id: "feature.authn.register.termsOfUse",
     defaultMessage: "By registering, you agree to our <a>Terms of Use</a>",
@@ -71,31 +67,28 @@ const InputEmail = () => {
   const [isChecking, setIsChecking] = useState(false);
   const [isEmailExistent, setIsEmailExistent] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [hasWarning, setHasWarning] = useState(false);
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const { setLayoutSize } = useLayoutContext();
   const {
     user: { action },
     dapp: { name, blockchain, logo },
   } = context;
+  const isRegistering = input && !hasError && !isChecking && !isEmailExistent;
+
+  useEffect(() => {
+    if (setLayoutSize) setLayoutSize(isRegistering || hasError ? "md" : "sm");
+  }, [isRegistering, hasError, setLayoutSize]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkEmail = useCallback(
     debounce((email) => {
-      if (!email) {
+      if (!email || !checkEmailFormat(email)) {
         setIsChecking(false);
-        setHasError(false);
-        setHasWarning(false);
-        return;
-      }
-
-      if (!checkEmailFormat(email)) {
-        setIsChecking(false);
-        setHasError(true);
+        setHasError(!!email);
         return;
       }
 
       setHasError(false);
-      setHasWarning(!checkEmailCap(email));
       // @todo: regex check email validity before send request
       checkEmailExist(email).then(({ exist }) => {
         setIsChecking(false);
@@ -127,6 +120,12 @@ const InputEmail = () => {
 
   const handleClose = useCallback(() => send("close"), [send]);
 
+  const clearInput = () => {
+    setInput("");
+    setIsChecking(false);
+    setHasError(false);
+  };
+
   const renderButtonText = () => {
     if (isChecking || !input) {
       return <FormattedMessage {...messages.signInOrRegister} />;
@@ -142,7 +141,19 @@ const InputEmail = () => {
       return <Image src={inputLoading} animation={rotateAnimation} />;
     }
     if (hasError) {
-      return <Image src={error} />;
+      return (
+        <Button
+          onClick={clearInput}
+          minWidth="max-content"
+          p="0"
+          borderRadius="0"
+          bg="none"
+          _hover={{}}
+          _active={{}}
+        >
+          <Image src={error} />
+        </Button>
+      );
     }
     return input && <Image src={check} />;
   };
@@ -212,11 +223,9 @@ const InputEmail = () => {
               {renderInputIcon()}
             </InputRightElement>
           </InputGroup>
-          {(hasError || hasWarning) && (
-            <Text fontSize="size.body.3" color="font.alert" mb="space.xs">
-              <FormattedMessage
-                {...(hasError ? messages.invalidEmail : messages.checkCasing)}
-              />
+          {hasError && (
+            <Text fontSize="size.body.3" color="font.alert" mb="space.4xl">
+              <FormattedMessage {...messages.invalidEmail} />
             </Text>
           )}
 
@@ -228,12 +237,13 @@ const InputEmail = () => {
             {renderButtonText()}
           </Button>
 
-          {input && !hasError && !isChecking && !isEmailExistent && (
+          {isRegistering && (
             <Text
               fontSize="size.help.1"
               color="font.secondary"
               textAlign="center"
-              mt="space.s"
+              mt="space.3xl"
+              mb="space.4xs"
             >
               <FormattedMessage
                 {...messages.termsOfUse}
