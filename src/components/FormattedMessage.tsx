@@ -1,8 +1,8 @@
 import { FormattedMessage, defineMessage } from "react-intl";
-import { getDescriptor } from "src/messages";
+import { MessageKey, getDescriptor } from "src/messages";
 
 interface Props {
-  intlKey: string;
+  intlKey: MessageKey;
   [key: string]: any;
 }
 

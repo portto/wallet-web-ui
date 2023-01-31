@@ -6,9 +6,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { FormattedMessage } from "react-intl";
+
+import FormattedMessage from "src/components/FormattedMessage";
 import measureTextWidth from "src/utils/measureTextWidth";
-import messages from "../features/EVM/Transaction/components/messages";
 
 interface TransactionDetail {
   tokenAmount: string;
@@ -71,7 +71,7 @@ const TransactionInfo = ({
     >
       <Box>{children}</Box>
       <Text fontSize={"size.body.3"} mb="space.2xs">
-        <FormattedMessage {...messages.confirmTransactionFrom} />
+        <FormattedMessage intlKey="app.authz.confirmTransactionFrom" />
       </Text>
       <Text
         bg="white"
