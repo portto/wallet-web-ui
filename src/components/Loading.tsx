@@ -1,5 +1,4 @@
 import { Box, Center, Flex, Text } from "@chakra-ui/react";
-import { defineMessages } from "react-intl";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "./Header";
 import LoadingLogo from "./LoadingLogo";

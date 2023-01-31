@@ -1,6 +1,5 @@
 import { Center, Button as ChakraButton, Flex, Text } from "@chakra-ui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { defineMessages } from "react-intl";
 import {
   enableBlockchain,
   estimateEnableBlockchain,
