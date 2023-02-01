@@ -142,7 +142,9 @@ export default function useTransactionDetail(
       isSupportedTokenTransferring: !!tokenDetail && isERC20Transferring,
       tokenName,
       tokenAmount,
-      usdValue: (parseFloat(usdPrice) * parseFloat(tokenAmount)).toFixed(2),
+      usdValue: `${(parseFloat(usdPrice) * parseFloat(tokenAmount)).toFixed(
+        2
+      )}`,
       hasEnoughBalance: tokenBalance >= tokenAmount,
     };
   }, [

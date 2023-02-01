@@ -8,7 +8,7 @@ import fetchDappInfo from "src/utils/fetchDappInfo";
 
 const Connecting = () => {
   const { context, send } = useSigningMachine();
-  const { blockchain, url = "", name, logo, id } = context.dapp;
+  const { blockchain, url = "" } = context.dapp;
 
   const setMessage = useCallback(async (data: any) => {
     const { message, chain, method } = data;
@@ -70,10 +70,9 @@ const Connecting = () => {
 
   // notify parant frame ready
   useEffect(() => {
-    const { blockchain, url = "" } = context.dapp;
     if (!url) return;
     onReady({ l6n: url, blockchain });
-  }, [context.dapp.blockchain, context.dapp.url]);
+  }, [blockchain, url]);
 
   // gather current dapp info
   useEffect(() => {

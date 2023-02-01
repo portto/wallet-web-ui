@@ -25,7 +25,7 @@ const Main = () => {
   const [verifiedTx] = useState(false);
 
   const { user, transaction, dapp } = context;
-  const dappDomain = new URL(dapp.url || "").host;
+  const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject } = transaction;
   const transactionData = rawObject.transactions
     .filter(({ data }: EvmTransaction) => data)
@@ -37,7 +37,12 @@ const Main = () => {
     (transaction.fee || 0) - (transaction.discount || 0);
 
   const txDetailData = useTransactionDetail(transaction, user.balance);
-  const { isNativeTransferring } = txDetailData || {};
+  const {
+    isNativeTransferring,
+    usdValue = "0",
+    tokenName,
+    tokenAmount,
+  } = txDetailData || {};
 
   const { sessionId = "" } = user;
   const { blockchain } = dapp;
@@ -137,7 +142,13 @@ const Main = () => {
         onClose={() => send({ type: "close" })}
         blockchain={dapp?.blockchain}
       />
-      <TransactionInfo host={dappDomain} transactionDetail={txDetailData}>
+      <TransactionInfo
+        host={dappDomain}
+        transactionDetail={{
+          usdValue,
+          tokenAmount: `${tokenAmount} ${tokenName}`,
+        }}
+      >
         <DappLogo url={dapp.logo || ""} mb="space.s" />
       </TransactionInfo>
       <Box px="space.l">
