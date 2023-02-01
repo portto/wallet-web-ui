@@ -26,8 +26,8 @@ const systemStatus = [
 ];
 
 const stageComponentMapping = {
-  [machineStates.CONNECTING]: Connecting,
-  [machineStates.MAIN]: Main,
+  [machineStates.CONNECTING]: { component: Connecting },
+  [machineStates.MAIN]: { component: Main, compactView: false },
   // TODO: add non-custodial view.
   // [machineStates.NON_CUSTODIAL]: NonCustodial,
 };
@@ -102,10 +102,9 @@ const Transaction = withTransactionContext(
       }
     }, [value]);
 
-    const Component = stageComponentMapping[stage] ?? Noop;
-
+    const Component = stageComponentMapping[stage]?.component ?? Noop;
     return (
-      <Layout isCompact={false}>
+      <Layout isCompact={stageComponentMapping[stage]?.compactView}>
         <Component />
       </Layout>
     );
