@@ -25,7 +25,7 @@ const Main = () => {
   const [verifiedTx] = useState(false);
 
   const { user, transaction, dapp } = context;
-  const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host;
+  const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject } = transaction;
   const transactionData = rawObject.transactions
     .filter(({ data }: EvmTransaction) => data)
