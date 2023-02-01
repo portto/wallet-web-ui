@@ -1,22 +1,10 @@
 import { Box, Center, Flex, Text } from "@chakra-ui/react";
 import { useCallback, useEffect } from "react";
-import { FormattedMessage, defineMessages } from "react-intl";
 import { getAuthnQueue } from "src/apis";
+import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useAuthenticateMachine } from "src/machines/authenticate";
-
-const messages = defineMessages({
-  title: {
-    id: "feature.authn.queue.title",
-    defaultMessage: "There is too much activity on Blocto",
-  },
-  description: {
-    id: "feature.authn.queue.description",
-    defaultMessage:
-      "Please wait until it's your turn to proceed with authentication...",
-  },
-});
 
 const Queueing = () => {
   const { context, send } = useAuthenticateMachine();
@@ -64,10 +52,10 @@ const Queueing = () => {
               lineHeight="line.height.subheading.1"
               mb="space.2xs"
             >
-              <FormattedMessage {...messages.title} />
+              <FormattedMessage intlKey="feature.authn.queue.title" />
             </Text>
             <Text fontSize="size.body.3" textAlign="center">
-              <FormattedMessage {...messages.description} />
+              <FormattedMessage intlKey="feature.authn.queue.description" />
             </Text>
           </Flex>
         </Center>

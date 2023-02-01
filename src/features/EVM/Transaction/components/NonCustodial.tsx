@@ -1,23 +1,12 @@
 import { Box, Center, Flex, Text } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
-import { FormattedMessage, defineMessages } from "react-intl";
 import { createSigningRequest, getSigningRequest } from "src/apis";
+import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { ERROR_MESSAGES } from "src/utils/constants";
-
-const messages = defineMessages({
-  title: {
-    id: "feature.transaction.nonCustodial.title",
-    defaultMessage: "Please verify in Blocto app",
-  },
-  description: {
-    id: "feature.transaction.nonCustodial.description",
-    defaultMessage: "Approve the transaction from Blocto app...",
-  },
-});
 
 const NonCustodial = () => {
   const { context, send } = useTransactionMachine();
@@ -94,10 +83,10 @@ const NonCustodial = () => {
               lineHeight="line.height.subheading.1"
               mb="space.2xs"
             >
-              <FormattedMessage {...messages.title} />
+              <FormattedMessage intlKey="feature.transaction.nonCustodial.title" />
             </Text>
             <Text fontSize="size.body.3" textAlign="center">
-              <FormattedMessage {...messages.description} />
+              <FormattedMessage intlKey="feature.transaction.nonCustodial.description" />
             </Text>
           </Flex>
         </Center>

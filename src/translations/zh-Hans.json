@@ -1,9 +1,9 @@
 {
   "app.general.loading": "Connecting...",
   "app.general.loading.description": "It may take a few seconds.",
-  "app.genaral.approve": "批准",
-  "app.genaral.email": "电子邮件",
-  "app.genaral.address": "{chain} 地址",
+  "app.general.approve": "批准",
+  "app.general.email": "电子邮件",
+  "app.general.address": "{chain} 地址",
   "app.general.itTakesSomeTimeToProceed": "需要一些时间才能继续",
   "app.general.downloadBloctoApp": "Download Blocto App",
   "feature.authn.signInOrRegister": "Sign in / Register",

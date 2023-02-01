@@ -10,49 +10,18 @@ import {
   keyframes,
 } from "@chakra-ui/react";
 import debounce from "lodash/debounce";
-import { useCallback, useEffect, useState } from "react";
-import { FormattedMessage, defineMessages } from "react-intl";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { checkEmailExist, requestEmailAuth } from "src/apis";
 import check from "src/assets/images/icons/check.svg";
 import error from "src/assets/images/icons/error.svg";
 import inputLoading from "src/assets/images/icons/input-loading.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
+import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import { useLayoutContext } from "src/context/layout";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import checkEmailFormat from "src/utils/checkEmailFormat";
-
-const messages = defineMessages({
-  signInOrRegister: {
-    id: "feature.authn.signInOrRegister",
-    defaultMessage: "Sign in / Register",
-  },
-  signIn: {
-    id: "feature.authn.signIn.submit",
-    defaultMessage: "Sign in",
-  },
-  register: {
-    id: "feature.authn.register.submit",
-    defaultMessage: "Register",
-  },
-  title: {
-    id: "feature.authn.signIn.title",
-    defaultMessage: "Sign in",
-  },
-  description: {
-    id: "feature.authn.signIn.description",
-    defaultMessage: "Request account with",
-  },
-  invalidEmail: {
-    id: "feature.authn.input.invalidEmail",
-    defaultMessage: "Please confirm your email format",
-  },
-  termsOfUse: {
-    id: "feature.authn.register.termsOfUse",
-    defaultMessage: "By registering, you agree to our <a>Terms of Use</a>",
-  },
-});
 
 const rotate = keyframes`
 from { transform: rotate(0); }
@@ -128,12 +97,12 @@ const InputEmail = () => {
 
   const renderButtonText = () => {
     if (isChecking || !input) {
-      return <FormattedMessage {...messages.signInOrRegister} />;
+      return <FormattedMessage intlKey="feature.authn.signInOrRegister" />;
     }
     if (isEmailExistent) {
-      return <FormattedMessage {...messages.signIn} />;
+      return <FormattedMessage intlKey="feature.authn.signIn.submit" />;
     }
-    return <FormattedMessage {...messages.register} />;
+    return <FormattedMessage intlKey="feature.authn.register.submit" />;
   };
 
   const renderInputIcon = () => {
@@ -179,10 +148,10 @@ const InputEmail = () => {
             fontWeight="weight.l"
             lineHeight="line.height.subheading.1"
           >
-            <FormattedMessage {...messages.title} />
+            <FormattedMessage intlKey="feature.authn.signIn.title" />
           </Text>
           <Text my="space.2xs">
-            <FormattedMessage {...messages.description} />
+            <FormattedMessage intlKey="feature.authn.signIn.description" />
           </Text>
           <Text
             px="space.m"
@@ -225,7 +194,7 @@ const InputEmail = () => {
           </InputGroup>
           {hasError && (
             <Text fontSize="size.body.3" color="font.alert" mb="space.4xl">
-              <FormattedMessage {...messages.invalidEmail} />
+              <FormattedMessage intlKey="feature.authn.input.invalidEmail" />
             </Text>
           )}
 
@@ -246,9 +215,9 @@ const InputEmail = () => {
               mb="space.4xs"
             >
               <FormattedMessage
-                {...messages.termsOfUse}
+                intlKey="feature.authn.register.termsOfUse"
                 values={{
-                  a: (chunks) => (
+                  a: (chunks: ReactNode) => (
                     <Link
                       href="https://portto.com/terms/"
                       isExternal

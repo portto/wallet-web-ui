@@ -1,28 +1,13 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { useCallback } from "react";
-import { FormattedMessage, defineMessages } from "react-intl";
 import { signEthereumMessage } from "src/apis";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
+import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import { useSigningMachine } from "src/machines/signing";
 import { logSignTx } from "src/services/Amplitude";
-
-const messages = defineMessages({
-  title: {
-    id: "feature.sign.title",
-    defaultMessage: "You are signing for",
-  },
-  message: {
-    id: "app.genaral.message",
-    defaultMessage: "Message",
-  },
-  approve: {
-    id: "app.genaral.approve",
-    defaultMessage: "Approve",
-  },
-});
 
 const Main = () => {
   const { context, send } = useSigningMachine();
@@ -62,7 +47,7 @@ const Main = () => {
       >
         <DappLogo url={context.dapp.logo || ""} mb="space.s" />
         <Text fontSize="size.body.3" mb="space.2xs">
-          <FormattedMessage {...messages.title} />
+          <FormattedMessage intlKey="feature.sign.title" />
         </Text>
         <Text
           px="space.m"
@@ -78,7 +63,7 @@ const Main = () => {
       </Flex>
 
       <Box flex="1 0 0" px="space.l" overflow="auto">
-        <Field title={<FormattedMessage {...messages.message} />}>
+        <Field title={<FormattedMessage intlKey="app.general.message" />}>
           {message.toBeSigned}
         </Field>
         <FieldLine />
@@ -91,7 +76,7 @@ const Main = () => {
         boxShadow="0px 0px 10px rgba(35, 37, 40, 0.05)"
       >
         <Button onClick={approve}>
-          <FormattedMessage {...messages.approve} />
+          <FormattedMessage intlKey="app.general.approve" />
         </Button>
       </Box>
     </Flex>
