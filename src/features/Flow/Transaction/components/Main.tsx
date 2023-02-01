@@ -64,7 +64,6 @@ const Main = () => {
   } = context;
   const { transaction } = rawObject;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
-
   const scriptInfo = getFlowScriptWithTemplate(transaction);
 
   const { usdValue, tokenAmount, recognizedTx } =
