@@ -39,14 +39,15 @@ const useDefaultStateFromProps = (props: any) => {
     authorizationId: string;
   }>();
 
-  const id = props?.appId || appId;
-
-  const name = props?.name;
-  const logo = props?.logo;
-
   const noop = () => undefined;
-  const onApprove = props?.onApprove || noop;
-  const onReject = props?.onReject || noop;
+
+  const {
+    appId: id = appId,
+    name,
+    logo,
+    onApprove = noop,
+    onReject = noop,
+  } = props;
 
   return useMemo(
     () => ({
