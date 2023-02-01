@@ -1,6 +1,5 @@
 import { Box, Flex, HStack, Text } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
-import { FormattedMessage } from "react-intl";
 import { getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
@@ -8,6 +7,7 @@ import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
+import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import TransactionContent from "src/components/TransactionContent";
 import TransactionInfo from "src/components/TransactionInfo";
@@ -16,41 +16,6 @@ import { logSendTx } from "src/services/Amplitude";
 import { getFlowScriptWithTemplate } from "src/services/Flow";
 import { getTransactionLocale } from "src/utils/locales";
 import useTransactionDetail from "../hooks/useTransactionDetail";
-
-const messages = {
-  operation: {
-    id: "app.authz.operation",
-    defaultMessage: "Operation",
-  },
-  confirmTransactionFrom: {
-    id: "app.authz.confirmTransactionFrom",
-    defaultMessage: "Confirm transaction from",
-  },
-  transactionFee: {
-    id: "app.authz.transactionFee",
-    defaultMessage: "Transaction Fee",
-  },
-  approve: {
-    id: "app.authz.approve",
-    defaultMessage: "Approve",
-  },
-  script: {
-    id: "app.authz.script",
-    defaultMessage: "Script",
-  },
-  transactionContainsScript: {
-    id: "app.authz.transactionContainsScript",
-    defaultMessage: "This transaction contains script",
-  },
-  transactionFeePoints: {
-    id: "app.authz.transactionFeePoints",
-    defaultMessage: "{points} Points",
-  },
-  free: {
-    id: "app.authz.free",
-    defaultMessage: "Free (subsidized by Blocto)",
-  },
-};
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
@@ -113,7 +78,7 @@ const Main = () => {
         <Logo />
       </Flex>
       <Box>
-        <FormattedMessage {...messages.free} />
+        <FormattedMessage intlKey="app.authz.free" />
       </Box>
     </HStack>
   );
@@ -135,7 +100,7 @@ const Main = () => {
         {recognizedTx ? (
           <>
             <Field
-              title={<FormattedMessage {...messages.operation} />}
+              title={<FormattedMessage intlKey="app.authz.operation" />}
               hidableInfo={
                 <TransactionContent verified={verifiedTx}>
                   <Text
@@ -169,19 +134,23 @@ const Main = () => {
               />
             </Field>
             <FieldLine />
-            <Field title={<FormattedMessage {...messages.transactionFee} />}>
+            <Field
+              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
+            >
               {getTransactionFeeField()}
             </Field>
             <FieldLine />
           </>
         ) : (
           <>
-            <Field title={<FormattedMessage {...messages.transactionFee} />}>
+            <Field
+              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
+            >
               {getTransactionFeeField()}
             </Field>
             <Box height="10px" bg="background.tertiary" mx="-20px" />
             <Field
-              title={<FormattedMessage {...messages.script} />}
+              title={<FormattedMessage intlKey="app.authz.script" />}
               hidableInfo={
                 <TransactionContent>
                   <Text
@@ -199,7 +168,7 @@ const Main = () => {
               }
               icon={<CheckAlert width="16px" height="16px" />}
             >
-              <FormattedMessage {...messages.transactionContainsScript} />
+              <FormattedMessage intlKey="app.authz.transactionContainsScript" />
             </Field>
             <FieldLine />
           </>
@@ -207,7 +176,7 @@ const Main = () => {
       </Box>
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
         <Button onClick={approve}>
-          <FormattedMessage {...messages.approve} />
+          <FormattedMessage intlKey="app.authz.approve" />
         </Button>
       </Flex>
     </Box>

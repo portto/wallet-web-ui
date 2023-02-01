@@ -1,6 +1,5 @@
 import { Box, Flex, HStack, Spinner } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
-import { FormattedMessage } from "react-intl";
 import { estimatePoint, getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
@@ -8,6 +7,7 @@ import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
+import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import TransactionContent from "src/components/TransactionContent";
 import TransactionInfo from "src/components/TransactionInfo";
@@ -140,7 +140,7 @@ const Main = () => {
             </Flex>
             <Box>
               <FormattedMessage
-                {...messages.transactionFeePoints}
+                intlKey="app.authz.transactionFeePoints"
                 values={{ points: realTransactionFee }}
               />
               {hasDiscount && (
@@ -148,7 +148,7 @@ const Main = () => {
                   (
                   <Box as="del">
                     <FormattedMessage
-                      {...messages.transactionFeePoints}
+                      intlKey="app.authz.transactionFeePoints"
                       values={{ points: transaction.fee }}
                     />
                   </Box>
@@ -178,7 +178,7 @@ const Main = () => {
         {recognizedTx ? (
           <>
             <Field
-              title={<FormattedMessage {...messages.operation} />}
+              title={<FormattedMessage intlKey="app.authz.operation" />}
               hidableInfo={
                 !isNativeTransferring && (
                   <TransactionContent verified={verifiedTx}>
@@ -198,19 +198,23 @@ const Main = () => {
               Operation Name
             </Field>
             <FieldLine />
-            <Field title={<FormattedMessage {...messages.transactionFee} />}>
+            <Field
+              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
+            >
               {getTransactionFeeField()}
             </Field>
             <FieldLine />
           </>
         ) : (
           <>
-            <Field title={<FormattedMessage {...messages.transactionFee} />}>
+            <Field
+              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
+            >
               {getTransactionFeeField()}
             </Field>
             <Box height="10px" bg="background.tertiary" mx="-20px" />
             <Field
-              title={<FormattedMessage {...messages.script} />}
+              title={<FormattedMessage intlKey="app.authz.script" />}
               hidableInfo={
                 !isNativeTransferring && (
                   <TransactionContent>{transactionData}</TransactionContent>
@@ -218,7 +222,7 @@ const Main = () => {
               }
               icon={<CheckAlert width="16px" height="16px" />}
             >
-              <FormattedMessage {...messages.transactionContainsScript} />
+              <FormattedMessage intlKey="app.authz.transactionContainsScript" />
             </Field>
             <FieldLine />
           </>
@@ -227,7 +231,7 @@ const Main = () => {
 
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
         <Button onClick={approve}>
-          <FormattedMessage {...messages.approve} />
+          <FormattedMessage intlKey="app.authz.approve" />
         </Button>
       </Flex>
     </Box>

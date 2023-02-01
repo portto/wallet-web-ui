@@ -15,7 +15,6 @@ import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { EvmTransaction } from "src/types";
 import useTransactionDetail from "../hooks/useTransactionDetail";
-import messages from "./messages";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();

@@ -1,12 +1,12 @@
 import { Box, Flex, HStack, Spinner } from "@chakra-ui/react";
 import { useCallback, useEffect } from "react";
-import { FormattedMessage } from "react-intl";
 import { estimatePoint, getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
+import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import TransactionContent from "src/components/TransactionContent";
 import TransactionInfo from "src/components/TransactionInfo";
@@ -37,14 +37,6 @@ const messages = {
   transactionContainsScript: {
     id: "app.authz.transactionContainsScript",
     defaultMessage: "This transaction contains script",
-  },
-  transactionFeePoints: {
-    id: "app.authz.transactionFeePoints",
-    defaultMessage: "{points} Points",
-  },
-  free: {
-    id: "app.authz.free",
-    defaultMessage: "Free (subsidized by Blocto)",
   },
 };
 
@@ -130,16 +122,13 @@ const Main = () => {
               <Logo />
             </Flex>
             <Box>
-              <FormattedMessage
-                {...messages.transactionFeePoints}
-                values={{ points: realTransactionFee }}
-              />
+              <FormattedMessage intlKey="app.authz.transactionFeePoints" />
               {hasDiscount && (
                 <Box as="span" pl="space.3xs">
                   (
                   <Box as="del">
                     <FormattedMessage
-                      {...messages.transactionFeePoints}
+                      intlKey="app.authz.transactionFeePoints"
                       values={{ points: transaction.fee }}
                     />
                   </Box>
@@ -167,12 +156,12 @@ const Main = () => {
       </TransactionInfo>
 
       <Box px="space.l">
-        <Field title={<FormattedMessage {...messages.transactionFee} />}>
+        <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
           {getTransactionFeeField()}
         </Field>
         <Box height="10px" bg="background.tertiary" mx="-20px" />
         <Field
-          title={<FormattedMessage {...messages.script} />}
+          title={<FormattedMessage intlKey="app.authz.script" />}
           hidableInfo={
             !!rawObject.convertedTx && (
               <TransactionContent>{rawObject.convertedTx}</TransactionContent>
@@ -180,14 +169,14 @@ const Main = () => {
           }
           icon={<CheckAlert width="16px" height="16px" />}
         >
-          <FormattedMessage {...messages.transactionContainsScript} />
+          <FormattedMessage intlKey="app.authz.transactionContainsScript" />
         </Field>
         <FieldLine />
       </Box>
 
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
         <Button onClick={approve}>
-          <FormattedMessage {...messages.approve} />
+          <FormattedMessage intlKey="app.authz.approve" />
         </Button>
       </Flex>
     </Box>
