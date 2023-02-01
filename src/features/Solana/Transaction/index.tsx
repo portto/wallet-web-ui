@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getMaintenanceStatus } from "src/apis";
-import Layout from "src/components/Layout";
+import { useLayoutContext } from "src/context/layout";
 import {
   machineStates,
   useTransactionMachine,
@@ -28,11 +28,14 @@ const systemStatus = [
   machineStates.FINAL,
 ];
 
-const stageComponentMapping = {
-  [machineStates.CONNECTING]: Connecting,
-  [machineStates.MAIN]: Main,
-  // TODO: Add noncustodial component
-  // [machineStates.NON_CUSTODIAL]: NonCustodial,
+const stageComponentMapping: Record<
+  string,
+  { component: () => JSX.Element; layoutSize: "sm" | "lg" }
+> = {
+  [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
+  [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
+  // TODO: add non-custodial view.
+  // [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "lg" },
 };
 
 const useDefaultStateFromProps = (props: any) => {
@@ -82,6 +85,7 @@ const Transaction = withTransactionContext(
     const state = useDefaultStateFromProps(props);
     const { value, send } = useTransactionMachine();
     const [stage, setStage] = useState(machineStates.IDLE);
+    const { setLayoutSize } = useLayoutContext();
 
     // initialization
     useEffect(() => {
@@ -104,13 +108,14 @@ const Transaction = withTransactionContext(
       }
     }, [value]);
 
-    const Component = stageComponentMapping[stage] ?? Noop;
+    useEffect(() => {
+      if (setLayoutSize && stageComponentMapping[stage]?.layoutSize)
+        setLayoutSize(stageComponentMapping[stage]?.layoutSize);
+    }, [stage, setLayoutSize]);
 
-    return (
-      <Layout isCompact={false}>
-        <Component />
-      </Layout>
-    );
+    const Component = stageComponentMapping[stage]?.component ?? Noop;
+
+    return <Component />;
   })
 );
 
