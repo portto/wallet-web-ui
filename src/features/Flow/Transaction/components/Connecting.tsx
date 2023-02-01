@@ -11,12 +11,18 @@ const Connecting = () => {
   const { blockchain } = context.dapp;
 
   const fetchTransaction = useCallback(async () => {
-    const { sessionId, transaction } = await getAuthorization({
-      authorizationId,
-      blockchain,
-    });
-    const [{ point, type, email, id }, { assets: allAssets }] =
-      await Promise.all([getUserInfo(), getAccountAssets()]);
+    const [
+      { point, type, email, id },
+      { assets: allAssets },
+      { sessionId, transaction },
+    ] = await Promise.all([
+      getUserInfo(),
+      getAccountAssets(),
+      getAuthorization({
+        authorizationId,
+        blockchain,
+      }),
+    ]);
     const assets = allAssets.filter(
       (asset: AccountAsset) => asset.blockchain === blockchain
     );
