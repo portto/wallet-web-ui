@@ -122,7 +122,10 @@ const Main = () => {
               <Logo />
             </Flex>
             <Box>
-              <FormattedMessage intlKey="app.authz.transactionFeePoints" />
+              <FormattedMessage
+                intlKey="app.authz.transactionFeePoints"
+                values={{ points: realTransactionFee }}
+              />
               {hasDiscount && (
                 <Box as="span" pl="space.3xs">
                   (
@@ -142,7 +145,7 @@ const Main = () => {
         )}
       </HStack>
     );
-  }, [transaction.fee, realTransactionFee, hasDiscount]);
+  }, [transaction.fee, hasDiscount]);
 
   return (
     <Box>
