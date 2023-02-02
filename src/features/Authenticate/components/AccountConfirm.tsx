@@ -28,6 +28,7 @@ const AccountConifrm = () => {
       type: userType,
       addresses,
       deviceKey,
+      deviceId,
       signatureData,
     },
     blockchainIcon,
@@ -50,6 +51,7 @@ const AccountConifrm = () => {
         thumbnail: logo,
       },
       deviceKey,
+      deviceId,
       signatureData,
     });
     const { paddr, code, signatures = [] } = handshakeData;

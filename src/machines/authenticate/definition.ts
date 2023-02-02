@@ -59,6 +59,7 @@ export interface AuthenticateMachineContext {
     authenticationId?: string;
     accessToken?: string;
     deviceKey?: string;
+    deviceId?: string;
     action?: "register" | "login";
     nonce?: string;
     points?: number;
@@ -149,7 +150,10 @@ const machine = createMachine<AuthenticateMachineContext>(
       [machineStates.SET_CREDENTIALS]: {
         invoke: { src: "setCredentials" },
         on: {
-          verifyUser: machineStates.VERIFY_USER,
+          verifyUser: {
+            target: machineStates.VERIFY_USER,
+            actions: "updateUser",
+          },
         },
         tags: ["System"],
       },
