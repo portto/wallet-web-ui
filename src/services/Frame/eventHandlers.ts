@@ -224,16 +224,20 @@ export const onSignatureResponse = ({
 };
 
 export const onSignatureDecline = ({
-  type,
+  blockchain,
   l6n,
   errorMessage,
 }: {
-  type: string;
+  blockchain: Exclude<Chains, Chains.flow>;
   l6n: string;
   errorMessage: string;
 }) => {
+  const isEvmChain = EVM_CHAINS.includes(blockchain);
+  const targetEvents = isEvmChain
+    ? RESPONSE_EVENTS.ethereum
+    : RESPONSE_EVENTS[blockchain];
   const msg = {
-    type,
+    type: targetEvents,
     status: "DECLINED",
     errorMessage,
   };

@@ -56,7 +56,17 @@ const Main = () => {
     });
   }, [sessionId, context.dapp, signatureId, send]);
 
-  const handleClose = useCallback(() => send("close"), [send]);
+  const handleClose = useCallback(() => {
+    if (signatureId) {
+      updateSignatureDetails({
+        signatureId,
+        sessionId,
+        action: "decline",
+      });
+    }
+
+    send("close");
+  }, [send, sessionId, signatureId]);
 
   return (
     <Flex flexDirection="column">
