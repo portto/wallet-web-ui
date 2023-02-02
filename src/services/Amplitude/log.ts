@@ -1,6 +1,7 @@
 import { getInstance } from "./system";
 
-const IS_LOCAL = process.env.ENV === "local" || !process.env.ENV;
+const IS_LOCAL =
+  process.env.REACT_APP_ENV === "local" || !process.env.REACT_APP_ENV;
 const logCore = (name: string, properties = {}, callback = () => undefined) => {
   if (IS_LOCAL) {
     console.debug(`[Sentry-Log] Event: ${name}, properties:`, properties);

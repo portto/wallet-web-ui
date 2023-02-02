@@ -2,7 +2,8 @@
 import * as Sentry from "@sentry/browser";
 import { getLocale } from "src/utils/locales";
 
-const IS_LOCAL = process.env.ENV === "local" || !process.env.ENV;
+const IS_LOCAL =
+  process.env.REACT_APP_ENV === "local" || !process.env.REACT_APP_ENV;
 
 const API_ERROR_WHITE_LIST_HASH: { [key in string]: number } = {
   account_not_found: 1,
