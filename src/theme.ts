@@ -2,7 +2,7 @@ import boTheme from "@blocto/web-chakra-theme";
 import { extendTheme } from "@chakra-ui/react";
 import merge from "lodash.merge";
 
-const IS_PROD = process.env.ENV === "production";
+const IS_PROD = process.env.REACT_APP_ENV === "production";
 
 const theme = extendTheme(
   merge(boTheme, {
