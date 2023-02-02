@@ -13,33 +13,6 @@ import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 
-const messages = {
-  operation: {
-    id: "app.authz.operation",
-    defaultMessage: "Operation",
-  },
-  confirmTransactionFrom: {
-    id: "app.authz.confirmTransactionFrom",
-    defaultMessage: "Confirm transaction from",
-  },
-  transactionFee: {
-    id: "app.authz.transactionFee",
-    defaultMessage: "Transaction Fee",
-  },
-  approve: {
-    id: "app.authz.approve",
-    defaultMessage: "Approve",
-  },
-  script: {
-    id: "app.authz.script",
-    defaultMessage: "Script",
-  },
-  transactionContainsScript: {
-    id: "app.authz.transactionContainsScript",
-    defaultMessage: "This transaction contains script",
-  },
-};
-
 const Main = () => {
   const { context, send } = useTransactionMachine();
 
