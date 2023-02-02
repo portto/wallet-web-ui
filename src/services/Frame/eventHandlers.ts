@@ -12,6 +12,13 @@ import {
 import { postMessageToParentFrame } from "./utils";
 
 const BLOCTO_ADDRESS = process.env.REACT_APP_BLOCTO_ADDRESS;
+const getNameOfChainWithEvents = (
+  blockchain: Chains,
+  frameEvents: { [key: string]: string[] }
+) => {
+  const isEvmChain = EVM_CHAINS.includes(blockchain);
+  return isEvmChain ? frameEvents.ethereum : frameEvents[blockchain] || [];
+};
 
 export const onInternalConfirm = ({
   l6n,
@@ -252,39 +259,49 @@ export const onSignatureDecline = ({
 };
 
 export const onTransactionResponse = ({
-  type,
   l6n,
   txHash,
+  blockchain,
 }: {
-  type: string;
   l6n: string;
   txHash: string;
+  blockchain: Chains;
 }) => {
-  const msg = {
-    type,
-    status: "APPROVED",
-    txHash,
-  };
+  const targetEvents = getNameOfChainWithEvents(blockchain, RESPONSE_EVENTS);
 
-  postMessageToParentFrame(msg, l6n);
+  targetEvents.forEach((event: string) => {
+    postMessageToParentFrame(
+      {
+        type: event,
+        status: "APPROVED",
+        txHash,
+      },
+      l6n
+    );
+  });
 };
 
 export const onTransactionDecline = ({
-  type,
   l6n,
   errorMessage,
+  blockchain,
 }: {
-  type: string;
   l6n: string;
   errorMessage: string;
+  blockchain: Chains;
 }) => {
-  const msg = {
-    type,
-    status: "DECLINED",
-    errorMessage,
-  };
+  const targetEvents = getNameOfChainWithEvents(blockchain, RESPONSE_EVENTS);
 
-  postMessageToParentFrame(msg, l6n);
+  targetEvents.forEach((event: string) => {
+    postMessageToParentFrame(
+      {
+        type: event,
+        status: "DECLINED",
+        errorMessage,
+      },
+      l6n
+    );
+  });
 };
 
 export const onReady = ({
