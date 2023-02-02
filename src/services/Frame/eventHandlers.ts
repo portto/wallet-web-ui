@@ -1,4 +1,5 @@
 import semver from "semver";
+import { Chains } from "src/types";
 import { EVM_CHAINS } from "src/utils/constants";
 import {
   CLOSE_EVENTS,
@@ -198,23 +199,24 @@ export const onChallengeResponse = ({
 };
 
 export const onSignatureResponse = ({
-  type,
+  blockchain,
   l6n,
   signature,
-  signatures,
   ...rest
 }: {
-  type: string;
+  blockchain: Exclude<Chains, Chains.flow>;
   l6n: string;
   signature: string | string[];
-  signatures?: string[];
   [key: string]: any;
 }) => {
+  const isEvmChain = EVM_CHAINS.includes(blockchain);
+  const targetEvents = isEvmChain
+    ? RESPONSE_EVENTS.ethereum
+    : RESPONSE_EVENTS[blockchain];
   const msg = {
-    type,
+    type: targetEvents,
     status: "APPROVED",
     signature,
-    signatures,
     ...rest,
   };
 

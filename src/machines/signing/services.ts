@@ -3,18 +3,22 @@ import {
   onSignatureDecline,
   onSignatureResponse,
 } from "src/services/Frame";
+import { Chains } from "src/types";
 import { SigningMachineContext } from "./definition";
 
 export const finish = async (context: SigningMachineContext) => {
   const { onApprove } = context.user;
-  const { url = "" } = context.dapp;
+  const { blockchain, url = "" } = context.dapp;
   const { signature = "" } = context.message;
 
-  onSignatureResponse({
-    type: ETH_EVENTS.RESPONSE,
-    signature,
-    l6n: url,
-  });
+  // Signing messages on Flow goes throw the back channel so we don't need to post the response
+  if (blockchain !== Chains.flow) {
+    onSignatureResponse({
+      blockchain,
+      signature,
+      l6n: url,
+    });
+  }
 
   onApprove?.(signature);
 };

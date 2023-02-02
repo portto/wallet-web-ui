@@ -12,6 +12,7 @@ const EVM = {
 };
 
 const Flow = {
+  Signing: React.lazy(() => import("src/features/Flow/Signing")),
   Transaction: React.lazy(() => import("src/features/Flow/Transaction")),
 };
 
@@ -43,6 +44,10 @@ const App = () => {
         <Route
           path={`/:appId/:blockchain(flow)/authz/:authorizationId?`}
           render={() => <Flow.Transaction />}
+        />
+        <Route
+          path={`/:appId/:blockchain(flow)/user-signature/:signatureId?`}
+          render={() => <Flow.Signing />}
         />
       </Switch>
     </Suspense>
