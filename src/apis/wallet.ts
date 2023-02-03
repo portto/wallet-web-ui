@@ -97,7 +97,12 @@ export const signAptosMessage = ({
   });
 
 export const getSignatureDetails = ({ signatureId }: { signatureId: string }) =>
-  apiGet({
+  apiGet<{
+    message: string;
+    origin: string;
+    sessionId: string;
+    status: "PENDING" | "APPROVED" | "DECLINED";
+  }>({
     url: "api/flow/signature-details",
     request: {
       signatureId,
@@ -109,14 +114,10 @@ export const updateSignatureDetails = ({
   signatureId,
   sessionId,
   action,
-  signature,
-  keyId,
 }: {
   signatureId: string;
   sessionId: string;
   action: string;
-  signature: string;
-  keyId: string;
 }) =>
   apiPut({
     url: "api/flow/user-signature",
@@ -124,8 +125,6 @@ export const updateSignatureDetails = ({
       signatureId,
       sessionId,
       action,
-      signature,
-      keyId,
     },
     isAuthorized: true,
   });

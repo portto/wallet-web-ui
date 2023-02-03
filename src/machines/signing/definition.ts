@@ -40,13 +40,13 @@ export interface SigningMachineContext {
     onApprove: (arg: any) => void;
     onReject: (arg: any) => void;
   };
+  signatureId?: string;
   message: {
     // raw message input
     raw?: string;
     // converted message to besigned
     toBeSigned?: string;
     signature?: string | string[];
-    signatures?: string[];
     // for aptos signature
     bitmap?: string;
     // any other things need to be stored
@@ -95,7 +95,7 @@ const machine = createMachine<SigningMachineContext>(
           reject: { target: machineStates.CLOSE, actions: "updateMessage" },
           approve: {
             target: machineStates.FINISH_PROCESS,
-            actions: "updateMessage",
+            actions: "updateUserAndMessage",
           },
         },
       },
@@ -145,7 +145,6 @@ const machine = createMachine<SigningMachineContext>(
           ...event.data,
         }),
       }),
-      resetAuth: assign({ user: (_) => defaultContext.user }),
     },
   }
 );

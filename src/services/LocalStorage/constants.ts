@@ -12,6 +12,7 @@ export const KEY_SESSION_ID = "blocto.app.sessionId";
 export const KEY_USER_TYPE = "blocto.app.userType";
 export const KEY_DEVICE_KEY = "blocto.app.deviceKey";
 export const KEY_TUTORIAL_SEEN = "blocto.app.tutorialSeen";
+export const KEY_DEVICE_ID = "blocto.app.deviceId";
 
 // flow related keys
 export const KEY_AUTO_RESTAKING = "blocto.flow.autoRestaking";

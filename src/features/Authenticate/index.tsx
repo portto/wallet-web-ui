@@ -9,6 +9,7 @@ import {
 } from "src/machines/authenticate";
 import {
   KEY_ACCESS_TOKEN,
+  KEY_DEVICE_ID,
   KEY_DEVICE_KEY,
   KEY_EMAIL,
   KEY_USER_ID,
@@ -108,6 +109,7 @@ const useDefaultStateFromProps = (props: any) => {
         email,
         accessToken: getItem(KEY_ACCESS_TOKEN),
         deviceKey: getItem(KEY_DEVICE_KEY),
+        deviceId: getItem(KEY_DEVICE_ID),
         action: "register",
         addresses: {},
         type: getItem(KEY_USER_TYPE),

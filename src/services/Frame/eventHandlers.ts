@@ -1,4 +1,5 @@
 import semver from "semver";
+import { Chains } from "src/types";
 import { EVM_CHAINS } from "src/utils/constants";
 import {
   CLOSE_EVENTS,
@@ -198,45 +199,56 @@ export const onChallengeResponse = ({
 };
 
 export const onSignatureResponse = ({
-  type,
+  blockchain,
   l6n,
   signature,
-  signatures,
   ...rest
 }: {
-  type: string;
+  blockchain: Exclude<Chains, Chains.flow>;
   l6n: string;
   signature: string | string[];
-  signatures?: string[];
   [key: string]: any;
 }) => {
-  const msg = {
-    type,
-    status: "APPROVED",
-    signature,
-    signatures,
-    ...rest,
-  };
+  const isEvmChain = EVM_CHAINS.includes(blockchain);
+  const targetEvents = isEvmChain
+    ? RESPONSE_EVENTS.ethereum
+    : RESPONSE_EVENTS[blockchain];
 
-  postMessageToParentFrame(msg, l6n);
+  targetEvents.forEach((type) => {
+    const msg = {
+      type,
+      status: "APPROVED",
+      signature,
+      ...rest,
+    };
+
+    postMessageToParentFrame(msg, l6n);
+  });
 };
 
 export const onSignatureDecline = ({
-  type,
+  blockchain,
   l6n,
   errorMessage,
 }: {
-  type: string;
+  blockchain: Exclude<Chains, Chains.flow>;
   l6n: string;
   errorMessage: string;
 }) => {
-  const msg = {
-    type,
-    status: "DECLINED",
-    errorMessage,
-  };
+  const isEvmChain = EVM_CHAINS.includes(blockchain);
+  const targetEvents = isEvmChain
+    ? RESPONSE_EVENTS.ethereum
+    : RESPONSE_EVENTS[blockchain];
 
-  postMessageToParentFrame(msg, l6n);
+  targetEvents.forEach((type) => {
+    const msg = {
+      type,
+      status: "DECLINED",
+      errorMessage,
+    };
+
+    postMessageToParentFrame(msg, l6n);
+  });
 };
 
 export const onTransactionResponse = ({

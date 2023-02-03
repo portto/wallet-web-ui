@@ -3,6 +3,7 @@ import { getAccountAssets, getUserInfo, updateAuthentication } from "src/apis";
 import { onClose, onInternalConfirm, onResponse } from "src/services/Frame";
 import {
   KEY_ACCESS_TOKEN,
+  KEY_DEVICE_ID,
   KEY_DEVICE_KEY,
   KEY_EMAIL,
   KEY_SESSION_ID,
@@ -20,11 +21,20 @@ import { AuthenticateMachineContext } from "./definition";
 export const setCredentials =
   (context: AuthenticateMachineContext, event: AnyEventObject) =>
   async (callback: (args: Event<AnyEventObject>) => void) => {
+    let deviceId;
     if (event?.data?.accessToken) {
+      const splittedJwt = event.data.accessToken.split(".");
+      const decodedJwtInfo = splittedJwt?.[1] && atob(splittedJwt[1]);
+      const jwtInfo = decodedJwtInfo && JSON.parse(decodedJwtInfo);
+      if (jwtInfo) {
+        deviceId = jwtInfo.device_id;
+        setItem(KEY_DEVICE_ID, deviceId);
+      }
       setItem(KEY_ACCESS_TOKEN, event.data.accessToken);
       setItem(KEY_DEVICE_KEY, event.data?.deviceKey);
     }
-    callback("verifyUser");
+
+    return callback({ type: "verifyUser", data: { deviceId } });
   };
 
 export const verifyUser =
