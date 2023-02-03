@@ -213,14 +213,17 @@ export const onSignatureResponse = ({
   const targetEvents = isEvmChain
     ? RESPONSE_EVENTS.ethereum
     : RESPONSE_EVENTS[blockchain];
-  const msg = {
-    type: targetEvents,
-    status: "APPROVED",
-    signature,
-    ...rest,
-  };
 
-  postMessageToParentFrame(msg, l6n);
+  targetEvents.forEach((type) => {
+    const msg = {
+      type,
+      status: "APPROVED",
+      signature,
+      ...rest,
+    };
+
+    postMessageToParentFrame(msg, l6n);
+  });
 };
 
 export const onSignatureDecline = ({
@@ -236,13 +239,16 @@ export const onSignatureDecline = ({
   const targetEvents = isEvmChain
     ? RESPONSE_EVENTS.ethereum
     : RESPONSE_EVENTS[blockchain];
-  const msg = {
-    type: targetEvents,
-    status: "DECLINED",
-    errorMessage,
-  };
 
-  postMessageToParentFrame(msg, l6n);
+  targetEvents.forEach((type) => {
+    const msg = {
+      type,
+      status: "DECLINED",
+      errorMessage,
+    };
+
+    postMessageToParentFrame(msg, l6n);
+  });
 };
 
 export const onTransactionResponse = ({
