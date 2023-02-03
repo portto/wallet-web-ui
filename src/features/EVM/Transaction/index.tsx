@@ -32,7 +32,7 @@ const stageComponentMapping: Record<
 > = {
   [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
-  [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "lg" },
+  [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "sm" },
 };
 
 const useDefaultStateFromProps = (props: any) => {

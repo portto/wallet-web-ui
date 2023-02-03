@@ -85,7 +85,7 @@ const machine = createMachine<TransactionMachineContext>(
           ready: { target: machineStates.MAIN, actions: "updateUserAndTx" },
           nonCustodial: {
             target: machineStates.NON_CUSTODIAL,
-            actions: "updateUser",
+            actions: "updateUserAndTx",
           },
         },
       },

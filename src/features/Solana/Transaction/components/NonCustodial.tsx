@@ -18,11 +18,12 @@ const NonCustodial = () => {
       blockchain,
       url,
       type: "tx",
-      txs: rawObject.transactions,
+      txs: rawObject.transaction,
     }),
-    [blockchain, logo, name, rawObject.transactions, url]
+    [blockchain, logo, name, rawObject.transaction, url]
   );
   useNonCustodialTransaction(payload);
+
   const handleClose = useCallback(() => send("close"), [send]);
 
   return (

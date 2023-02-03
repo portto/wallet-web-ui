@@ -44,6 +44,6 @@ export default function useNonCustodialTransaction(payload: object) {
       }
     }, 1000);
 
-    return clearInterval(interval);
+    return () => clearInterval(interval);
   }, [dapp, send, signingRequestId]);
 }
