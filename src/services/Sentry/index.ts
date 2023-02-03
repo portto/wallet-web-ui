@@ -1,9 +1,7 @@
 /* eslint-disable camelcase */
 import * as Sentry from "@sentry/browser";
+import { IS_LOCAL } from "src/services/Env";
 import { getLocale } from "src/utils/locales";
-
-const IS_LOCAL =
-  process.env.REACT_APP_ENV === "local" || !process.env.REACT_APP_ENV;
 
 const API_ERROR_WHITE_LIST_HASH: { [key in string]: number } = {
   account_not_found: 1,

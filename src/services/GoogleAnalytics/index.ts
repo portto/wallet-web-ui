@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+import { IS_LOCAL } from "src/services/Env";
 
-const IS_LOCAL = process.env.NEV === "local" || !process.env.NEV;
 // load ga
 export const loadGA = () => {
   // istanbul ignore next

@@ -1,5 +1,4 @@
-const IS_LOCAL =
-  process.env.REACT_APP_ENV === "local" || !process.env.REACT_APP_ENV;
+import { IS_LOCAL } from "src/services/Env";
 
 export const postMessageToParentFrame = (args: any, l6n: string) => {
   if (IS_LOCAL) {
