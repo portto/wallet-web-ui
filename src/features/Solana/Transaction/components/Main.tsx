@@ -17,7 +17,7 @@ const Main = () => {
   const { context, send } = useTransactionMachine();
 
   const { user, transaction, dapp } = context;
-  const dappDomain = new URL(dapp.url || "").host;
+  const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject } = transaction;
 
   const hasDiscount = (transaction.discount || 0) > 0;
