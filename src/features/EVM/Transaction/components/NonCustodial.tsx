@@ -1,66 +1,26 @@
 import { Box, Center, Flex, Text } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
-import { createSigningRequest, getSigningRequest } from "src/apis";
+import { useCallback } from "react";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
+import useNonCustodialTransaction from "src/hooks/useNonCustodialTransaction";
 import { useTransactionMachine } from "src/machines/transaction";
-import { logSendTx } from "src/services/Amplitude";
-import { ERROR_MESSAGES } from "src/utils/constants";
 
 const NonCustodial = () => {
   const { context, send } = useTransactionMachine();
-  const [signingRequestId, setSigningRequestId] = useState<string>("");
-
-  const { user, transaction, dapp } = context;
+  const { blockchain, url = "", name = "", logo = "" } = context.dapp;
+  const { transaction } = context;
   const { rawObject } = transaction;
-  // create non custodial signing request
-  useEffect(() => {
-    const { blockchain, url = "", name = "", logo = "" } = dapp;
+  const payload = {
+    title: name,
+    image: logo,
+    blockchain,
+    url,
+    type: "tx",
+    txs: rawObject.transactions,
+  };
 
-    createSigningRequest({
-      title: name,
-      image: logo,
-      blockchain,
-      url,
-      type: "tx",
-      txs: rawObject.transactions,
-    }).then(({ id }) => setSigningRequestId(id));
-  }, [user.sessionId, dapp, rawObject]);
-
-  // check signing request status
-  useEffect(() => {
-    const { id = "", blockchain, url = "", name = "" } = dapp;
-    const domain = new URL(url).host;
-
-    const interval = setInterval(async () => {
-      const { status, tx_hash: txHash } = await getSigningRequest({
-        blockchain,
-        id: signingRequestId,
-      });
-      if (status === "approve") {
-        logSendTx({
-          domain,
-          url,
-          chain: blockchain,
-          type: "authz",
-          dAppName: name,
-          dAppId: id,
-        });
-        clearInterval(interval);
-        send({ type: "approve", data: { txHash } });
-      } else if (status === "reject") {
-        send({
-          type: "reject",
-          data: { failReason: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
-        });
-        clearInterval(interval);
-      }
-    }, 1000);
-
-    return clearInterval(interval);
-  }, [dapp, send, signingRequestId]);
-
+  useNonCustodialTransaction(payload);
   const handleClose = useCallback(() => send("close"), [send]);
 
   return (
