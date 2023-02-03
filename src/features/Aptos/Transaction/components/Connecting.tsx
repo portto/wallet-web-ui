@@ -40,11 +40,9 @@ const Connecting = () => {
       sessionId,
       balance,
     };
-    if (type === "security")
-      return send({ type: "nonCustodial", data: userData });
 
     send({
-      type: "ready",
+      type: type === "security" ? "nonCustodial" : "ready",
       data: {
         user: userData,
         transaction: {
