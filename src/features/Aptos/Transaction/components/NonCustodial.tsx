@@ -11,6 +11,14 @@ const NonCustodial = () => {
   const { blockchain, url = "", name = "", logo = "" } = context.dapp;
   const { transaction } = context;
   const { rawObject } = transaction;
+  const {
+    type: payload_type,
+    arguments: args = [],
+    function: functionName = "",
+    type_arguments,
+    code,
+  } = rawObject.transaction;
+
   const payload = useMemo(
     () => ({
       title: name,
@@ -19,8 +27,24 @@ const NonCustodial = () => {
       url,
       type: "tx",
       txs: rawObject.transaction,
+      payload_type,
+      code,
+      function: functionName,
+      arguments: args,
+      type_arguments,
     }),
-    [blockchain, logo, name, rawObject.transaction, url]
+    [
+      args,
+      payload_type,
+      blockchain,
+      code,
+      functionName,
+      logo,
+      name,
+      rawObject.transaction,
+      type_arguments,
+      url,
+    ]
   );
   useNonCustodialTransaction(payload);
 
