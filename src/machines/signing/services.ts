@@ -7,7 +7,7 @@ export const finish = async (context: SigningMachineContext) => {
   const { blockchain, url = "" } = context.dapp;
   const { signature = "" } = context.message;
 
-  // Signing messages on Flow goes throw the back channel so we don't need to post the response
+  // Signing messages on Flow goes through the back channel so we don't need to post the response
   if (blockchain !== Chains.flow) {
     onSignatureResponse({
       blockchain,
@@ -24,7 +24,7 @@ export const abort = async (context: SigningMachineContext) => {
   const { error } = context.message;
   const { onReject } = context.user;
 
-  // Signing messages on Flow goes throw the back channel so we don't need to post the response
+  // Signing messages on Flow goes through the back channel so we don't need to post the response
   if (blockchain !== Chains.flow) {
     onSignatureDecline({
       blockchain,
