@@ -33,10 +33,16 @@ HELP_MESSAGE = """
     
       dev-tool [blockchain] transfer [address] [value]
       dev-tool [blockchain] setValue [value]
+    
+    Aptos
+
+      dev-tool aptos script transfer [address] [value]
+      dev-tool aptos function transfer [address] [value]
 
   sign message
 
     dev-tool [evm-chains] sign [message] ([method])
+    dev-tool aptos sign [message]
 
   help
 
@@ -88,6 +94,34 @@ def make_evm_payload(blockchain, payload, account):
     value = hex(int(args[2]))[2:].zfill(64)
     payload['data'] = "{signature}{value}".format(signature=signature, value=value)
     payload['to'] = EVM_ADDRESSES[blockchain]
+  # EVM use transaction array as payload
+  payload = [payload]
+
+def make_aptos_payload(payload):
+  if args[1] == 'function' and args[2] == 'transfer':
+    payload['arguments'] = [args[3], args[4]]
+    payload['function'] = "0x1::coin::transfer"
+    payload['type'] = "entry_function_payload"
+    payload['type_arguments'] = ['0x1::aptos_coin::AptosCoin']
+  elif args[1] == 'script' and args[2] == 'transfer':
+    payload['arguments'] = [args[3], args[4]]
+    payload['code'] = {
+      "bytecode": "0xa11ceb0b0500000005010002030205050706070d170824200000000100010003060c0503000d6170746f735f6163636f756e74087472616e736665720000000000000000000000000000000000000000000000000000000000000001000001050b000b010b02110002",
+      "abi": {
+        "name": "main",
+        "visibility": "public",
+        "is_entry": True,
+        "generic_type_params": [],
+        "params": [
+          "&signer",
+          "address",
+          "u64"
+        ],
+        "return": []
+      }
+    }
+    payload['type'] = "script_payload"
+    payload['type_arguments'] = []
 
 def __main__():
 
@@ -108,17 +142,20 @@ def __main__():
 
       payload = { 'sessionId': code }
 
-      # @todo: support other chains
-
+      # @todo: support flow sign
       if blockchain in EVM_CHAINS:
         payload['message'] = args[2]
         payload['method'] = args[3] if len(args) > 3 else "eth_sign"
-
+      elif blockchain == 'aptos':
+        payload['message'] = args[2]
+        payload['nonce'] = "dev-tool-sign"
+        payload['address'] = True
+        payload['application'] = True
+        payload['chainId'] = True
+      
       request_body = json.dumps(payload)
 
       connection.request('POST', url, request_body, { 'Content-type': 'application/json' })
-
-      response = json.load(connection.getresponse())
       signature_id = response['signatureId']
       generated_url = "{dev_url}/{dapp_id}/{blockchain}/user-signature/{signature_id}".format(dev_url=dev_url, dapp_id=DEV_DAPP_ID, blockchain=blockchain, signature_id=signature_id)
       os.system('open "{url}"'.format(url = generated_url))
@@ -147,12 +184,12 @@ def __main__():
 
       payload = { 'sessionId': code }
       
-      # @todo: support other chains
-      
+      # @todo: handle solana/flow tx
       if blockchain in EVM_CHAINS:
         make_evm_payload(blockchain, payload, account)
-
-      request_body=json.dumps([payload])
+      elif blockchain == 'aptos':
+        make_aptos_payload(payload)
+      request_body = json.dumps(payload)
 
       url = "/api/{blockchain}/authz?code={code}".format(blockchain=blockchain, code=code)
       connection.request('POST', url, request_body, { 'Content-type': 'application/json', 'referer': DAPP_URL })
