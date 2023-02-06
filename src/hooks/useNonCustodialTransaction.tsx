@@ -38,7 +38,7 @@ export default function useNonCustodialTransaction(payload: object) {
       } else if (status === "reject") {
         send({
           type: "reject",
-          data: { failReason: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
+          data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
         });
         clearInterval(interval);
       }

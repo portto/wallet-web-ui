@@ -61,7 +61,7 @@ const Main = () => {
         dAppName: name,
         dAppId: id,
       });
-    } else send({ type: "reject", data: { failReason: reason } });
+    } else send({ type: "reject", data: { error: reason } });
   }, [user, dapp, transaction, dappDomain, send]);
 
   const getTransactionFeeField = () => (
