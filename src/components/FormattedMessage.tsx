@@ -7,8 +7,11 @@ interface Props {
 }
 
 export default ({ intlKey, ...props }: Props) => {
-  if (!intlKey) return null;
-  const descriptor = getDescriptor(intlKey);
-  if (!descriptor) return null;
-  return <FormattedMessage {...defineMessage(descriptor)} {...props} />;
+  const descriptor = intlKey && getDescriptor(intlKey);
+  return (
+    <FormattedMessage
+      {...(descriptor ? defineMessage(descriptor) : {})}
+      {...props}
+    />
+  );
 };
