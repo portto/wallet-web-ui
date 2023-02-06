@@ -18,9 +18,9 @@ import useTransactionDetail from "../hooks/useTransactionDetail";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
-  // TODO: add operation detection logic
+  // @todo: add operation detection logic
   const [recognizedTx] = useState(false);
-  // TODO: add operation verified logic
+  // @todo: add operation verified logic
   const [verifiedTx] = useState(false);
 
   const { user, transaction, dapp } = context;
@@ -204,7 +204,7 @@ const Main = () => {
           </>
         )}
       </Box>
-      {/* // TODO: remove testing data. */}
+      {/* // @todo: remove testing data. */}
       {/* <Box>Dapp</Box>
       <Box px={4}>
         <Box>Dapp name: {dapp.name}</Box>

@@ -31,7 +31,7 @@ const stageComponentMapping: Record<
 > = {
   [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
-  // TODO: add non-custodial view.
+  // @todo: add non-custodial view.
   // [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "lg" },
 };
 

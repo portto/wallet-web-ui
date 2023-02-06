@@ -129,7 +129,7 @@ const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
       </Box>
     );
 
-    // TODO: add condition about staging env.
+    // @todo: add condition about staging env.
     //   if () {
     //     return <Label>STAGING</Label>;
     //   }

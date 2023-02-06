@@ -51,7 +51,7 @@ export default function useTransactionDetail(transaction: FlowTransaction) {
       !!recognizedTokens && Object.entries(recognizedTokens);
 
     return {
-      // TODO: add balance checking logic.
+      // @todo: add balance checking logic.
       // hasEnoughBalance: true,
       tokenNames: tokenValuePair.map(([tokenName]) => tokenName),
       // for displaying multiple tokens in the tx.

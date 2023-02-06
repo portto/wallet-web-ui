@@ -18,7 +18,7 @@ import {
 import Connecting from "./components/Connecting";
 import Main from "./components/Main";
 
-// TODO: Add noncustodial component
+// @todo: Add noncustodial component
 // import NonCustodial from "./components/NonCustodial";
 
 const systemStatus = [
@@ -34,7 +34,7 @@ const stageComponentMapping: Record<
 > = {
   [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
-  // TODO: add non-custodial view.
+  // @todo: add non-custodial view.
   // [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "lg" },
 };
 

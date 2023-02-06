@@ -19,7 +19,7 @@ import useTransactionDetail from "../hooks/useTransactionDetail";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
-  // TODO: add operation verified logic
+  // @todo: add operation verified logic
   const [verifiedTx] = useState(true);
 
   const {

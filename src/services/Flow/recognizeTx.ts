@@ -4,7 +4,7 @@ import { IS_MAINNET, IS_SANDBOXNET, IS_TESTNET } from "src/services/Env";
 import { FlowTransaction, RecognizedFlowTx } from "src/types";
 import hashMsg from "src/utils/hashMsg";
 
-// TODO: Get recognized transactions from @blocto/flow-transactions for sandboxnet
+// @todo: Get recognized transactions from @blocto/flow-transactions for sandboxnet
 const transactions = (): { [key: string]: any } => {
   if (IS_SANDBOXNET || IS_TESTNET) return transactionsTestnet;
   if (IS_MAINNET) return transactionsMainnet;
