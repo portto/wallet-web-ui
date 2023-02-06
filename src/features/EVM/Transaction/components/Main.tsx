@@ -170,7 +170,7 @@ const Main = () => {
                 )
               }
             >
-              {/* //TODO: add operation detection logic. */}
+              {/* // @todo: add operation detection logic. */}
               Operation Name
             </Field>
             <FieldLine />
