@@ -213,12 +213,7 @@ const Main = () => {
                 )
               }
             >
-<<<<<<< Updated upstream
-              {/* // @todo: add operation detection logic. */}
-              Operation Name
-=======
               {`${moduleName}::${methodName}`}
->>>>>>> Stashed changes
             </Field>
             <FieldLine />
             <Field
