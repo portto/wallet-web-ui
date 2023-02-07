@@ -11,9 +11,45 @@ metadata:
     ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   tls:
-    - secretName: portto-tls-secret
-  defaultBackend:
-    service:
-      name: wallet-web-ui-service
-      port:
-        number: 80
+    - hosts:
+        - wallet-v2.blocto.app
+      secretName: cf-origin-cert-wallet-v2
+  rules:
+    - host: wallet-v2.blocto.app
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: wallet-web-backend-service
+                port:
+                  number: 80
+          - path: /blocto
+            pathType: Prefix
+            backend:
+              service:
+                name: wallet-web-backend-service
+                port:
+                  number: 80
+          - path: /access
+            pathType: Prefix
+            backend:
+              service:
+                name: wallet-web-backend-service
+                port:
+                  number: 80
+          - path: /bloctoWeb
+            pathType: Prefix
+            backend:
+              service:
+                name: wallet-web-backend-service
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wallet-web-ui-service
+                port:
+                  number: 80

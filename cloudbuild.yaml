@@ -3,10 +3,6 @@ steps:
   - name: 'node:16'
     args:
       - 'yarn'
-  - name: 'node:16'
-    args:
-      - 'yarn'
-      - 'build'
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
