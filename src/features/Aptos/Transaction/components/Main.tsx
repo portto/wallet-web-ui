@@ -17,10 +17,8 @@ import useTransactionDetail from "../hooks/useTransactionDetail";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
-  // @todo: add operation detection logic
-  const [recognizedTx] = useState(false);
-  // @todo: add operation verified logic
-  const [verifiedTx] = useState(false);
+  const [recognizedTx, setRecognizedTx] = useState(false);
+  const [verifiedTx, setVerifiedTx] = useState(false);
 
   const { user, transaction, dapp } = context;
   const dappDomain = new URL(dapp.url || "").host;
@@ -32,6 +30,8 @@ const Main = () => {
     type_arguments: typeArgs = [],
     code,
   } = rawObject.transaction;
+  const [moduleAddress = "", moduleName, methodName] =
+    functionName.split("::") || [];
 
   const hasDiscount = (transaction.discount || 0) > 0;
   const realTransactionFee =
@@ -56,7 +56,13 @@ const Main = () => {
           },
         })
     );
-  }, [sessionId, rawObject, blockchain, send]);
+
+    // Framework module address range: 0x1 - 0xa
+    if (Number(moduleAddress) >= 1 && Number(moduleAddress) <= 10) {
+      setRecognizedTx(true);
+      setVerifiedTx(true);
+    }
+  }, [sessionId, rawObject, blockchain, send, moduleAddress]);
 
   const approve = useCallback(async () => {
     const { sessionId, authorizationId = "" } = user;
@@ -207,8 +213,12 @@ const Main = () => {
                 )
               }
             >
+<<<<<<< Updated upstream
               {/* // @todo: add operation detection logic. */}
               Operation Name
+=======
+              {`${moduleName}::${methodName}`}
+>>>>>>> Stashed changes
             </Field>
             <FieldLine />
             <Field
