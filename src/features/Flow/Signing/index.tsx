@@ -29,7 +29,7 @@ const stageComponentMapping: Record<
 > = {
   [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
-  // TODO: Implement proper sign process for non-custodial users
+  // @todo: Implement proper sign process for non-custodial users
   [machineStates.NON_CUSTODIAL]: { component: Main, layoutSize: "lg" },
 };
 

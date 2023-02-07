@@ -2,7 +2,7 @@ import { defineMessages } from "react-intl";
 
 export default defineMessages({
   // original
-  // TODO: remove unused string.
+  // @todo: remove unused string.
   confirmTransaction: {
     id: "app.authz.confirmTransaction",
     defaultMessage: "Confirm transaction",

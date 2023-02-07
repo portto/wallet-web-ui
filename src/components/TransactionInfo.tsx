@@ -87,16 +87,18 @@ const TransactionInfo = ({
       </Text>
       {transactionDetail && (
         <>
-          <Box
-            ref={tokenAmountRef}
-            mb="space.4xs"
-            fontWeight="weight.l"
-            fontSize={`${tokenFontSize}px`}
-            lineHeight="line.height.heading.2"
-          >
-            {showTokenAmount && `${tokenAmount}`}
-          </Box>
-          {showTokenAmount && (
+          {tokenAmount && (
+            <Box
+              ref={tokenAmountRef}
+              mb="space.4xs"
+              fontWeight="weight.l"
+              fontSize={`${tokenFontSize}px`}
+              lineHeight="line.height.heading.2"
+            >
+              {showTokenAmount && `${tokenAmount}`}
+            </Box>
+          )}
+          {usdValue && showTokenAmount && (
             <Box color="font.secondary">≈ {usdValue} USD</Box>
           )}
         </>

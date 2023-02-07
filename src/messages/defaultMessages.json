@@ -37,8 +37,9 @@
   "app.authz.approve": "Approve",
   "app.authz.script": "Script",
   "app.authz.transactionContainsScript": "This transaction contains script",
+  "app.authz.transactionFeePoints": "{points} Points",
+  "app.authz.free": "Free (subsidized by Blocto)",
   "feature.sign.title": "You are signing for",
   "feature.transaction.nonCustodial.title": "Please verify in Blocto app",
-  "feature.transaction.nonCustodial.description": "Approve the transaction from Blocto app...",
-  "app.authz.transactionFeePoints": "{points} Points"
+  "feature.transaction.nonCustodial.description": "Approve the transaction from Blocto app..."
 }

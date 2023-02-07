@@ -13,35 +13,32 @@ import TransactionContent from "src/components/TransactionContent";
 import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
-import { EvmTransaction } from "src/types";
 import useTransactionDetail from "../hooks/useTransactionDetail";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
-  // @todo: add operation detection logic
-  const [recognizedTx] = useState(false);
-  // @todo: add operation verified logic
-  const [verifiedTx] = useState(false);
+  const [recognizedTx, setRecognizedTx] = useState(false);
+  const [verifiedTx, setVerifiedTx] = useState(false);
 
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject } = transaction;
-  const transactionData = rawObject.transactions
-    .filter(({ data }: EvmTransaction) => data)
-    .map(({ data }: EvmTransaction) => data)
-    .join("\n\n");
+  const {
+    type,
+    arguments: args = [],
+    function: functionName = "",
+    type_arguments: typeArgs = [],
+    code,
+  } = rawObject.transaction;
+  const [moduleAddress = "", moduleName, methodName] =
+    functionName.split("::") || [];
 
   const hasDiscount = (transaction.discount || 0) > 0;
   const realTransactionFee =
     (transaction.fee || 0) - (transaction.discount || 0);
 
-  const txDetailData = useTransactionDetail(transaction, user.balance);
-  const {
-    isNativeTransferring,
-    usdValue = "0",
-    tokenName,
-    tokenAmount,
-  } = txDetailData || {};
+  const txDetailData = useTransactionDetail(rawObject.transaction);
+  const { tokenAmount = "", usdValue = "" } = txDetailData || {};
 
   const { sessionId = "" } = user;
   const { blockchain } = dapp;
@@ -59,7 +56,13 @@ const Main = () => {
           },
         })
     );
-  }, [sessionId, rawObject, blockchain, send]);
+
+    // Framework module address range: 0x1 - 0xa
+    if (Number(moduleAddress) >= 1 && Number(moduleAddress) <= 10) {
+      setRecognizedTx(true);
+      setVerifiedTx(true);
+    }
+  }, [sessionId, rawObject, blockchain, send, moduleAddress]);
 
   const approve = useCallback(async () => {
     const { sessionId, authorizationId = "" } = user;
@@ -134,6 +137,51 @@ const Main = () => {
     );
   }, [transaction.fee, realTransactionFee, hasDiscount]);
 
+  const getTransactionData = () => {
+    if (functionName) {
+      return (
+        <>
+          {/* @todo: support other tx type */}
+          Type: entry_function_payload
+          <br />
+          {!!typeArgs.length && (
+            <>
+              Type Arguments: [{typeArgs.join(", ")}]<br />
+            </>
+          )}
+          {!!args.length && (
+            <>
+              Arguments: [{args.join(", ")}]<br />
+            </>
+          )}
+          <br />
+          {functionName}
+        </>
+      );
+    }
+    if (code) {
+      /* @todo: support other tx type */
+      return (
+        <>
+          Type: {type}
+          <br />
+          {!!typeArgs.length && (
+            <>
+              Type Arguments: [{typeArgs.join(", ")}]<br />
+            </>
+          )}
+          {!!args.length && (
+            <>
+              Arguments: [{args.join(", ")}]<br />
+            </>
+          )}
+          <br />
+          {functionName || (code && code.bytecode)}
+        </>
+      );
+    }
+    return null;
+  };
   return (
     <Box>
       <Header
@@ -143,10 +191,7 @@ const Main = () => {
       />
       <TransactionInfo
         host={dappDomain}
-        transactionDetail={{
-          usdValue,
-          tokenAmount: `${tokenAmount} ${tokenName}`,
-        }}
+        transactionDetail={{ tokenAmount, usdValue }}
       >
         <DappLogo url={dapp.logo || ""} mb="space.s" />
       </TransactionInfo>
@@ -156,11 +201,9 @@ const Main = () => {
             <Field
               title={<FormattedMessage intlKey="app.authz.operation" />}
               hidableInfo={
-                !isNativeTransferring && (
-                  <TransactionContent verified={verifiedTx}>
-                    {transactionData}
-                  </TransactionContent>
-                )
+                <TransactionContent verified={verifiedTx}>
+                  {getTransactionData()}
+                </TransactionContent>
               }
               icon={
                 verifiedTx ? (
@@ -170,8 +213,7 @@ const Main = () => {
                 )
               }
             >
-              {/* // @todo: add operation detection logic. */}
-              Operation Name
+              {`${moduleName}::${methodName}`}
             </Field>
             <FieldLine />
             <Field
@@ -192,9 +234,7 @@ const Main = () => {
             <Field
               title={<FormattedMessage intlKey="app.authz.script" />}
               hidableInfo={
-                !isNativeTransferring && (
-                  <TransactionContent>{transactionData}</TransactionContent>
-                )
+                <TransactionContent>{getTransactionData()}</TransactionContent>
               }
               icon={<CheckAlert width="16px" height="16px" />}
             >
@@ -204,28 +244,7 @@ const Main = () => {
           </>
         )}
       </Box>
-      {/* // @todo: remove testing data. */}
-      {/* <Box>Dapp</Box>
-      <Box px={4}>
-        <Box>Dapp name: {dapp.name}</Box>
-      </Box> */}
-      {/* <Box>User</Box>
-      <Box px={4}>
-        <Box>Points: {user.points}</Box>
-        <Box>
-          Assets:{" "}
-          {user.assets?.map((asset) => (
-            <Box px={4} key={asset.name}>
-              {asset.name} {asset.value} {asset.usd_price}
-            </Box>
-          ))}
-        </Box>
-      </Box>
-      <Box>Transaction</Box>
-      <Box px={4}>
-        <Box>May Fail?: {transaction.mayFail ? "true" : "false"}</Box>
-        <Box>Error: {transaction.error}</Box>
-      </Box> */}
+
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
         <Button onClick={approve}>
           <FormattedMessage intlKey="app.authz.approve" />

@@ -83,7 +83,6 @@ const Transaction = withTransactionContext(
     const { value, send } = useTransactionMachine();
     const [stage, setStage] = useState(machineStates.IDLE);
     const { setLayoutSize } = useLayoutContext();
-
     // initialization
     useEffect(() => {
       send({ type: "init", data: state });
