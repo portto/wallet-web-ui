@@ -1,29 +1,22 @@
 import { Box, Center, Flex, Text } from "@chakra-ui/react";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
+import { updateNonCustodial } from "src/apis";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
-import useNonCustodialTransaction from "src/hooks/useNonCustodialTransaction";
 import { useTransactionMachine } from "src/machines/transaction";
 
 const NonCustodial = () => {
   const { context, send } = useTransactionMachine();
-  const { blockchain, url = "", name = "", logo = "" } = context.dapp;
-  const { transaction } = context;
-  const { rawObject } = transaction;
-  const payload = useMemo(
-    () => ({
-      title: name,
-      image: logo,
-      blockchain,
-      url,
-      type: "tx",
-      txs: rawObject.transactions,
-    }),
-    [blockchain, logo, name, rawObject.transactions, url]
-  );
-  useNonCustodialTransaction(payload);
-  const handleClose = useCallback(() => send("close"), [send]);
+  const { authorizationId, sessionId } = context.user;
+
+  const handleClose = useCallback(() => {
+    if (authorizationId && sessionId) {
+      updateNonCustodial({ authorizationId, sessionId }).then(() =>
+        send("close")
+      );
+    }
+  }, [authorizationId, send, sessionId]);
 
   return (
     <Box position="relative">

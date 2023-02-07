@@ -17,9 +17,7 @@ import {
 
 import Connecting from "./components/Connecting";
 import Main from "./components/Main";
-
-// @todo: Add noncustodial component
-// import NonCustodial from "./components/NonCustodial";
+import NonCustodial from "./components/NonCustodial";
 
 const systemStatus = [
   machineStates.IDLE,
@@ -34,8 +32,7 @@ const stageComponentMapping: Record<
 > = {
   [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
-  // @todo: add non-custodial view.
-  // [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "lg" },
+  [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "sm" },
 };
 
 const useDefaultStateFromProps = (props: any) => {

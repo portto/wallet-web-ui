@@ -10,7 +10,9 @@ const NonCustodial = () => {
   const { context, send } = useTransactionMachine();
   const { blockchain, url = "", name = "", logo = "" } = context.dapp;
   const { transaction } = context;
-  const { rawObject } = transaction;
+  const {
+    rawObject: { transaction: rawTx, convertedTx, extraSignatures },
+  } = transaction;
   const payload = useMemo(
     () => ({
       title: name,
@@ -18,11 +20,14 @@ const NonCustodial = () => {
       blockchain,
       url,
       type: "tx",
-      txs: rawObject.transactions,
+      raw_tx: rawTx,
+      raw_meta_tx: convertedTx,
+      extra_signatures: extraSignatures,
     }),
-    [blockchain, logo, name, rawObject.transactions, url]
+    [blockchain, logo, name, extraSignatures, convertedTx, rawTx, url]
   );
   useNonCustodialTransaction(payload);
+
   const handleClose = useCallback(() => send("close"), [send]);
 
   return (
