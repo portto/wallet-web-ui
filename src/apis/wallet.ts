@@ -126,14 +126,17 @@ interface SignatureDetails {
 export const getSignatureDetails = ({
   blockchain,
   signatureId,
+  sessionId,
 }: {
   blockchain: Chains;
   signatureId: string;
+  sessionId: string;
 }) =>
   apiGet<SignatureDetails>({
     url: `api/${blockchain}/signature-details`,
     request: {
       signatureId,
+      sessionId,
     },
     isAuthorized: true,
   });

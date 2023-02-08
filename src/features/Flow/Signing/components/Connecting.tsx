@@ -1,6 +1,10 @@
 import { Buffer } from "buffer";
 import { useCallback, useEffect } from "react";
-import { getSignatureDetails, getUserInfo } from "src/apis";
+import {
+  getSignatureDetails,
+  getUserInfo,
+  updateSignatureDetails,
+} from "src/apis";
 import Loading from "src/components/Loading";
 import { useSigningMachine } from "src/machines/signing";
 import fetchDappInfo from "src/utils/fetchDappInfo";
@@ -10,6 +14,7 @@ const Connecting = () => {
   const {
     dapp: { blockchain, url = "", name, logo, id },
     signatureId,
+    user: { sessionId = "" },
   } = context;
 
   useEffect(() => {
@@ -17,7 +22,7 @@ const Connecting = () => {
       // get user type (custodial or not) and get the details of the signing message
       Promise.all([
         getUserInfo(),
-        getSignatureDetails({ blockchain, signatureId }),
+        getSignatureDetails({ blockchain, signatureId, sessionId }),
       ]).then(([{ type }, { sessionId, message }]) => {
         send({
           type: type === "normal" ? "ready" : "nonCustodial",
@@ -45,7 +50,17 @@ const Connecting = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockchain, id, send, signatureId]);
 
-  const handleClose = useCallback(() => send("close"), [send]);
+  const handleClose = useCallback(() => {
+    if (signatureId) {
+      updateSignatureDetails({
+        signatureId,
+        sessionId,
+        action: "decline",
+        blockchain,
+      });
+    }
+    send("close");
+  }, [blockchain, send, sessionId, signatureId]);
 
   return <Loading blockchain={blockchain} onClose={handleClose} />;
 };

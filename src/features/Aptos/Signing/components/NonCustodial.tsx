@@ -1,6 +1,10 @@
 import { Box, Center, Flex, Text } from "@chakra-ui/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { createSigningRequest, getSigningRequest } from "src/apis";
+import {
+  createSigningRequest,
+  getSigningRequest,
+  updateSignatureDetails,
+} from "src/apis";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
@@ -33,6 +37,8 @@ const NonCustodial = () => {
 
   const {
     dapp: { blockchain, id: appId = "", url = "", name = "", logo = "" },
+    signatureId,
+    user: { sessionId = "" },
   } = context;
   const domain = url ? new URL(url).host : "";
 
@@ -58,6 +64,22 @@ const NonCustodial = () => {
     // intentionally run once
     // eslint-disable-next-line
   }, []);
+
+  const handleClose = useCallback(() => {
+    if (signatureId) {
+      updateSignatureDetails({
+        signatureId,
+        sessionId,
+        action: "decline",
+        blockchain,
+      });
+    }
+
+    send({
+      type: "reject",
+      data: { error: ERROR_MESSAGES.SIGN_DECLINE_ERROR },
+    });
+  }, [blockchain, send, sessionId, signatureId]);
 
   const pollWalletStatus = async () => {
     const result = await getSigningRequest({
@@ -102,10 +124,7 @@ const NonCustodial = () => {
         },
       });
     } else {
-      send({
-        type: "reject",
-        data: { error: ERROR_MESSAGES.SIGN_DECLINE_ERROR },
-      });
+      handleClose();
     }
   };
 
@@ -120,15 +139,6 @@ const NonCustodial = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signingRequestId]);
-
-  const handleClose = useCallback(
-    () =>
-      send({
-        type: "reject",
-        data: { error: ERROR_MESSAGES.SIGN_DECLINE_ERROR },
-      }),
-    [send]
-  );
 
   return (
     <Box position="relative">
