@@ -6,6 +6,7 @@ import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useSigningMachine } from "src/machines/signing";
 import { logSendTx } from "src/services/Amplitude";
+import { NonCustodialTxResponse } from "src/types";
 import { ERROR_MESSAGES } from "src/utils/constants";
 
 const NonCustodial = () => {
@@ -35,10 +36,11 @@ const NonCustodial = () => {
     const domain = new URL(url).host;
 
     const interval = setInterval(async () => {
-      const { status, tx_hash: txHash } = await getSigningRequest({
+      const result = await getSigningRequest({
         blockchain,
         id: signingRequestId,
       });
+      const { status, tx_hash: txHash } = result as NonCustodialTxResponse;
       if (status === "approve") {
         logSendTx({
           domain,
