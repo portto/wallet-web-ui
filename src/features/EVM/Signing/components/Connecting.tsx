@@ -1,6 +1,10 @@
 import { SignTypedDataVersion, TypedDataUtils } from "@metamask/eth-sig-util";
 import { useCallback, useEffect } from "react";
-import { getSignatureDetails, getUserInfo } from "src/apis";
+import {
+  getSignatureDetails,
+  getUserInfo,
+  updateSignatureDetails,
+} from "src/apis";
 import Loading from "src/components/Loading";
 import { useSigningMachine } from "src/machines/signing";
 import { EVMSignatureDetails } from "src/types";
@@ -74,14 +78,20 @@ const Connecting = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blockchain, id, send, signatureId]);
 
-  const handleClose = useCallback(
-    () =>
-      send({
-        type: "reject",
-        data: { error: ERROR_MESSAGES.SIGN_DECLINE_ERROR },
-      }),
-    [send]
-  );
+  const handleClose = useCallback(() => {
+    if (signatureId) {
+      updateSignatureDetails({
+        signatureId,
+        sessionId,
+        action: "decline",
+        blockchain,
+      });
+    }
+    send({
+      type: "reject",
+      data: { error: ERROR_MESSAGES.SIGN_DECLINE_ERROR },
+    });
+  }, [blockchain, send, sessionId, signatureId]);
 
   return <Loading blockchain={blockchain} onClose={handleClose} />;
 };
