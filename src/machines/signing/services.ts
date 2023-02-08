@@ -1,5 +1,6 @@
 import { onSignatureDecline, onSignatureResponse } from "src/services/Frame";
 import { Chains } from "src/types";
+import { ERROR_MESSAGES } from "src/utils/constants";
 import { SigningMachineContext } from "./definition";
 
 const formatSignatureInformation = (
@@ -56,7 +57,7 @@ export const abort = async (context: SigningMachineContext) => {
     onSignatureDecline({
       blockchain,
       l6n: url,
-      errorMessage: error || "Signing message failed with unexpected error",
+      errorMessage: error || ERROR_MESSAGES.SIGN_UNEXPECTED_ERROR,
     });
   }
 
