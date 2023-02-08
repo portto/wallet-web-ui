@@ -146,7 +146,8 @@ const Main = () => {
         host={dappDomain}
         transactionDetail={{
           usdValue,
-          tokenAmount: `${tokenAmount} ${tokenName}`,
+          tokenAmount:
+            tokenAmount && tokenName && `${tokenAmount} ${tokenName}`,
         }}
       >
         <DappLogo url={dapp.logo || ""} mb="space.s" />

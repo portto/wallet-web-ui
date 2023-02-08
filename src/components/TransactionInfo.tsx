@@ -57,10 +57,17 @@ const TransactionInfo = ({
     setUrlFontSize(getFitFontSize(host, 16));
     setTokenFontSize(getFitFontSize(tokenAmount, 28));
 
-    if (!transactionDetail) return;
+    if (!usdValue || !tokenAmount) return;
 
     setShowTokenAmount(true);
-  }, [transactionDetail, getFitFontSize, host, setTokenFontSize, tokenAmount]);
+  }, [
+    transactionDetail,
+    getFitFontSize,
+    host,
+    setTokenFontSize,
+    tokenAmount,
+    usdValue,
+  ]);
 
   return (
     <Box
