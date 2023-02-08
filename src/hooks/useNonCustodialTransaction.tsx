@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createSigningRequest, getSigningRequest } from "src/apis";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
+import { NonCustodialTxResponse } from "src/types";
 import { ERROR_MESSAGES } from "src/utils/constants";
 
 export default function useNonCustodialTransaction(payload: object) {
@@ -20,10 +21,11 @@ export default function useNonCustodialTransaction(payload: object) {
     const domain = (url ? new URL(url) : {}).host || "";
 
     const interval = setInterval(async () => {
-      const { status, tx_hash: txHash } = await getSigningRequest({
+      const result = await getSigningRequest({
         blockchain,
         id: signingRequestId,
       });
+      const { status, tx_hash: txHash } = result as NonCustodialTxResponse;
       if (status === "approve") {
         logSendTx({
           domain,
