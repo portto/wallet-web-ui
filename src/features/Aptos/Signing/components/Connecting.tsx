@@ -1,4 +1,3 @@
-import { Buffer } from "buffer";
 import { useCallback, useEffect } from "react";
 import { getSignatureDetails, getUserInfo } from "src/apis";
 import Loading from "src/components/Loading";
@@ -18,21 +17,42 @@ const Connecting = () => {
       Promise.all([
         getUserInfo(),
         getSignatureDetails({ blockchain, signatureId }),
-      ]).then(([{ type }, { sessionId, message }]) => {
-        send({
-          type: type === "normal" ? "ready" : "nonCustodial",
-          data: {
-            message: {
-              raw: Buffer.from(message, "hex").toString(),
-              toBeSigned: message,
-            },
-            user: {
-              type,
-              sessionId,
-            },
+      ]).then(
+        ([
+          { type },
+          {
+            sessionId,
+            fullMessage,
+            message,
+            nonce,
+            prefix,
+            address,
+            application,
+            chainId,
           },
-        });
-      });
+        ]) => {
+          send({
+            type: type === "normal" ? "ready" : "nonCustodial",
+            data: {
+              message: {
+                raw: message,
+                toBeSigned: fullMessage,
+                meta: {
+                  nonce,
+                  prefix,
+                  address,
+                  application,
+                  chainId,
+                },
+              },
+              user: {
+                type,
+                sessionId,
+              },
+            },
+          });
+        }
+      );
     }
 
     // gather current dapp info

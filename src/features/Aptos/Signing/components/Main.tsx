@@ -8,6 +8,7 @@ import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import { useSigningMachine } from "src/machines/signing";
 import { logSignTx } from "src/services/Amplitude";
+import { AptosUpdateSignatureDetailsResponse } from "src/types";
 import { ERROR_MESSAGES } from "src/utils/constants";
 
 const Main = () => {
@@ -36,9 +37,17 @@ const Main = () => {
       sessionId,
       action: "approve",
       blockchain,
-    }).then(() => {
+    }).then((result) => {
+      const {
+        signature,
+        bitmap,
+        fullMessage: toBeSigned,
+        message: raw,
+        ...meta
+      } = result as AptosUpdateSignatureDetailsResponse;
       send({
         type: "approve",
+        data: { signature, bitmap, raw, toBeSigned, meta },
       });
     });
   }, [blockchain, id, name, send, sessionId, signatureId, url]);
@@ -92,7 +101,7 @@ const Main = () => {
 
       <Box flex="1 0 0" px="space.l" overflow="auto">
         <Field title={<FormattedMessage intlKey="app.general.message" />}>
-          {message.raw}
+          {message.toBeSigned}
         </Field>
         <FieldLine />
       </Box>

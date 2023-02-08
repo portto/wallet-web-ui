@@ -18,8 +18,10 @@ const Flow = {
 const SOL = {
   Transaction: React.lazy(() => import("src/features/Solana/Transaction")),
 };
+
 const Aptos = {
   Transaction: React.lazy(() => import("src/features/Aptos/Transaction")),
+  Signing: React.lazy(() => import("src/features/Aptos/Signing")),
 };
 
 const supportedEVMChains = EVM_CHAINS.join("|");
@@ -62,6 +64,10 @@ const App = () => {
         <Route
           path={`/:appId/:blockchain(aptos)/authz/:authorizationId?`}
           render={() => <Aptos.Transaction />}
+        />
+        <Route
+          path={`/:appId/:blockchain(aptos)/user-signature/:signatureId?`}
+          render={() => <Aptos.Signing />}
         />
       </Switch>
     </Suspense>

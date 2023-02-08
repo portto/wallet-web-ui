@@ -14,6 +14,7 @@ import {
 } from "src/services/LocalStorage";
 import Connecting from "./components/Connecting";
 import Main from "./components/Main";
+import NonCustodial from "./components/NonCustodial";
 
 const systemStatus = [
   machineStates.IDLE,
@@ -28,8 +29,7 @@ const stageComponentMapping: Record<
 > = {
   [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
-  // @todo: Implement proper sign process for non-custodial users
-  [machineStates.NON_CUSTODIAL]: { component: Main, layoutSize: "lg" },
+  [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "sm" },
 };
 
 const noop = () => undefined;

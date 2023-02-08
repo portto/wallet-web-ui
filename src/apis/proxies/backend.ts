@@ -1,6 +1,11 @@
 import { getReadableDeviceInfo } from "src/services/Device";
 import { KEY_ACCESS_TOKEN, getItem } from "src/services/LocalStorage";
-import { AccountAsset, Chains } from "src/types";
+import {
+  AccountAsset,
+  AptosNonCustodialSigningResponse,
+  Chains,
+  NonCustodialTxResponse,
+} from "src/types";
 import { apiGet, apiPost } from "../axios";
 
 export const checkEmailExist = (email = "") =>
@@ -314,10 +319,7 @@ export const getSigningRequest = ({
   blockchain: Chains;
   id: string;
 }) =>
-  apiGet<{
-    status: "pending" | "approve" | "reject";
-    tx_hash: string;
-  }>({
+  apiGet<NonCustodialTxResponse | AptosNonCustodialSigningResponse>({
     url: `blocto/nonCustodial/signingRequest/${blockchain}/${id}`,
     isAuthorized: true,
   });
