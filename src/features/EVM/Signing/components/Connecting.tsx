@@ -1,91 +1,97 @@
 import { SignTypedDataVersion, TypedDataUtils } from "@metamask/eth-sig-util";
 import { useCallback, useEffect } from "react";
-import { getUserInfo } from "src/apis";
+import {
+  getSignatureDetails,
+  getUserInfo,
+  updateSignatureDetails,
+} from "src/apis";
 import Loading from "src/components/Loading";
 import { useSigningMachine } from "src/machines/signing";
-import { ETH_EVENTS, onReady } from "src/services/Frame";
+import { EVMSignatureDetails } from "src/types";
+import { ERROR_MESSAGES } from "src/utils/constants";
 import fetchDappInfo from "src/utils/fetchDappInfo";
+
+const formatSignData = (message: string, method: string) => {
+  let toBeSigned = message;
+  let dataType;
+  if (
+    method &&
+    [
+      "eth_signTypedData_v3",
+      "eth_signTypedData",
+      "eth_signTypedData_v4",
+    ].includes(method)
+  ) {
+    dataType = message;
+    const version =
+      method === "eth_signTypedData_v3"
+        ? SignTypedDataVersion.V3
+        : SignTypedDataVersion.V4;
+    toBeSigned = TypedDataUtils.eip712Hash(
+      JSON.parse(dataType),
+      version
+    ).toString("hex");
+  }
+  return { toBeSigned, dataType };
+};
 
 const Connecting = () => {
   const { context, send } = useSigningMachine();
-  const { blockchain, url = "" } = context.dapp;
-
-  const setMessage = useCallback(async (data: any) => {
-    const { message, chain, method } = data;
-    let contentToBeSigned = message;
-    let dataType;
-    if (
-      [
-        "eth_signTypedData",
-        "eth_signTypedData_v3",
-        "eth_signTypedData_v4",
-      ].includes(method)
-    ) {
-      dataType = message;
-      const version =
-        method === "eth_signTypedData_v4" || method === "eth_signTypedData"
-          ? SignTypedDataVersion.V4
-          : SignTypedDataVersion.V3;
-      contentToBeSigned = TypedDataUtils.eip712Hash(
-        JSON.parse(dataType),
-        version
-      ).toString("hex");
-    }
-    const { type } = await getUserInfo();
-    send({
-      type: type === "normal" ? "ready" : "nonCustodial",
-      data: {
-        message: {
-          raw: message,
-          toBeSigned: contentToBeSigned,
-          meta: { chain, method, dataType },
-        },
-        user: {
-          type,
-        },
-      },
-    });
-  }, []);
+  const {
+    signatureId = "",
+    user: { sessionId = "" },
+  } = context;
+  const { blockchain, url = "", name, logo, id } = context.dapp;
 
   // get message and preprocess
+  // intentionally run once
   useEffect(() => {
-    if (context.message) return;
-    const listener = ({ data }: any) => {
-      if (data === null) return;
-      if (typeof data !== "object") return;
-      if (data.type === ETH_EVENTS.READY_RESPONSE) {
-        setMessage(data);
-      }
-    };
-    window.addEventListener("message", listener);
-    return () => window.removeEventListener("message", listener);
-  }, []);
+    // get user type (custodial or not) and get the details of the signing message
+    Promise.all([
+      getSignatureDetails({ signatureId, blockchain, sessionId }),
+      getUserInfo(),
+    ]).then(([signatureDetails, { type }]) => {
+      const { message, method } = signatureDetails as EVMSignatureDetails;
+      const { toBeSigned, dataType } = formatSignData(message, method);
+      send({
+        type: type === "normal" ? "ready" : "nonCustodial",
+        data: {
+          message: {
+            raw: message,
+            toBeSigned,
+            meta: { method, dataType },
+          },
+          user: {
+            type,
+          },
+        },
+      });
+    });
 
-  // get user type: custodial or not
-  useEffect(() => {
-    getUserInfo().then(({ type }) =>
-      send({ type: "updateUser", data: { type } })
-    );
-  }, []);
-
-  // notify parant frame ready
-  useEffect(() => {
-    if (!url) return;
-    onReady({ l6n: url, blockchain });
-  }, [blockchain, url]);
-
-  // gather current dapp info
-  useEffect(() => {
-    const { name, logo, id, url = "" } = context.dapp || {};
+    // gather current dapp info
     if (!(name && logo)) {
       fetchDappInfo({ id, url }).then((data) =>
         send({ type: "updateDapp", data })
       );
     }
-    // intentionally run once
-  }, []);
+    // Shouldn't include {name}, {logo} and {url} since {fetchDappInfo} is meant to update them
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blockchain, id, send, signatureId]);
 
-  const handleClose = useCallback(() => send("close"), [send]);
+  const handleClose = useCallback(() => {
+    if (signatureId) {
+      updateSignatureDetails({
+        signatureId,
+        sessionId,
+        action: "decline",
+        blockchain,
+      });
+    }
+    send({
+      type: "reject",
+      data: { error: ERROR_MESSAGES.SIGN_DECLINE_ERROR },
+    });
+  }, [blockchain, send, sessionId, signatureId]);
 
   return <Loading blockchain={blockchain} onClose={handleClose} />;
 };

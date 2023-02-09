@@ -4,6 +4,7 @@ import {
   AccountAsset,
   AptosNonCustodialSigningResponse,
   Chains,
+  EVMNonCustodialSigningResponse,
   NonCustodialTxResponse,
 } from "src/types";
 import { apiGet, apiPost } from "../axios";
@@ -319,7 +320,11 @@ export const getSigningRequest = ({
   blockchain: Chains;
   id: string;
 }) =>
-  apiGet<NonCustodialTxResponse | AptosNonCustodialSigningResponse>({
+  apiGet<
+    | NonCustodialTxResponse
+    | EVMNonCustodialSigningResponse
+    | AptosNonCustodialSigningResponse
+  >({
     url: `blocto/nonCustodial/signingRequest/${blockchain}/${id}`,
     isAuthorized: true,
   });

@@ -29,13 +29,14 @@ const stageComponentMapping: Record<
 > = {
   [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
-  [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "lg" },
+  [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "sm" },
 };
 
 const useDefaultStateFromProps = (props: any) => {
-  const { blockchain, appId } = useParams<{
+  const { blockchain, appId, signatureId } = useParams<{
     appId: string;
     blockchain: string;
+    signatureId: string;
   }>();
 
   const id = props?.appId || appId;
@@ -62,9 +63,10 @@ const useDefaultStateFromProps = (props: any) => {
         onApprove,
         onReject,
       },
+      signatureId,
       message,
     }),
-    [location]
+    [blockchain, id, logo, message, name, onApprove, onReject, signatureId]
   );
 };
 

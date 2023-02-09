@@ -80,9 +80,39 @@ export interface AptosTransaction {
   type_arguments: string[];
 }
 
+export interface FlowSignatureDetails {
+  message: string;
+  origin: string | undefined;
+  sessionId: string;
+  status: "PENDING" | "APPROVED" | "DECLINED";
+  appId: string;
+  signatureId?: string;
+  vsn?: number;
+  reason?: string | null;
+  data?: unknown;
+}
+
+export interface EVMSignatureDetails extends FlowSignatureDetails {
+  method: string;
+}
+
+export interface AptosSignatureDetails extends FlowSignatureDetails {
+  nonce?: string;
+  prefix?: string;
+  fullMessage?: string;
+  address?: string;
+  application?: string;
+  chainId?: number;
+}
+
 export interface FlowUpdateSignatureDetailsResponse {
   result: "ok";
 }
+
+export interface EVMUpdateSignatureDetailsResponse {
+  signature: string;
+}
+
 export interface AptosUpdateSignatureDetailsResponse {
   signature: string[];
   bitmap: number[];
@@ -95,13 +125,19 @@ export interface AptosUpdateSignatureDetailsResponse {
   chainId?: number;
 }
 
-export interface NonCustodialTxResponse {
+export interface NonCustodialResponse {
   status: "pending" | "approve" | "reject";
+}
+
+export interface NonCustodialTxResponse extends NonCustodialResponse {
   tx_hash: string;
 }
 
-export interface AptosNonCustodialSigningResponse {
-  status: "pending" | "approve" | "reject";
+export interface EVMNonCustodialSigningResponse extends NonCustodialResponse {
+  signature: string;
+}
+
+export interface AptosNonCustodialSigningResponse extends NonCustodialResponse {
   signatures: string[];
   device_key_index: number;
   full_message: string;
