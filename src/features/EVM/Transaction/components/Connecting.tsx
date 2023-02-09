@@ -1,13 +1,19 @@
-import { useEffect } from "react";
-import { getAccountAssets, getAuthorization, getUserInfo } from "src/apis";
+import { useCallback, useEffect } from "react";
+import {
+  getAccountAssets,
+  getAuthorization,
+  getUserInfo,
+  updateAuthorization,
+} from "src/apis";
 import Loading from "src/components/Loading";
 import { useTransactionMachine } from "src/machines/transaction";
 import { AccountAsset } from "src/types";
+import { ERROR_MESSAGES } from "src/utils/constants";
 import fetchDappInfo from "src/utils/fetchDappInfo";
 
 const Connecting = () => {
   const { context, send } = useTransactionMachine();
-
+  const { blockchain } = context.dapp;
   // gather current dapp info
   useEffect(() => {
     const { name, logo, id, url = "" } = context.dapp || {};
@@ -62,7 +68,25 @@ const Connecting = () => {
     // intentionally run once
   }, []);
 
-  return <Loading />;
+  const handleReject = useCallback(async () => {
+    const { sessionId, authorizationId = "" } = context.user;
+    const { blockchain } = context.dapp;
+    if (authorizationId) {
+      await updateAuthorization({
+        authorizationId,
+        action: "decline",
+        sessionId,
+        blockchain,
+      });
+    }
+
+    send({
+      type: "close",
+      data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
+    });
+  }, [context, send]);
+
+  return <Loading onClose={handleReject} blockchain={blockchain} />;
 };
 
 export default Connecting;

@@ -14,6 +14,7 @@ import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { EvmTransaction } from "src/types";
+import { ERROR_MESSAGES } from "src/utils/constants";
 import useTransactionDetail from "../hooks/useTransactionDetail";
 
 const Main = () => {
@@ -92,6 +93,23 @@ const Main = () => {
     } else send({ type: "reject", data: { error: reason } });
   }, [user, dapp, transaction, dappDomain, send]);
 
+  const handleReject = useCallback(async () => {
+    const { sessionId, authorizationId = "" } = user;
+    const { blockchain } = dapp;
+    if (authorizationId) {
+      await updateAuthorization({
+        authorizationId,
+        action: "approve",
+        sessionId,
+        blockchain,
+      });
+    }
+    send({
+      type: "close",
+      data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
+    });
+  }, [dapp, send, user]);
+
   const getTransactionFeeField = useCallback(() => {
     return (
       <HStack>
@@ -139,7 +157,7 @@ const Main = () => {
     <Box>
       <Header
         bg="background.secondary"
-        onClose={() => send({ type: "close" })}
+        onClose={handleReject}
         blockchain={dapp?.blockchain}
       />
       <TransactionInfo
