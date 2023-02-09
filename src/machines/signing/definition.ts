@@ -37,7 +37,6 @@ export interface SigningMachineContext {
   user: {
     type?: string;
     sessionId?: string;
-    signatureId?: string;
     onApprove: (arg: any) => void;
     onReject: (arg: any) => void;
   };
