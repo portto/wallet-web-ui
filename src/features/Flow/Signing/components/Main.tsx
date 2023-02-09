@@ -16,9 +16,9 @@ const Main = () => {
 
   const {
     user: { sessionId = "" },
-    message,
+    message: { raw },
     signatureId,
-    dapp: { blockchain, id = "", url = "", name = "" },
+    dapp: { blockchain, id = "", url = "", name = "", logo = "" },
   } = context;
 
   const approve = useCallback(async () => {
@@ -63,7 +63,7 @@ const Main = () => {
     <Flex flexDirection="column">
       <Header
         bg="background.secondary"
-        blockchain={context.dapp.blockchain}
+        blockchain={blockchain}
         onClose={handleClose}
       />
 
@@ -73,7 +73,7 @@ const Main = () => {
         pb="space.xl"
         bg="background.secondary"
       >
-        <DappLogo url={context.dapp.logo || ""} mb="space.s" />
+        <DappLogo url={logo} mb="space.s" />
         <Text fontSize="size.body.3" mb="space.2xs">
           <FormattedMessage intlKey="feature.sign.title" />
         </Text>
@@ -86,13 +86,13 @@ const Main = () => {
           bg="background.primary"
           borderRadius="32px"
         >
-          {context.dapp.url}
+          {url}
         </Text>
       </Flex>
 
       <Box flex="1 0 0" px="space.l" overflow="auto">
         <Field title={<FormattedMessage intlKey="app.general.message" />}>
-          {message.raw}
+          {raw}
         </Field>
         <FieldLine />
       </Box>

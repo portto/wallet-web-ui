@@ -1,74 +1,97 @@
 import { Box, Center, Flex, Text } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createSigningRequest, getSigningRequest } from "src/apis";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useSigningMachine } from "src/machines/signing";
-import { logSendTx } from "src/services/Amplitude";
-import { NonCustodialTxResponse } from "src/types";
+import { logSignTx } from "src/services/Amplitude";
+import { EVMNonCustodialSigningResponse } from "src/types";
 import { ERROR_MESSAGES } from "src/utils/constants";
 
+const POLLING_INTERVAL = 1000;
+
 const NonCustodial = () => {
+  const timerRef = useRef<NodeJS.Timeout>();
   const { context, send } = useSigningMachine();
   const [signingRequestId, setSigningRequestId] = useState<string>("");
 
-  const { user, message, dapp } = context;
+  const {
+    dapp: { blockchain, url = "", name = "", logo = "", id = "" },
+  } = context;
+  const domain = url ? new URL(url).host : "";
 
   // create non custodial signing request
   useEffect(() => {
-    const { blockchain, url = "", name = "", logo = "" } = dapp;
-    const { toBeSigned } = message;
+    const { toBeSigned, meta: { method } = {} } = context.message;
 
     createSigningRequest({
       title: name,
       image: logo,
       blockchain,
       url,
-      type: "tx",
+      type: method,
       message: toBeSigned,
-    }).then(({ id }) => setSigningRequestId(id));
-  }, [user.sessionId, message.toBeSigned, dapp.blockchain]);
+    }).then(({ id }) => {
+      setSigningRequestId(id);
+    });
+    // intentionally run once
+    // eslint-disable-next-line
+  }, []);
 
-  // check signing request status
-  useEffect(() => {
-    const { id = "", blockchain, url = "", name = "" } = dapp;
-    const domain = new URL(url).host;
+  const handleClose = useCallback(
+    () =>
+      send({
+        type: "reject",
+        data: { error: ERROR_MESSAGES.SIGN_DECLINE_ERROR },
+      }),
+    [send]
+  );
 
-    const interval = setInterval(async () => {
-      const result = await getSigningRequest({
-        blockchain,
-        id: signingRequestId,
-      });
-      const { status, tx_hash: txHash } = result as NonCustodialTxResponse;
+  const pollSigningRequest = () => {
+    getSigningRequest({ id: signingRequestId, blockchain }).then((result) => {
+      const { status, signature } = result as EVMNonCustodialSigningResponse;
+      if (status === "pending") {
+        return (timerRef.current = setTimeout(
+          pollSigningRequest,
+          POLLING_INTERVAL
+        ));
+      }
       if (status === "approve") {
-        logSendTx({
+        logSignTx({
           domain,
           url,
           chain: blockchain,
-          type: "authz",
           dAppName: name,
           dAppId: id,
         });
-        clearInterval(interval);
-        send({ type: "approve", data: { txHash } });
-      } else if (status === "reject") {
         send({
-          type: "reject",
-          data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
+          type: "approve",
+          data: { signature },
         });
-        clearInterval(interval);
+      } else if (status === "reject") {
+        handleClose();
       }
-    }, 1000);
+    });
+  };
 
-    return clearInterval(interval);
-  }, []);
+  useEffect(() => {
+    if (signingRequestId) {
+      // check signing request status
+      pollSigningRequest();
+    }
 
-  const handleClose = useCallback(() => send("close"), [send]);
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signingRequestId]);
 
   return (
     <Box position="relative">
-      <Header blockchain={context.dapp.blockchain} onClose={handleClose} />
+      <Header blockchain={blockchain} onClose={handleClose} />
       <Box
         position="absolute"
         top="0"

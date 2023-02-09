@@ -1,8 +1,12 @@
 import {
+  AptosSignatureDetails,
   AptosTransaction,
   AptosUpdateSignatureDetailsResponse,
   Chains,
+  EVMSignatureDetails,
+  EVMUpdateSignatureDetailsResponse,
   EvmTransaction,
+  FlowSignatureDetails,
   FlowTransaction,
   FlowUpdateSignatureDetailsResponse,
 } from "src/types";
@@ -132,7 +136,7 @@ export const getSignatureDetails = ({
   signatureId: string;
   sessionId: string;
 }) =>
-  apiGet<SignatureDetails>({
+  apiGet<FlowSignatureDetails | EVMSignatureDetails | AptosSignatureDetails>({
     url: `api/${blockchain}/signature-details`,
     request: {
       signatureId,
@@ -153,7 +157,9 @@ export const updateSignatureDetails = ({
   blockchain: Chains;
 }) =>
   apiPut<
-    FlowUpdateSignatureDetailsResponse | AptosUpdateSignatureDetailsResponse
+    | FlowUpdateSignatureDetailsResponse
+    | EVMUpdateSignatureDetailsResponse
+    | AptosUpdateSignatureDetailsResponse
   >({
     url: `api/${blockchain}/user-signature`,
     request: {

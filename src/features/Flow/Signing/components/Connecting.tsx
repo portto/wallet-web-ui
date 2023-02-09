@@ -7,6 +7,7 @@ import {
 } from "src/apis";
 import Loading from "src/components/Loading";
 import { useSigningMachine } from "src/machines/signing";
+import { ERROR_MESSAGES } from "src/utils/constants";
 import fetchDappInfo from "src/utils/fetchDappInfo";
 
 const Connecting = () => {
@@ -23,7 +24,7 @@ const Connecting = () => {
       Promise.all([
         getUserInfo(),
         getSignatureDetails({ blockchain, signatureId, sessionId }),
-      ]).then(([{ type }, { sessionId, message }]) => {
+      ]).then(([{ type }, { message }]) => {
         send({
           type: type === "normal" ? "ready" : "nonCustodial",
           data: {
@@ -33,7 +34,6 @@ const Connecting = () => {
             },
             user: {
               type,
-              sessionId,
             },
           },
         });
@@ -59,7 +59,10 @@ const Connecting = () => {
         blockchain,
       });
     }
-    send("close");
+    send({
+      type: "reject",
+      data: { error: ERROR_MESSAGES.SIGN_DECLINE_ERROR },
+    });
   }, [blockchain, send, sessionId, signatureId]);
 
   return <Loading blockchain={blockchain} onClose={handleClose} />;
