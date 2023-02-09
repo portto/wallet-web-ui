@@ -13,7 +13,7 @@ const Queueing = () => {
   const { context, send } = useTransactionMachine();
   const { blockchain } = context.dapp;
   const [waitingCount, setWaitingCount] = useState(0);
-  console.log("waitingCount :", waitingCount);
+
   const { preauthId = "" } = useParams<{
     preauthId?: string;
   }>();
@@ -67,18 +67,22 @@ const Queueing = () => {
         height="100%"
       >
         <Center height="100%">
-          <Flex flexDirection="column" alignItems="center">
+          <Flex flexDirection="column" alignItems="center" px="space.l">
             <LoadingLogo mb="space.s" />
             <Text
               fontSize="size.heading.4"
               fontWeight="weight.l"
               lineHeight="line.height.subheading.1"
+              textAlign="center"
               mb="space.2xs"
             >
-              <FormattedMessage intlKey="feature.authn.queue.title" />
+              <FormattedMessage intlKey="feature.preAuthz.queue.title" />
             </Text>
             <Text fontSize="size.body.3" textAlign="center">
-              <FormattedMessage intlKey="feature.authn.queue.description" />
+              <FormattedMessage
+                intlKey="feature.preAuthz.queue.description"
+                values={{ count: waitingCount }}
+              />
             </Text>
           </Flex>
         </Center>
