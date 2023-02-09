@@ -71,7 +71,7 @@ const Connecting = () => {
     // intentionally run once
   }, []);
 
-  const handleReject = useCallback(async () => {
+  const handleClose = useCallback(async () => {
     const { sessionId, authorizationId = "" } = context.user;
     const { blockchain } = context.dapp;
     if (authorizationId) {
@@ -87,7 +87,7 @@ const Connecting = () => {
       data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
     });
   }, [context, send]);
-  return <Loading onClose={handleReject} blockchain={blockchain} />;
+  return <Loading onClose={handleClose} blockchain={blockchain} />;
 };
 
 export default Connecting;

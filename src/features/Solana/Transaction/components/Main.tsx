@@ -121,7 +121,7 @@ const Main = () => {
     );
   }, [transaction.fee, hasDiscount]);
 
-  const handleReject = useCallback(async () => {
+  const handleClose = useCallback(async () => {
     const { sessionId, authorizationId = "" } = context.user;
     const { blockchain } = context.dapp;
     if (authorizationId) {
@@ -142,7 +142,7 @@ const Main = () => {
     <Box>
       <Header
         bg="background.secondary"
-        onClose={handleReject}
+        onClose={handleClose}
         blockchain={dapp?.blockchain}
       />
       <TransactionInfo host={dappDomain}>

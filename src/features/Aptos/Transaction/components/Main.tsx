@@ -95,7 +95,7 @@ const Main = () => {
     } else send({ type: "reject", data: { error: reason } });
   }, [user, dapp, transaction, dappDomain, send]);
 
-  const handleReject = useCallback(async () => {
+  const handleClose = useCallback(async () => {
     const { sessionId, authorizationId = "" } = context.user;
     const { blockchain } = context.dapp;
     if (authorizationId) {
@@ -204,7 +204,7 @@ const Main = () => {
     <Box>
       <Header
         bg="background.secondary"
-        onClose={handleReject}
+        onClose={handleClose}
         blockchain={dapp?.blockchain}
       />
       <TransactionInfo
