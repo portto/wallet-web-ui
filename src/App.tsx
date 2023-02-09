@@ -46,7 +46,7 @@ const App = () => {
           render={() => <EVM.Transaction />}
         />
         <Route
-          path={`/:appId/:blockchain(${supportedEVMChains})/user-signature`}
+          path={`/:appId/:blockchain(${supportedEVMChains})/user-signature/:signatureId`}
           render={() => <EVM.Signing />}
         />
         <Route

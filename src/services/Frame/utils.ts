@@ -7,6 +7,6 @@ export const postMessageToParentFrame = (args: any, l6n: string) => {
   }
   const parent = window.opener || window.parent;
   if (parent && parent.postMessage) {
-    parent.postMessage(args, l6n);
+    parent.postMessage(args, "*");
   }
 };

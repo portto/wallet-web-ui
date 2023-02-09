@@ -33,9 +33,10 @@ const stageComponentMapping: Record<
 };
 
 const useDefaultStateFromProps = (props: any) => {
-  const { blockchain, appId } = useParams<{
+  const { blockchain, appId, signatureId } = useParams<{
     appId: string;
     blockchain: string;
+    signatureId: string;
   }>();
 
   const id = props?.appId || appId;
@@ -58,6 +59,7 @@ const useDefaultStateFromProps = (props: any) => {
       },
       user: {
         sessionId: getItem(KEY_SESSION_ID),
+        signatureId,
         type: getItem(KEY_USER_TYPE),
         onApprove,
         onReject,
