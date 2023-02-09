@@ -79,7 +79,6 @@ const Connecting = () => {
         blockchain,
       });
     }
-
     send({
       type: "close",
       data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
