@@ -1,4 +1,11 @@
-import { AptosTransaction, EvmTransaction, FlowTransaction } from "src/types";
+import {
+  AptosTransaction,
+  AptosUpdateSignatureDetailsResponse,
+  Chains,
+  EvmTransaction,
+  FlowTransaction,
+  FlowUpdateSignatureDetailsResponse,
+} from "src/types";
 import { apiGet, apiPost, apiPut } from "./axios";
 
 export const getMaintenanceStatus = (chain: string) =>
@@ -96,16 +103,40 @@ export const signAptosMessage = ({
     isAuthorized: true,
   });
 
-export const getSignatureDetails = ({ signatureId }: { signatureId: string }) =>
-  apiGet<{
-    message: string;
-    origin: string;
-    sessionId: string;
-    status: "PENDING" | "APPROVED" | "DECLINED";
-  }>({
-    url: "api/flow/signature-details",
+interface SignatureDetails {
+  message: string;
+  origin: string | undefined;
+  sessionId: string;
+  status: "PENDING" | "APPROVED" | "DECLINED";
+  appId: string;
+  signatureId?: string;
+  vsn?: number;
+  reason?: string | null;
+  data?: unknown;
+  /* Attributes for Aptos */
+  nonce?: string;
+  prefix?: string;
+  fullMessage?: string;
+  address?: string;
+  application?: string;
+  chainId?: number;
+  /* Attributes for Aptos */
+}
+
+export const getSignatureDetails = ({
+  blockchain,
+  signatureId,
+  sessionId,
+}: {
+  blockchain: Chains;
+  signatureId: string;
+  sessionId: string;
+}) =>
+  apiGet<SignatureDetails>({
+    url: `api/${blockchain}/signature-details`,
     request: {
       signatureId,
+      sessionId,
     },
     isAuthorized: true,
   });
@@ -114,13 +145,17 @@ export const updateSignatureDetails = ({
   signatureId,
   sessionId,
   action,
+  blockchain,
 }: {
   signatureId: string;
   sessionId: string;
   action: string;
+  blockchain: Chains;
 }) =>
-  apiPut({
-    url: "api/flow/user-signature",
+  apiPut<
+    FlowUpdateSignatureDetailsResponse | AptosUpdateSignatureDetailsResponse
+  >({
+    url: `api/${blockchain}/user-signature`,
     request: {
       signatureId,
       sessionId,

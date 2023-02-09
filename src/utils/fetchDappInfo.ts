@@ -14,6 +14,7 @@ const fetchFromURL = async (url?: string) => {
       return {
         logo: result.thumbnail,
         name: result.title,
+        url: fetchingURL,
       };
     } catch (error) {
       return {};

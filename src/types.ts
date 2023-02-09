@@ -79,3 +79,35 @@ export interface AptosTransaction {
   type: string;
   type_arguments: string[];
 }
+
+export interface FlowUpdateSignatureDetailsResponse {
+  result: "ok";
+}
+export interface AptosUpdateSignatureDetailsResponse {
+  signature: string[];
+  bitmap: number[];
+  fullMessage: string;
+  message: string;
+  nonce: string;
+  prefix: string;
+  address?: string;
+  application?: string;
+  chainId?: number;
+}
+
+export interface NonCustodialTxResponse {
+  status: "pending" | "approve" | "reject";
+  tx_hash: string;
+}
+
+export interface AptosNonCustodialSigningResponse {
+  status: "pending" | "approve" | "reject";
+  signatures: string[];
+  device_key_index: number;
+  full_message: string;
+  address?: string;
+  application?: string;
+  chain_id?: number;
+  message: string;
+  nonce: string;
+}

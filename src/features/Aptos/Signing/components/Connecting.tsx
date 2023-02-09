@@ -1,4 +1,3 @@
-import { Buffer } from "buffer";
 import { useCallback, useEffect } from "react";
 import {
   getSignatureDetails,
@@ -7,6 +6,7 @@ import {
 } from "src/apis";
 import Loading from "src/components/Loading";
 import { useSigningMachine } from "src/machines/signing";
+import { ERROR_MESSAGES } from "src/utils/constants";
 import fetchDappInfo from "src/utils/fetchDappInfo";
 
 const Connecting = () => {
@@ -23,21 +23,42 @@ const Connecting = () => {
       Promise.all([
         getUserInfo(),
         getSignatureDetails({ blockchain, signatureId, sessionId }),
-      ]).then(([{ type }, { sessionId, message }]) => {
-        send({
-          type: type === "normal" ? "ready" : "nonCustodial",
-          data: {
-            message: {
-              raw: Buffer.from(message, "hex").toString(),
-              toBeSigned: message,
-            },
-            user: {
-              type,
-              sessionId,
-            },
+      ]).then(
+        ([
+          { type },
+          {
+            sessionId,
+            fullMessage,
+            message,
+            nonce,
+            prefix,
+            address,
+            application,
+            chainId,
           },
-        });
-      });
+        ]) => {
+          send({
+            type: type === "normal" ? "ready" : "nonCustodial",
+            data: {
+              message: {
+                raw: message,
+                toBeSigned: fullMessage,
+                meta: {
+                  nonce,
+                  prefix,
+                  address,
+                  application,
+                  chainId,
+                },
+              },
+              user: {
+                type,
+                sessionId,
+              },
+            },
+          });
+        }
+      );
     }
 
     // gather current dapp info
@@ -59,7 +80,10 @@ const Connecting = () => {
         blockchain,
       });
     }
-    send("close");
+    send({
+      type: "reject",
+      data: { error: ERROR_MESSAGES.SIGN_DECLINE_ERROR },
+    });
   }, [blockchain, send, sessionId, signatureId]);
 
   return <Loading blockchain={blockchain} onClose={handleClose} />;

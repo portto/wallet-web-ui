@@ -81,8 +81,8 @@ const useDefaultStateFromProps = (props: any) => {
   const url = search.get("l6n");
   const nonce = search.get("nonce");
   const channel = search.get("channel");
-  const id = props?.appId || appId || search.get("appId");
   const authenticationId = search.get("authenticationId");
+  const id = props?.appId || appId;
   const isThroughBackChannel = channel === "back" && Boolean(authenticationId);
   const blockchain = paramBlockchain || props?.blockchain || "flow";
   const email = userEmail || getItem(KEY_EMAIL);

@@ -50,8 +50,8 @@ export interface SigningMachineContext {
     // for aptos signature
     bitmap?: string;
     // any other things need to be stored
-    meta?: any;
-    error?: any;
+    meta?: Record<string, unknown>;
+    error?: string;
   };
 }
 
@@ -95,7 +95,7 @@ const machine = createMachine<SigningMachineContext>(
           reject: { target: machineStates.CLOSE, actions: "updateMessage" },
           approve: {
             target: machineStates.FINISH_PROCESS,
-            actions: "updateUserAndMessage",
+            actions: "updateMessage",
           },
         },
       },
