@@ -108,6 +108,7 @@ export interface AptosSignatureDetails extends FlowSignatureDetails {
 export interface FlowUpdateSignatureDetailsResponse {
   result: "ok";
 }
+
 export interface EVMUpdateSignatureDetailsResponse {
   signature: string;
 }
