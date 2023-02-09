@@ -6,11 +6,11 @@ import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 
 import LoadingLogo from "src/components/LoadingLogo";
-import { useAuthenticateMachine } from "src/machines/authenticate";
+import { useTransactionMachine } from "src/machines/transaction";
 import { Chains } from "src/types";
 
 const Queueing = () => {
-  const { context, send } = useAuthenticateMachine();
+  const { context, send } = useTransactionMachine();
   const { blockchain } = context.dapp;
   const [waitingCount, setWaitingCount] = useState(0);
   console.log("waitingCount :", waitingCount);
@@ -48,12 +48,13 @@ const Queueing = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [send, context.queue, preauthId, blockchain, handleApprove]);
+  }, [send, context, preauthId, blockchain, handleApprove]);
 
   const handleClose = useCallback(() => {
     handleDecline();
     send("close");
   }, [handleDecline, send]);
+
   return (
     <Box position="relative">
       <Header blockchain={context.dapp.blockchain} onClose={handleClose} />

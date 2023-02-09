@@ -14,10 +14,8 @@ const EVM = {
 const Flow = {
   Signing: React.lazy(() => import("src/features/Flow/Signing")),
   Transaction: React.lazy(() => import("src/features/Flow/Transaction")),
-  PreAuthz: React.lazy(
-    () => import("src/features/Flow/Transaction/components/PreAuthz")
-  ),
 };
+
 const SOL = {
   Transaction: React.lazy(() => import("src/features/Solana/Transaction")),
 };
@@ -57,12 +55,16 @@ const App = () => {
           render={() => <Flow.Transaction />}
         />
         <Route
-          path={`/:appId/:blockchain(flow)/user-signature/:signatureId?`}
-          render={() => <Flow.Signing />}
+          path={`/:appId/:blockchain(flow)/pre-authz`}
+          render={() => <Flow.Transaction />}
         />
         <Route
-          path={`/:appId/:blockchain(flow)/pre-authz`}
-          render={() => <Flow.PreAuthz />}
+          path={`/:appId/:blockchain(flow)/user-signature/:signatureId?`}
+          render={() => <Flow.Signing />}
+        />{" "}
+        <Route
+          path={`/:appId/:blockchain(solana)/authz/:authorizationId?`}
+          render={() => <SOL.Transaction />}
         />
         <Route
           path={`/:appId/:blockchain(aptos)/authz/:authorizationId?`}

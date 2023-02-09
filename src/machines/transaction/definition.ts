@@ -16,6 +16,7 @@ export const machineStates = {
   IDLE: "idle",
   CONNECTING: "connecting",
   DANGEROUS: "dangerous",
+  PRE_AUTHZ: "pre-authz",
   MAIN: "main",
   NON_CUSTODIAL: "nonCustodial",
   FINISH_PROCESS: "finishProcess",
@@ -78,8 +79,18 @@ const machine = createMachine<TransactionMachineContext>(
       [machineStates.IDLE]: {
         on: {
           init: { target: machineStates.CONNECTING, actions: "updateState" },
+          preAuthz: {
+            target: machineStates.PRE_AUTHZ,
+            actions: "updateState",
+          },
         },
         tags: ["System"],
+      },
+      [machineStates.PRE_AUTHZ]: {
+        on: {
+          // The routing of ui will be handled by fcl.
+          ready: { target: machineStates.CLOSE },
+        },
       },
       [machineStates.CONNECTING]: {
         on: {

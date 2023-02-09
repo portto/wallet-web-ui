@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { getMaintenanceStatus } from "src/apis";
 import { useLayoutContext } from "src/context/layout";
 import {
@@ -19,6 +19,7 @@ import Connecting from "./components/Connecting";
 import DangerousTxAlert from "./components/DangerousTxAlert";
 import Main from "./components/Main";
 import NonCustodial from "./components/NonCustodial";
+import PreAuthz from "./components/PreAuthz";
 
 const systemStatus = [
   machineStates.IDLE,
@@ -35,6 +36,7 @@ const stageComponentMapping: Record<
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
   [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "sm" },
   [machineStates.DANGEROUS]: { component: DangerousTxAlert, layoutSize: "sm" },
+  [machineStates.PRE_AUTHZ]: { component: PreAuthz, layoutSize: "sm" },
 };
 
 const useDefaultStateFromProps = (props: any) => {
@@ -83,13 +85,18 @@ const Noop = () => null;
 const Transaction = withTransactionContext(
   memo((props) => {
     const state = useDefaultStateFromProps(props);
+    const location = useLocation();
     const { value, send } = useTransactionMachine();
     const [stage, setStage] = useState(machineStates.IDLE);
     const { setLayoutSize } = useLayoutContext();
 
     // initialization
     useEffect(() => {
-      send({ type: "init", data: state });
+      if (location.pathname.includes("pre-authz")) {
+        send({ type: "preAuthz", data: state });
+      } else {
+        send({ type: "init", data: state });
+      }
       // intentionally run once
       // eslint-disable-next-line
     }, []);
