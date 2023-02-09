@@ -12,6 +12,7 @@ import TransactionContent from "src/components/TransactionContent";
 import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
+import { ERROR_MESSAGES } from "src/utils/constants";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
@@ -120,11 +121,28 @@ const Main = () => {
     );
   }, [transaction.fee, hasDiscount]);
 
+  const handleReject = useCallback(async () => {
+    const { sessionId, authorizationId = "" } = context.user;
+    const { blockchain } = context.dapp;
+    if (authorizationId) {
+      await updateAuthorization({
+        authorizationId,
+        action: "decline",
+        sessionId,
+        blockchain,
+      });
+    }
+    send({
+      type: "close",
+      data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
+    });
+  }, [context, send]);
+
   return (
     <Box>
       <Header
         bg="background.secondary"
-        onClose={() => send({ type: "close" })}
+        onClose={handleReject}
         blockchain={dapp?.blockchain}
       />
       <TransactionInfo host={dappDomain}>
