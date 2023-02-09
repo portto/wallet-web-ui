@@ -33,8 +33,10 @@ const formatSignData = (message: string, method: string) => {
 
 const Connecting = () => {
   const { context, send } = useSigningMachine();
-  const { signatureId = "" } = context;
-  const { sessionId = "" } = context.user;
+  const {
+    signatureId = "",
+    user: { sessionId = "" },
+  } = context;
   const { blockchain, url = "", name, logo, id } = context.dapp;
 
   // get message and preprocess

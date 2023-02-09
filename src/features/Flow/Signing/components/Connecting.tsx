@@ -23,7 +23,7 @@ const Connecting = () => {
       // get user type (custodial or not) and get the details of the signing message
       Promise.all([
         getUserInfo(),
-        getSignatureDetails({ blockchain, signatureId, sessionId }),
+        getSignatureDetails({ signatureId, blockchain, sessionId }),
       ]).then(([{ type }, { message }]) => {
         send({
           type: type === "normal" ? "ready" : "nonCustodial",
