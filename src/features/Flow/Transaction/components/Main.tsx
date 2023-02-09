@@ -14,6 +14,7 @@ import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { getFlowScriptWithTemplate } from "src/services/Flow";
+import { ERROR_MESSAGES } from "src/utils/constants";
 import isMaliciousTx from "src/utils/isMaliciousTx";
 import { getTransactionLocale } from "src/utils/locales";
 import useTransactionDetail from "../hooks/useTransactionDetail";
@@ -72,6 +73,23 @@ const Main = () => {
     } else send({ type: "reject", data: { error: reason } });
   }, [user, dapp, transaction, dappDomain, send]);
 
+  const handleReject = useCallback(async () => {
+    const { sessionId, authorizationId = "" } = context.user;
+    const { blockchain } = context.dapp;
+    if (authorizationId) {
+      await updateAuthorization({
+        authorizationId,
+        action: "decline",
+        sessionId,
+        blockchain,
+      });
+    }
+    send({
+      type: "close",
+      data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
+    });
+  }, [context, send]);
+
   const getTransactionFeeField = () => (
     <HStack>
       <Flex
@@ -99,7 +117,7 @@ const Main = () => {
     <Box>
       <Header
         bg="background.secondary"
-        onClose={() => send({ type: "close" })}
+        onClose={handleReject}
         blockchain={dapp?.blockchain}
       />
       <TransactionInfo
