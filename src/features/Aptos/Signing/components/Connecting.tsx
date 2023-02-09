@@ -6,6 +6,7 @@ import {
 } from "src/apis";
 import Loading from "src/components/Loading";
 import { useSigningMachine } from "src/machines/signing";
+import { AptosSignatureDetails } from "src/types";
 import { ERROR_MESSAGES } from "src/utils/constants";
 import fetchDappInfo from "src/utils/fetchDappInfo";
 
@@ -23,42 +24,38 @@ const Connecting = () => {
       Promise.all([
         getUserInfo(),
         getSignatureDetails({ blockchain, signatureId, sessionId }),
-      ]).then(
-        ([
-          { type },
-          {
-            sessionId,
-            fullMessage,
-            message,
-            nonce,
-            prefix,
-            address,
-            application,
-            chainId,
-          },
-        ]) => {
-          send({
-            type: type === "normal" ? "ready" : "nonCustodial",
-            data: {
-              message: {
-                raw: message,
-                toBeSigned: fullMessage,
-                meta: {
-                  nonce,
-                  prefix,
-                  address,
-                  application,
-                  chainId,
-                },
-              },
-              user: {
-                type,
-                sessionId,
+      ]).then(([{ type }, signatureDetails]) => {
+        const {
+          sessionId,
+          fullMessage,
+          message,
+          nonce,
+          prefix,
+          address,
+          application,
+          chainId,
+        } = signatureDetails as AptosSignatureDetails;
+        send({
+          type: type === "normal" ? "ready" : "nonCustodial",
+          data: {
+            message: {
+              raw: message,
+              toBeSigned: fullMessage,
+              meta: {
+                nonce,
+                prefix,
+                address,
+                application,
+                chainId,
               },
             },
-          });
-        }
-      );
+            user: {
+              type,
+              sessionId,
+            },
+          },
+        });
+      });
     }
 
     // gather current dapp info
