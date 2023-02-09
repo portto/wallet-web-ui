@@ -29,7 +29,7 @@ const NonCustodial = () => {
 
   // create non custodial signing request
   useEffect(() => {
-    const { toBeSigned, meta: { method } = {} } = context.message;
+    const { toBeSigned, meta: { method, dataType } = {} } = context.message;
 
     createSigningRequest({
       title: name,
@@ -38,6 +38,7 @@ const NonCustodial = () => {
       url,
       type: method,
       message: toBeSigned,
+      data_type: dataType,
     }).then(({ id }) => {
       setSigningRequestId(id);
     });
