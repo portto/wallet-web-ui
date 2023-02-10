@@ -17,7 +17,6 @@ import { getFlowScriptWithTemplate } from "src/services/Flow";
 import isMaliciousTx from "src/utils/isMaliciousTx";
 import { getTransactionLocale } from "src/utils/locales";
 import useTransactionDetail from "../hooks/useTransactionDetail";
-import DangerousTxAlert from "./DangerousTxAlert";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
@@ -92,7 +91,7 @@ const Main = () => {
     </HStack>
   );
 
-  if (true) {
+  if (isDangerousTx) {
     send({ type: "dangerousTx" });
   }
 
