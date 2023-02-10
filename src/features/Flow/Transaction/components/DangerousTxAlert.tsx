@@ -22,7 +22,7 @@ const DangerousTxAlert = () => {
         height="100%"
       >
         <Center height="100%">
-          <Flex flexDirection="column" alignItems="center">
+          <Flex flexDirection="column" alignItems="center" px="space.s">
             <CheckAlert />
             <Text
               fontSize="size.heading.4"
@@ -30,11 +30,12 @@ const DangerousTxAlert = () => {
               lineHeight="line.height.subheading.1"
               mb="space.2xs"
               mt="space.s"
+              textAlign="center"
             >
-              <FormattedMessage intlKey="feature.authn.queue.title" />
-            </Text>
-            <Text fontSize="size.body.3" textAlign="center">
-              <FormattedMessage intlKey="feature.authn.queue.description" />
+              <FormattedMessage
+                intlKey="app.authz.dangerous"
+                values={{ br: <br /> }}
+              />
             </Text>
           </Flex>
         </Center>

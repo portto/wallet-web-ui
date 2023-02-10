@@ -92,8 +92,8 @@ const Main = () => {
     </HStack>
   );
 
-  if (isDangerousTx) {
-    return <DangerousTxAlert />;
+  if (true) {
+    send({ type: "dangerousTx" });
   }
 
   return (

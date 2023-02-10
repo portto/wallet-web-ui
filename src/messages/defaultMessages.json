@@ -41,5 +41,6 @@
   "app.authz.free": "Free (subsidized by Blocto)",
   "feature.sign.title": "You are signing for",
   "feature.transaction.nonCustodial.title": "Please verify in Blocto app",
-  "feature.transaction.nonCustodial.description": "Approve the transaction from Blocto app..."
+  "feature.transaction.nonCustodial.description": "Approve the transaction from Blocto app...",
+  "app.authz.dangerous": "Detected malicious operation! {br} We will reject for you."
 }
