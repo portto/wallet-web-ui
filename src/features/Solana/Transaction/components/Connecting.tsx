@@ -83,7 +83,7 @@ const Connecting = () => {
       });
     }
     send({
-      type: "close",
+      type: "reject",
       data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
     });
   }, [context, send]);
