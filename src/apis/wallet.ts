@@ -277,17 +277,6 @@ export const createDAppAuthorization = ({
     isAuthorized: true,
   });
 
-export const createAuthorization = ({
-  txs,
-  blockchain = "ethereum",
-  sessionId,
-  isInDApp,
-}: any) =>
-  apiPost({
-    url: `api/${blockchain}/authz?code=${sessionId}&isInDApp=${isInDApp}`,
-    request: txs,
-  });
-
 export const updateAuthorization = ({
   authorizationId,
   action,

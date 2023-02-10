@@ -28,6 +28,7 @@ const Connecting = () => {
         authorizationId,
         blockchain,
       });
+
       const [{ point, type, email, id }, { assets: allAssets }] =
         await Promise.all([getUserInfo(), getAccountAssets()]);
       const assets = allAssets.filter(
