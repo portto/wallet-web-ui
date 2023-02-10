@@ -1,34 +1,77 @@
 import { Box, Center, Flex, Text } from "@chakra-ui/react";
 import { useCallback, useEffect } from "react";
-import { getAuthnQueue } from "src/apis";
+import { checkEmailExist, getAuthnQueue, requestEmailAuth } from "src/apis";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useAuthenticateMachine } from "src/machines/authenticate";
+import { KEY_EMAIL, getItem } from "src/services/LocalStorage";
+import checkEmailFormat from "src/utils/checkEmailFormat";
 
-const Queueing = () => {
-  const { context, send } = useAuthenticateMachine();
-
-  // check queue status
-  useEffect(() => {
-    const {
-      queueNumber = 0,
-      readyNumber = 0,
-      queueId = 0,
-    } = context.queue || {};
+const getQueueReady = ({
+  queueNumber = 0,
+  readyNumber = 0,
+  queueId = 0,
+} = {}) => {
+  return new Promise<boolean>((resolve) => {
     if (readyNumber >= queueNumber) {
-      send("ready");
+      resolve(true);
     }
     const interval = setInterval(() => {
       getAuthnQueue(queueId).then(
         ({
           queueNumber: updatedQueueNumber,
           readyNumber: updatedReadyNumber,
-        }) => (updatedReadyNumber >= updatedQueueNumber ? send("ready") : null)
+        }) => {
+          if (updatedReadyNumber >= updatedQueueNumber) {
+            clearInterval(interval);
+            resolve(true);
+          }
+        }
       );
     }, 1000);
-    return () => clearInterval(interval);
-  }, [send, context.queue]);
+  });
+};
+
+const getLoginAction = (email?: string) => {
+  return new Promise((resolve: (result?: "login" | "register") => void) => {
+    if (!email || email === getItem(KEY_EMAIL)) {
+      return resolve();
+    }
+
+    if (!checkEmailFormat(email)) {
+      return resolve();
+    }
+
+    checkEmailExist(email).then(({ exist }) => {
+      resolve(exist ? "login" : "register");
+    });
+  });
+};
+
+const Queueing = () => {
+  const { context, send } = useAuthenticateMachine();
+  const { email } = context.user;
+
+  useEffect(() => {
+    Promise.all([getQueueReady(context.queue), getLoginAction(email)]).then(
+      ([isReady, action]) => {
+        if (!isReady) {
+          return;
+        }
+
+        if (!action) {
+          send("ready");
+        } else {
+          requestEmailAuth({ action, email }).then(({ id }) => {
+            if (id) {
+              send({ type: "otp", data: { email, authCodeId: id, action } });
+            }
+          });
+        }
+      }
+    );
+  }, [context.queue, email, send]);
 
   const handleClose = useCallback(() => send("close"), [send]);
 

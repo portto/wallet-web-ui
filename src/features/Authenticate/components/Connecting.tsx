@@ -2,10 +2,13 @@ import { useCallback, useEffect } from "react";
 import { createAuthnQueue } from "src/apis";
 import Loading from "src/components/Loading";
 import { useAuthenticateMachine } from "src/machines/authenticate";
+import { KEY_EMAIL, getItem } from "src/services/LocalStorage";
 import fetchDappInfo from "src/utils/fetchDappInfo";
 
 const Connecting = () => {
   const { context, send } = useAuthenticateMachine();
+  const { accessToken, email } = context.user;
+  const { name, logo, id, url = "" } = context.dapp;
 
   // enqueue current user into request waiting queue
   useEffect(() => {
@@ -14,15 +17,19 @@ const Connecting = () => {
 
   // gather current dapp info
   useEffect(() => {
-    const { accessToken } = context.user || {};
-    const { name, logo, id, url = "" } = context.dapp || {};
     if (!(name && logo)) {
       fetchDappInfo({ id, url }).then((data) => {
         send({ type: "updateDapp", data });
-        send(accessToken ? "skipLogin" : "ready");
+        let action = "skipLogin";
+        if (!accessToken || (email && email !== getItem(KEY_EMAIL))) {
+          action = "ready";
+        }
+        send(action);
       });
     }
-  }, [send, context]);
+    // Shouldn't include {name}, {logo} and {url} since {fetchDappInfo} is meant to update them
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accessToken, id, send]);
 
   const handleClose = useCallback(() => send("close"), [send]);
 

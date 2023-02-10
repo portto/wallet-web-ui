@@ -58,7 +58,6 @@ const InputEmail = () => {
       }
 
       setHasError(false);
-      // @todo: regex check email validity before send request
       checkEmailExist(email).then(({ exist }) => {
         setIsChecking(false);
         setIsEmailExistent(exist);
