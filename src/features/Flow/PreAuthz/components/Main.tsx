@@ -9,7 +9,7 @@ import LoadingLogo from "src/components/LoadingLogo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { Chains } from "src/types";
 
-const Queueing = () => {
+const PreAuthz = () => {
   const { context, send } = useTransactionMachine();
   const { blockchain } = context.dapp;
   const [waitingCount, setWaitingCount] = useState(0);
@@ -91,4 +91,4 @@ const Queueing = () => {
   );
 };
 
-export default Queueing;
+export default PreAuthz;
