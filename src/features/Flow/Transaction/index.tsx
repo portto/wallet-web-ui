@@ -16,6 +16,7 @@ import {
 } from "src/services/LocalStorage";
 
 import Connecting from "./components/Connecting";
+import DangerousTxAlert from "./components/DangerousTxAlert";
 import Main from "./components/Main";
 import NonCustodial from "./components/NonCustodial";
 
@@ -33,6 +34,7 @@ const stageComponentMapping: Record<
   [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
   [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "sm" },
+  [machineStates.DANGEROUS]: { component: DangerousTxAlert, layoutSize: "sm" },
 };
 
 const useDefaultStateFromProps = (props: any) => {

@@ -1,5 +1,5 @@
 import { Box, Flex, HStack, Text } from "@chakra-ui/react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
@@ -14,11 +14,14 @@ import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { getFlowScriptWithTemplate } from "src/services/Flow";
+import isMaliciousTx from "src/utils/isMaliciousTx";
 import { getTransactionLocale } from "src/utils/locales";
 import useTransactionDetail from "../hooks/useTransactionDetail";
+import DangerousTxAlert from "./DangerousTxAlert";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
+  const [isDangerousTx, setIsDangerousTx] = useState(false);
   // @todo: add operation verified logic
   const [verifiedTx] = useState(true);
 
@@ -33,6 +36,12 @@ const Main = () => {
 
   const { usdValue, tokenAmount, recognizedTx } =
     useTransactionDetail(transaction);
+
+  useEffect(() => {
+    if (isMaliciousTx(transaction, dappDomain)) {
+      setIsDangerousTx(true);
+    }
+  }, [dappDomain, transaction]);
 
   const approve = useCallback(async () => {
     const { sessionId, authorizationId = "" } = user;
@@ -82,6 +91,10 @@ const Main = () => {
       </Box>
     </HStack>
   );
+
+  if (isDangerousTx) {
+    return <DangerousTxAlert />;
+  }
 
   return (
     <Box>

@@ -4,7 +4,7 @@ import { IS_MAINNET, IS_SANDBOXNET, IS_TESTNET } from "src/services/Env";
 import { FlowTransaction } from "src/types";
 import hashMsg from "src/utils/hashMsg";
 
-const BLOCTO_ADDRESS = process.env.REACT_APP_BLOCTO_ADDRESS;
+const BLOCTO_ADDRESS = process.env.REACT_APP_BLOCTO_ADDRESS || "";
 // TODO: Get recognized transactions from @blocto/flow-transactions for sandboxnet
 
 type RecognizedTransactions = {
