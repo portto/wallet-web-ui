@@ -61,7 +61,7 @@ const App = () => {
         <Route
           path={`/:appId/:blockchain(flow)/user-signature/:signatureId?`}
           render={() => <Flow.Signing />}
-        />{" "}
+        />
         <Route
           path={`/:appId/:blockchain(solana)/authz/:authorizationId?`}
           render={() => <SOL.Transaction />}
