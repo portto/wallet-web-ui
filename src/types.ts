@@ -133,6 +133,12 @@ export interface NonCustodialTxResponse extends NonCustodialResponse {
   tx_hash: string;
 }
 
+export interface FlowNonCustodialSigningResponse extends NonCustodialResponse {
+  signature: string;
+  address: string;
+  id: string;
+}
+
 export interface EVMNonCustodialSigningResponse extends NonCustodialResponse {
   signature: string;
 }

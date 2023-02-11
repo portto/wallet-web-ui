@@ -321,3 +321,9 @@ export const updateNonCustodial = ({
     },
     isAuthorized: true,
   });
+
+export const createSharedAccount = () =>
+  apiPost<{ request_id: string; tx_hash: string }>({
+    url: "api/flow/create-script",
+    isAuthorized: true,
+  });

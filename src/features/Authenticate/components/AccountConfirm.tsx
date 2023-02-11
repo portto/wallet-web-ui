@@ -14,8 +14,21 @@ import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { logAuthenticated } from "src/services/Amplitude";
+import {
+  checkCollectionEnabled,
+  checkFusdEnabled,
+  enableCollection,
+  enableFusd,
+} from "src/services/Flow";
 import { KEY_SESSION_ID, setItem } from "src/services/LocalStorage";
+import { Chains } from "src/types";
 import formatAddress from "src/utils/formatAddress";
+
+const AUTO_ENABLE_HOSTS = ["port.onflow.org", "chainmonsters.com"];
+const PRE_ENABLE_HOSTS = [
+  "nft-store.blocto.app",
+  "nft-store-staging.blocto.app",
+];
 
 const AccountConifrm = () => {
   const { context, send } = useAuthenticateMachine();
@@ -33,43 +46,95 @@ const AccountConifrm = () => {
     },
     blockchainIcon,
   } = context;
+  const domain = url ? new URL(url).host : "";
+  // lock -> autoenable -> handshake -> preenable -> account confirm
+
+  // Auto enalbe FUSD in certain websites
+  // @todo: Move to {RunInitScripts}?
+  const handleAutoEnable = async () => {
+    const isFlow = blockchain === Chains.flow;
+    const isCustodial = userType === "normal";
+    const shouldCheckFusdEnabled =
+      isFlow && isCustodial && AUTO_ENABLE_HOSTS.includes(domain);
+
+    // if shouldn't check, assume is enabled
+    const maybeCheckFUSDEnabled = shouldCheckFusdEnabled
+      ? checkFusdEnabled
+      : () => Promise.resolve(true);
+
+    const flowAddress = addresses?.[blockchain] || "";
+    const isEnabled = await maybeCheckFUSDEnabled(flowAddress);
+    if (isEnabled) {
+      return;
+    }
+
+    return enableFusd(flowAddress);
+  };
+
+  // @todo: Move to {RunInitScripts}
+  const checkAccountPreEnable = async () => {
+    const isFlow = blockchain === Chains.flow;
+    const shouldPreEnable = isFlow && PRE_ENABLE_HOSTS.includes(domain);
+
+    // if shouldn't check, assume locked address created
+    const maybeCheckPreEnabled = shouldPreEnable
+      ? checkCollectionEnabled
+      : () => Promise.resolve(true);
+
+    const flowAddress = addresses?.[blockchain] || "";
+    const isEnabled = await maybeCheckPreEnabled(flowAddress);
+    if (isEnabled) {
+      return;
+    }
+
+    return enableCollection(flowAddress, domain);
+  };
 
   const approve = async () => {
     setHasSubmitted(true);
     const domain = url ? new URL(url).host : "";
-    // create session with api server
-    const handshakeData = await createHandshake({
-      blockchain,
-      email,
-      userId,
-      address: addresses,
-      domain,
-      appId: dAppId,
-      userType,
-      metadata: {
-        title: dAppName,
-        thumbnail: logo,
-      },
-      deviceKey,
-      deviceId,
-      signatureData,
-    });
-    const { paddr, code, signatures = [] } = handshakeData;
-    setItem(KEY_SESSION_ID, code);
 
-    // log authenticated event
-    logAuthenticated({ chain: blockchain, domain, dAppName, dAppId });
+    try {
+      await handleAutoEnable();
 
-    send({
-      type: userType === "normal" ? "approve" : "nonCustodialApprove",
-      data: {
-        accountInfo: {
-          paddr,
-          code,
+      // create session with api server
+      const handshakeData = await createHandshake({
+        blockchain,
+        email,
+        userId,
+        address: addresses,
+        domain,
+        appId: dAppId,
+        userType,
+        metadata: {
+          title: dAppName,
+          thumbnail: logo,
         },
-        signatures,
-      },
-    });
+        deviceKey,
+        deviceId,
+        signatureData,
+      });
+      const { paddr, code, signatures = [] } = handshakeData;
+      setItem(KEY_SESSION_ID, code);
+
+      // log authenticated event
+      logAuthenticated({ chain: blockchain, domain, dAppName, dAppId });
+
+      await checkAccountPreEnable();
+
+      send({
+        type: userType === "normal" ? "approve" : "nonCustodialApprove",
+        data: {
+          accountInfo: {
+            paddr,
+            code,
+          },
+          signatures,
+        },
+      });
+    } catch (error) {
+      setHasSubmitted(false);
+    }
   };
 
   const switchAccount = useCallback(async () => {

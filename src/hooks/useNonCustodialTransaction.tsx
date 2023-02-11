@@ -2,10 +2,16 @@ import { useEffect, useState } from "react";
 import { createSigningRequest, getSigningRequest } from "src/apis";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
-import { NonCustodialTxResponse } from "src/types";
+import { Chains, NonCustodialTxResponse } from "src/types";
 import { ERROR_MESSAGES } from "src/utils/constants";
 
-export default function useNonCustodialTransaction(payload: object) {
+export default function useNonCustodialTransaction(payload: {
+  blockchain: Chains;
+  title: string;
+  image: string;
+  url: string;
+  [key: string]: unknown;
+}) {
   const { context, send } = useTransactionMachine();
   const { dapp } = context;
   const [signingRequestId, setSigningRequestId] = useState<string>("");
