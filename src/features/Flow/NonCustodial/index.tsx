@@ -15,7 +15,6 @@ import {
   getItem,
 } from "src/services/LocalStorage";
 import Connecting from "./components/Connecting";
-import DangerousTxAlert from "./components/DangerousTxAlert";
 import Main from "./components/Main";
 
 const systemStatus = [
@@ -30,7 +29,7 @@ const stageComponentMapping: Record<
   { component: () => JSX.Element; layoutSize: "sm" | "lg" }
 > = {
   [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
-  [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
+  [machineStates.MAIN]: { component: Main, layoutSize: "sm" },
 };
 
 const useDefaultStateFromProps = (props: any) => {
@@ -76,7 +75,7 @@ const useDefaultStateFromProps = (props: any) => {
 
 const Noop = () => null;
 
-const Transaction = withTransactionContext(
+const NonCustodial = withTransactionContext(
   memo((props) => {
     const state = useDefaultStateFromProps(props);
     const { value, send } = useTransactionMachine();
@@ -115,4 +114,4 @@ const Transaction = withTransactionContext(
   })
 );
 
-export default Transaction;
+export default NonCustodial;

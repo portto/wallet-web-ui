@@ -15,6 +15,7 @@ const Flow = {
   Signing: React.lazy(() => import("src/features/Flow/Signing")),
   Transaction: React.lazy(() => import("src/features/Flow/Transaction")),
   PreAuthz: React.lazy(() => import("src/features/Flow/PreAuthz")),
+  NonCustodial: React.lazy(() => import("src/features/Flow/NonCustodial")),
 };
 
 const SOL = {
@@ -61,7 +62,7 @@ const App = () => {
         />
         <Route
           path={`/:appId/:blockchain(flow)/non-custodial/:authorizationId?`}
-          render={() => <Flow.Transaction />}
+          render={() => <Flow.NonCustodial />}
         />
         <Route
           path={`/:appId/:blockchain(flow)/user-signature/:signatureId?`}

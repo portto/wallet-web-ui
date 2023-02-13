@@ -1,29 +1,17 @@
 import { useCallback, useEffect } from "react";
-import { getAccountAssets, getAuthorization, getUserInfo } from "src/apis";
+import { getAccountAssets, getUserInfo } from "src/apis";
 import Loading from "src/components/Loading";
 import { useTransactionMachine } from "src/machines/transaction";
 import { AccountAsset } from "src/types";
-import { ERROR_MESSAGES } from "src/utils/constants";
 import fetchDappInfo from "src/utils/fetchDappInfo";
 
 const Connecting = () => {
   const { context, send } = useTransactionMachine();
-  const { authorizationId = "" } = context.user;
   const { blockchain } = context.dapp;
 
-  const fetchTransaction = useCallback(async () => {
-    const [
-      { point, type, email, id },
-      { assets: allAssets },
-      { sessionId, transaction },
-    ] = await Promise.all([
-      getUserInfo(),
-      getAccountAssets(),
-      getAuthorization({
-        authorizationId,
-        blockchain,
-      }),
-    ]);
+  const fetchUserData = useCallback(async () => {
+    const [{ point, type, email, id }, { assets: allAssets }] =
+      await Promise.all([getUserInfo(), getAccountAssets()]);
     const assets = allAssets.filter(
       (asset: AccountAsset) => asset.blockchain === blockchain
     );
@@ -38,7 +26,6 @@ const Connecting = () => {
       type,
       points: point,
       assets,
-      sessionId,
       balance,
     };
 
@@ -46,10 +33,9 @@ const Connecting = () => {
       type: "ready",
       data: {
         user: userData,
-        transaction: { rawObject: { transaction } },
       },
     });
-  }, [authorizationId, blockchain, send]);
+  }, [blockchain, send]);
 
   useEffect(() => {
     // gather current dapp info
@@ -59,18 +45,12 @@ const Connecting = () => {
         send({ type: "updateDapp", data })
       );
     }
-    // get transaction info
-    fetchTransaction();
+
+    fetchUserData();
     // intentionally run once
   }, []);
 
-  const handleClose = useCallback(async () => {
-    send({
-      type: "reject",
-      data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
-    });
-  }, [send]);
-  return <Loading onClose={handleClose} blockchain={blockchain} />;
+  return <Loading />;
 };
 
 export default Connecting;
