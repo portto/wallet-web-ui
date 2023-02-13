@@ -43,6 +43,6 @@
   "feature.sign.title": "You are signing for",
   "feature.transaction.nonCustodial.title": "Please verify in Blocto app",
   "feature.transaction.nonCustodial.description": "Approve the transaction from Blocto app...",
-  "app.authz.dangerous": "Detected malicious operation!",
-  "app.authz.rejectForYou": "We will reject for you."
+  "app.authz.warning": "WARNING",
+  "app.authz.maliciousHint": "We detected this transaction may contain malicious operation and suggest to terminate this transaction."
 }

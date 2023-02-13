@@ -33,14 +33,11 @@ const DangerousTxAlert = () => {
               mt="space.s"
               textAlign="center"
             >
-              <FormattedMessage
-                intlKey="app.authz.dangerous"
-                values={{ br: <br /> }}
-              />
+              <FormattedMessage intlKey="app.authz.warning" />
             </Text>
 
-            <Text>
-              <FormattedMessage intlKey="app.authz.rejectForYou" />
+            <Text textAlign="center">
+              <FormattedMessage intlKey="app.authz.maliciousHint" />
             </Text>
           </Flex>
         </Center>
