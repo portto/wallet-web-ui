@@ -38,10 +38,10 @@ const NonCustodial = () => {
               lineHeight="line.height.subheading.1"
               mb="space.2xs"
             >
-              <FormattedMessage intlKey="feature.transaction.nonCustodial.title" />
+              <FormattedMessage intlKey="feature.authz.nonCustodial.title" />
             </Text>
             <Text fontSize="size.body.3" textAlign="center">
-              <FormattedMessage intlKey="feature.transaction.nonCustodial.description" />
+              <FormattedMessage intlKey="feature.authz.nonCustodial.description" />
             </Text>
           </Flex>
         </Center>
