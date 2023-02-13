@@ -5,7 +5,7 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createHandshake } from "src/apis";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
@@ -14,17 +14,11 @@ import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { logAuthenticated } from "src/services/Amplitude";
-import {
-  checkCollectionEnabled,
-  checkFusdEnabled,
-  enableCollection,
-  enableFusd,
-} from "src/services/Flow";
+import { checkCollectionEnabled, enableCollection } from "src/services/Flow";
 import { KEY_SESSION_ID, setItem } from "src/services/LocalStorage";
-import { Chains } from "src/types";
+import { Chains, CompositeSignature } from "src/types";
 import formatAddress from "src/utils/formatAddress";
 
-const AUTO_ENABLE_HOSTS = ["port.onflow.org", "chainmonsters.com"];
 const PRE_ENABLE_HOSTS = [
   "nft-store.blocto.app",
   "nft-store-staging.blocto.app",
@@ -33,6 +27,11 @@ const PRE_ENABLE_HOSTS = [
 const AccountConifrm = () => {
   const { context, send } = useAuthenticateMachine();
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [handshakeData, setHandshakeData] = useState<{
+    paddr?: string;
+    code?: string;
+    signatures?: CompositeSignature[];
+  }>({});
   const {
     dapp: { id: dAppId = "", name: dAppName = "", logo, url = "", blockchain },
     user: {
@@ -47,29 +46,33 @@ const AccountConifrm = () => {
     blockchainIcon,
   } = context;
   const domain = url ? new URL(url).host : "";
-  // lock -> autoenable -> handshake -> preenable -> account confirm
 
-  // Auto enalbe FUSD in certain websites
-  // @todo: Move to {RunInitScripts}?
-  const handleAutoEnable = async () => {
-    const isFlow = blockchain === Chains.flow;
-    const isCustodial = userType === "normal";
-    const shouldCheckFusdEnabled =
-      isFlow && isCustodial && AUTO_ENABLE_HOSTS.includes(domain);
-
-    // if shouldn't check, assume is enabled
-    const maybeCheckFUSDEnabled = shouldCheckFusdEnabled
-      ? checkFusdEnabled
-      : () => Promise.resolve(true);
-
-    const flowAddress = addresses?.[blockchain] || "";
-    const isEnabled = await maybeCheckFUSDEnabled(flowAddress);
-    if (isEnabled) {
-      return;
-    }
-
-    return enableFusd(flowAddress);
-  };
+  useEffect(() => {
+    // create session with api server
+    createHandshake({
+      blockchain,
+      email,
+      userId,
+      address: addresses,
+      domain,
+      appId: dAppId,
+      userType,
+      metadata: {
+        title: dAppName,
+        thumbnail: logo,
+      },
+      deviceKey,
+      deviceId,
+      signatureData,
+    }).then(({ paddr, code, signatures = [] }) => {
+      setHandshakeData({ paddr, code, signatures });
+      setItem(KEY_SESSION_ID, code);
+      // log authenticated event
+      logAuthenticated({ chain: blockchain, domain, dAppName, dAppId });
+    });
+    // intentionally run once
+    // eslint-disable-next-line
+  }, []);
 
   // @todo: Move to {RunInitScripts}
   const checkAccountPreEnable = async () => {
@@ -92,36 +95,11 @@ const AccountConifrm = () => {
 
   const approve = async () => {
     setHasSubmitted(true);
-    const domain = url ? new URL(url).host : "";
 
     try {
-      await handleAutoEnable();
-
-      // create session with api server
-      const handshakeData = await createHandshake({
-        blockchain,
-        email,
-        userId,
-        address: addresses,
-        domain,
-        appId: dAppId,
-        userType,
-        metadata: {
-          title: dAppName,
-          thumbnail: logo,
-        },
-        deviceKey,
-        deviceId,
-        signatureData,
-      });
-      const { paddr, code, signatures = [] } = handshakeData;
-      setItem(KEY_SESSION_ID, code);
-
-      // log authenticated event
-      logAuthenticated({ chain: blockchain, domain, dAppName, dAppId });
-
       await checkAccountPreEnable();
 
+      const { paddr, code, signatures } = handshakeData;
       send({
         type: userType === "normal" ? "approve" : "nonCustodialApprove",
         data: {

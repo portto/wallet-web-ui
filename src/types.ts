@@ -153,3 +153,11 @@ export interface AptosNonCustodialSigningResponse extends NonCustodialResponse {
   message: string;
   nonce: string;
 }
+
+export interface CompositeSignature {
+  f_type: "CompositeSignature";
+  f_vsn: string;
+  addr: string;
+  keyId: number;
+  signature: string;
+}
