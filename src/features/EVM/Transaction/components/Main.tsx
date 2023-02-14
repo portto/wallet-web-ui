@@ -163,27 +163,30 @@ const Main = () => {
       <Box px="space.l">
         {recognizedTx ? (
           <>
-            <Field
-              title={<FormattedMessage intlKey="app.authz.operation" />}
-              hidableInfo={
-                !isNativeTransferring && (
-                  <TransactionContent verified={verifiedTx}>
-                    {transactionData}
-                  </TransactionContent>
-                )
-              }
-              icon={
-                verifiedTx ? (
-                  <Check width="16px" height="16px" />
-                ) : (
-                  <CheckAlert width="16px" height="16px" />
-                )
-              }
-            >
-              {/* // @todo: add operation detection logic. */}
-              Operation Name
-            </Field>
-            <FieldLine />
+            {!isNativeTransferring && (
+              <>
+                <Field
+                  title={<FormattedMessage intlKey="app.authz.operation" />}
+                  hidableInfo={
+                    <TransactionContent verified={verifiedTx}>
+                      {transactionData}
+                    </TransactionContent>
+                  }
+                  icon={
+                    verifiedTx ? (
+                      <Check width="16px" height="16px" />
+                    ) : (
+                      <CheckAlert width="16px" height="16px" />
+                    )
+                  }
+                >
+                  {/* // @todo: add operation detection logic. */}
+                  Operation Name
+                </Field>
+                <FieldLine />
+              </>
+            )}
+
             <Field
               title={<FormattedMessage intlKey="app.authz.transactionFee" />}
             >
@@ -198,18 +201,20 @@ const Main = () => {
             >
               {getTransactionFeeField()}
             </Field>
-            <Box height="10px" bg="background.tertiary" mx="-20px" />
-            <Field
-              title={<FormattedMessage intlKey="app.authz.script" />}
-              hidableInfo={
-                !isNativeTransferring && (
-                  <TransactionContent>{transactionData}</TransactionContent>
-                )
-              }
-              icon={<CheckAlert width="16px" height="16px" />}
-            >
-              <FormattedMessage intlKey="app.authz.transactionContainsScript" />
-            </Field>
+            {!isNativeTransferring && (
+              <>
+                <Box height="10px" bg="background.tertiary" mx="-20px" />
+                <Field
+                  title={<FormattedMessage intlKey="app.authz.script" />}
+                  hidableInfo={
+                    <TransactionContent>{transactionData}</TransactionContent>
+                  }
+                  icon={<CheckAlert width="16px" height="16px" />}
+                >
+                  <FormattedMessage intlKey="app.authz.transactionContainsScript" />
+                </Field>
+              </>
+            )}
             <FieldLine />
           </>
         )}
