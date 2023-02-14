@@ -54,7 +54,7 @@ def init_connection():
     server = os.environ['WALLET_DEV_SERVER'] 
   except:
     server = "wallet-v2.blocto.app"
-  connection = http.client.HTTPConnection(server)
+  connection = http.client.HTTPSConnection(server)
   return connection
 
 def get_code():
@@ -78,7 +78,7 @@ def format_evm_params(params, types):
       data += hex(int(params[i]))[2:].zfill(32)
   return data
 
-def make_evm_payload(blockchain, payload, account):
+def make_evm_payload(blockchain, account):
   transaction = {}
   transaction['from'] = account
   transaction['maxFeePerGas'] = "0x9502f90e"
@@ -94,9 +94,10 @@ def make_evm_payload(blockchain, payload, account):
     value = hex(int(args[2]))[2:].zfill(64)
     transaction['data'] = "{signature}{value}".format(signature=signature, value=value)
     transaction['to'] = EVM_ADDRESSES[blockchain]
-  payload['transactions'] = [transaction]
+  return [transaction]
 
-def make_aptos_payload(payload):
+def make_aptos_payload():
+  payload = {}
   if args[1] == 'function' and args[2] == 'transfer':
     payload['arguments'] = [args[3], args[4]]
     payload['function'] = "0x1::coin::transfer"
@@ -121,6 +122,7 @@ def make_aptos_payload(payload):
     }
     payload['type'] = "script_payload"
     payload['type_arguments'] = []
+  return payload
 
 def __main__():
 
@@ -155,6 +157,7 @@ def __main__():
       request_body = json.dumps(payload)
 
       connection.request('POST', url, request_body, { 'Content-type': 'application/json' })
+      response = json.load(connection.getresponse())
       signature_id = response['signatureId']
       generated_url = "{dev_url}/{dapp_id}/{blockchain}/user-signature/{signature_id}".format(dev_url=dev_url, dapp_id=DEV_DAPP_ID, blockchain=blockchain, signature_id=signature_id)
       os.system('open "{url}"'.format(url = generated_url))
@@ -181,14 +184,15 @@ def __main__():
       response = json.load(connection.getresponse())
       account = response['accounts'][0]
 
-      payload = { 'sessionId': code }
-      
+      payload = None
+
       # @todo: handle solana/flow tx
       if blockchain in EVM_CHAINS:
-        make_evm_payload(blockchain, payload, account)
+        payload = make_evm_payload(blockchain, account)
       elif blockchain == 'aptos':
-        make_aptos_payload(payload)
+        payload = make_aptos_payload()
       request_body = json.dumps(payload)
+
 
       url = "/api/{blockchain}/authz?code={code}".format(blockchain=blockchain, code=code)
       connection.request('POST', url, request_body, { 'Content-type': 'application/json', 'referer': DAPP_URL })
