@@ -143,6 +143,23 @@ const Main = () => {
     );
   }, [transaction.fee, realTransactionFee, hasDiscount]);
 
+  const TransactionContent = () => (
+    <FieldDetail
+      badgeText={
+        <FormattedMessage
+          intlKey={
+            verifiedTx
+              ? "app.authz.operationVerified"
+              : "app.authz.operationNotVerified"
+          }
+        />
+      }
+      badgeType={verifiedTx ? BadgeType.Verified : BadgeType.Unverified}
+    >
+      {transactionData}
+    </FieldDetail>
+  );
+
   return (
     <Box>
       <Header
@@ -167,24 +184,7 @@ const Main = () => {
               <>
                 <Field
                   title={<FormattedMessage intlKey="app.authz.operation" />}
-                  hidableInfo={
-                    <FieldDetail
-                      badgeText={
-                        <FormattedMessage
-                          intlKey={
-                            verifiedTx
-                              ? "app.authz.operationVerified"
-                              : "app.authz.operationNotVerified"
-                          }
-                        />
-                      }
-                      badgeType={
-                        verifiedTx ? BadgeType.Verified : BadgeType.Unverified
-                      }
-                    >
-                      {transactionData}
-                    </FieldDetail>
-                  }
+                  hidableInfo={<TransactionContent />}
                   icon={
                     verifiedTx ? (
                       <Check width="16px" height="16px" />
@@ -219,7 +219,7 @@ const Main = () => {
                 <Box height="10px" bg="background.tertiary" mx="-20px" />
                 <Field
                   title={<FormattedMessage intlKey="app.authz.script" />}
-                  hidableInfo={<FieldDetail>{transactionData}</FieldDetail>}
+                  hidableInfo={<TransactionContent />}
                   icon={<CheckAlert width="16px" height="16px" />}
                 >
                   <FormattedMessage intlKey="app.authz.transactionContainsScript" />
@@ -230,28 +230,6 @@ const Main = () => {
           </>
         )}
       </Box>
-      {/* // @todo: remove testing data. */}
-      {/* <Box>Dapp</Box>
-      <Box px={4}>
-        <Box>Dapp name: {dapp.name}</Box>
-      </Box> */}
-      {/* <Box>User</Box>
-      <Box px={4}>
-        <Box>Points: {user.points}</Box>
-        <Box>
-          Assets:{" "}
-          {user.assets?.map((asset) => (
-            <Box px={4} key={asset.name}>
-              {asset.name} {asset.value} {asset.usd_price}
-            </Box>
-          ))}
-        </Box>
-      </Box>
-      <Box>Transaction</Box>
-      <Box px={4}>
-        <Box>May Fail?: {transaction.mayFail ? "true" : "false"}</Box>
-        <Box>Error: {transaction.error}</Box>
-      </Box> */}
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
         <Button onClick={approve}>
           <FormattedMessage intlKey="app.authz.approve" />
