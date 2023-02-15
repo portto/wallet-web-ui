@@ -130,7 +130,7 @@ const Authenticate = withAuthenticateContext(
     const handleMessage = (event: MessageEvent) => {
       if (
         state.dapp.url === event.origin &&
-        FCL_EVENTS.READY_RESPONSE === event.data.type
+        event.data.type === FCL_EVENTS.READY_RESPONSE
       ) {
         const { body = {} } = event.data || {};
         const { nonce, appIdentifier } = body;

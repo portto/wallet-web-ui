@@ -2,12 +2,12 @@ import {
   AptosSignatureDetails,
   AptosTransaction,
   AptosUpdateSignatureDetailsResponse,
-  Authentication,
   Chains,
   CompositeSignature,
   EVMSignatureDetails,
   EVMUpdateSignatureDetailsResponse,
   EvmTransaction,
+  FlowAuthentication,
   FlowSignatureDetails,
   FlowTransaction,
   FlowUpdateSignatureDetailsResponse,
@@ -53,7 +53,7 @@ export const getAuthnQueue = (queueId: number) =>
   });
 
 export const getAuthn = (authenticationId: string) =>
-  apiGet<Authentication | null>({
+  apiGet<FlowAuthentication | null>({
     url: "api/flow/authn-details",
     request: {
       authenticationId,

@@ -163,7 +163,7 @@ export interface CompositeSignature {
   signature: string;
 }
 
-export interface Authentication {
+export interface FlowAuthentication {
   authenticationId: string;
   vsn: number;
   origin: string | undefined;
