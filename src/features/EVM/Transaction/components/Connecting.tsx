@@ -11,7 +11,7 @@ const Connecting = () => {
   const { blockchain } = context.dapp;
   // gather current dapp info
   useEffect(() => {
-    const { name, logo, id, url = "" } = context.dapp || {};
+    const { name, logo, id, url } = context.dapp || {};
     if (!(name && logo)) {
       fetchDappInfo({ id, url }).then((data) =>
         send({ type: "updateDapp", data })

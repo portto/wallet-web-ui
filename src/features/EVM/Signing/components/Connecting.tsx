@@ -41,7 +41,7 @@ const Connecting = () => {
     signatureId = "",
     user: { sessionId = "" },
   } = context;
-  const { blockchain, url = "", name, logo, id } = context.dapp;
+  const { blockchain, url, name, logo, id } = context.dapp;
 
   // get message and preprocess
   // intentionally run once

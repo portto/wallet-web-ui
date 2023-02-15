@@ -61,6 +61,7 @@ const useDefaultStateFromProps = (props: any) => {
         name,
         logo,
         blockchain,
+        url: document.referrer ? new URL(document.referrer).origin : "",
       },
       user: {
         id: getItem(KEY_USER_ID),

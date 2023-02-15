@@ -8,7 +8,7 @@ import fetchDappInfo from "src/utils/fetchDappInfo";
 const Connecting = () => {
   const { context, send } = useAuthenticateMachine();
   const { accessToken, email } = context.user;
-  const { name, logo, id, url = "" } = context.dapp;
+  const { name, logo, id, url } = context.dapp;
 
   // enqueue current user into request waiting queue
   useEffect(() => {
