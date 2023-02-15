@@ -51,6 +51,7 @@
     }],
     // note you must disable the base rule as it can report incorrect errors
     "no-shadow": "off",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
   }
 }

@@ -35,7 +35,7 @@ const getQueueReady = ({
 
 const getLoginAction = (email?: string) => {
   return new Promise((resolve: (result?: "login" | "register") => void) => {
-    if (!email || email === getItem(KEY_EMAIL)) {
+    if (!email) {
       return resolve();
     }
 
@@ -55,11 +55,7 @@ const Queueing = () => {
 
   useEffect(() => {
     Promise.all([getQueueReady(context.queue), getLoginAction(email)]).then(
-      ([isReady, action]) => {
-        if (!isReady) {
-          return;
-        }
-
+      ([_isReady, action]) => {
         if (!action) {
           send("ready");
         } else {
