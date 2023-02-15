@@ -70,11 +70,8 @@ export interface AuthenticateMachineContext {
       paddr: string;
     };
     signatureData?: {
-      fclVersion?: string;
       appIdentifier?: string;
-      appDomainTag?: string;
       nonce?: string;
-      timestamp?: string;
     };
     signatures?: string[];
     onConfirm: (arg: unknown) => void;

@@ -309,7 +309,7 @@ export const onReady = ({
   blockchain,
 }: {
   l6n: string;
-  blockchain: string;
+  blockchain: Chains;
 }) => {
   const isEvmChain = EVM_CHAINS.includes(blockchain);
   const targetEvents = isEvmChain
