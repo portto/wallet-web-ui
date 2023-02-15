@@ -1,5 +1,5 @@
-import { Box, Flex, HStack, Spinner } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
+import { Box, Flex, HStack, Link, Spinner } from "@chakra-ui/react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { estimatePoint, getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
@@ -26,7 +26,8 @@ const Main = () => {
 
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
-  const { rawObject } = transaction;
+  const { rawObject, failReason, mayFail } = transaction;
+  console.log(rawObject);
 
   const transactionData = rawObject.transactions
     .filter(({ data }: EvmTransaction) => data)
@@ -50,16 +51,17 @@ const Main = () => {
 
   useEffect(() => {
     estimatePoint({ rawObject, sessionId, blockchain }).then(
-      ({ cost, discount, error_code, chain_error_msg }) =>
+      ({ cost, discount, error_code, chain_error_msg }) => {
         send({
           type: "updateTransaction",
           data: {
             fee: cost,
             discount,
-            mayFail: error_code === "tx_may_fail",
-            error: chain_error_msg,
+            mayFail: !!error_code,
+            failReason: chain_error_msg || error_code,
           },
-        })
+        });
+      }
     );
   }, [sessionId, rawObject, blockchain, send]);
 
@@ -160,6 +162,45 @@ const Main = () => {
     </FieldDetail>
   );
 
+  const TransactionFeeField = () => (
+    <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
+      {getTransactionFeeField()}
+    </Field>
+  );
+
+  const EstimatePointErrorField = () => (
+    <Field
+      title={<FormattedMessage intlKey="app.authz.transactionFeeError" />}
+      hidableInfo={
+        <FieldDetail
+          badgeText={<FormattedMessage intlKey="app.authz.errorMessage" />}
+          badgeType={BadgeType.Unverified}
+          warningText={
+            <FormattedMessage
+              intlKey="app.authz.goToHelpCenter"
+              values={{
+                a: (chunks: ReactNode) => (
+                  <Link
+                    href="https://portto.zendesk.com/hc"
+                    isExternal
+                    rel="noopener noreferrer"
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              }}
+            />
+          }
+        >
+          {failReason}
+        </FieldDetail>
+      }
+      icon={<CheckAlert width="16px" height="16px" />}
+    >
+      <FormattedMessage intlKey="app.authz.errorMessage" />
+    </Field>
+  );
+
   return (
     <Box>
       <Header
@@ -199,21 +240,12 @@ const Main = () => {
                 <FieldLine />
               </>
             )}
-
-            <Field
-              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-            >
-              {getTransactionFeeField()}
-            </Field>
+            {mayFail ? <EstimatePointErrorField /> : <TransactionFeeField />}
             <FieldLine />
           </>
         ) : (
           <>
-            <Field
-              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-            >
-              {getTransactionFeeField()}
-            </Field>
+            {mayFail ? <EstimatePointErrorField /> : <TransactionFeeField />}
             {!isNativeTransferring && (
               <>
                 <Box height="10px" bg="background.tertiary" mx="-20px" />

@@ -41,10 +41,12 @@ const FieldDetail = ({
   children,
   badgeText,
   badgeType,
+  warningText,
 }: {
   children: ReactNode;
   badgeText?: string | ReactNode;
   badgeType: BadgeType;
+  warningText?: string | ReactNode;
 }) => {
   const getBadge = () => {
     return badgeType === BadgeType.Verified ? (
@@ -65,6 +67,9 @@ const FieldDetail = ({
         <FormattedMessage intlKey="app.authz.operation" />
       </Heading>
       {getBadge()}
+      <Box mt="space.m" color="font.alert">
+        {warningText}
+      </Box>
       <Box mt="space.xl" wordBreak="break-all" fontSize="size.body.3">
         {children}
       </Box>
