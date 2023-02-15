@@ -153,8 +153,8 @@ export const updateSignatureDetails = ({
 }: {
   signatureId: string;
   sessionId: string;
-  action: string;
   blockchain: Chains;
+  action: "approve" | "decline";
 }) =>
   apiPut<
     | FlowUpdateSignatureDetailsResponse
@@ -197,12 +197,12 @@ export const getAuthorization = ({
 export const updateAuthentication = ({
   authenticationId,
   action,
-  blockchain = "flow",
+  blockchain = Chains.flow,
   data,
 }: {
   authenticationId: string;
-  action: string;
-  blockchain: string;
+  action: "approve" | "decline";
+  blockchain: Chains;
   data?: any;
 }) =>
   apiPut({
@@ -221,7 +221,7 @@ export const updatePreAuthz = ({
   blockchain = "flow",
 }: {
   preauthId: string;
-  action: string;
+  action: "approve" | "decline";
   blockchain: string;
 }) =>
   apiPut({
