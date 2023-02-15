@@ -7,9 +7,9 @@ import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
+import FieldDetail from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
-import TransactionContent from "src/components/TransactionContent";
 import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
@@ -124,7 +124,7 @@ const Main = () => {
             <Field
               title={<FormattedMessage intlKey="app.authz.operation" />}
               hidableInfo={
-                <TransactionContent verified={verifiedTx}>
+                <FieldDetail verified={verifiedTx}>
                   <Text
                     whiteSpace="pre"
                     wordBreak="break-word"
@@ -136,7 +136,7 @@ const Main = () => {
                     {/* scriptInfo.params */}
                     {scriptInfo.script}
                   </Text>
-                </TransactionContent>
+                </FieldDetail>
               }
               icon={
                 verifiedTx ? (
@@ -174,7 +174,7 @@ const Main = () => {
             <Field
               title={<FormattedMessage intlKey="app.authz.script" />}
               hidableInfo={
-                <TransactionContent>
+                <FieldDetail>
                   <Text
                     whiteSpace="pre"
                     wordBreak="break-word"
@@ -186,7 +186,7 @@ const Main = () => {
                     {/* scriptInfo.params */}
                     {scriptInfo.script}
                   </Text>
-                </TransactionContent>
+                </FieldDetail>
               }
               icon={<CheckAlert width="16px" height="16px" />}
             >

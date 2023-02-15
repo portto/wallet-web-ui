@@ -7,9 +7,9 @@ import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
+import FieldDetail from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
-import TransactionContent from "src/components/TransactionContent";
 import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
@@ -209,9 +209,9 @@ const Main = () => {
             <Field
               title={<FormattedMessage intlKey="app.authz.operation" />}
               hidableInfo={
-                <TransactionContent verified={verifiedTx}>
+                <FieldDetail verified={verifiedTx}>
                   {getTransactionData()}
-                </TransactionContent>
+                </FieldDetail>
               }
               icon={
                 verifiedTx ? (
@@ -241,9 +241,7 @@ const Main = () => {
             <Box height="10px" bg="background.tertiary" mx="-20px" />
             <Field
               title={<FormattedMessage intlKey="app.authz.script" />}
-              hidableInfo={
-                <TransactionContent>{getTransactionData()}</TransactionContent>
-              }
+              hidableInfo={<FieldDetail>{getTransactionData()}</FieldDetail>}
               icon={<CheckAlert width="16px" height="16px" />}
             >
               <FormattedMessage intlKey="app.authz.transactionContainsScript" />

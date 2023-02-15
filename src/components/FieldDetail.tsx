@@ -4,6 +4,11 @@ import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-aler
 import { ReactComponent as CheckVerified } from "src/assets/images/icons/check-verified.svg";
 import FormattedMessage from "src/components/FormattedMessage";
 
+export enum BadgeType {
+  Verified,
+  Unverified,
+}
+
 const VerifiedBadge = ({ children }: { children?: ReactNode }) => (
   <Flex
     padding="space.m"
@@ -32,29 +37,17 @@ const UnVerifiedBadge = ({ children }: { children?: ReactNode }) => (
   </Flex>
 );
 
-const TransactionContent = ({
+const FieldDetail = ({
   children,
-  verified,
   badgeText,
+  badgeType,
 }: {
   children: ReactNode;
-  verified?: boolean;
   badgeText?: string | ReactNode;
+  badgeType: BadgeType;
 }) => {
   const getBadge = () => {
-    if (!badgeText) {
-      return verified ? (
-        <VerifiedBadge>
-          <FormattedMessage intlKey="app.authz.operationVerified" />
-        </VerifiedBadge>
-      ) : (
-        <UnVerifiedBadge>
-          <FormattedMessage intlKey="app.authz.operationNotVerified" />
-        </UnVerifiedBadge>
-      );
-    }
-
-    return verified ? (
+    return badgeType === BadgeType.Verified ? (
       <VerifiedBadge>{badgeText}</VerifiedBadge>
     ) : (
       <UnVerifiedBadge>{badgeText}</UnVerifiedBadge>
@@ -78,4 +71,4 @@ const TransactionContent = ({
     </>
   );
 };
-export default TransactionContent;
+export default FieldDetail;
