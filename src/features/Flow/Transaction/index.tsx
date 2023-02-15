@@ -15,7 +15,6 @@ import {
   getItem,
 } from "src/services/LocalStorage";
 import Connecting from "./components/Connecting";
-import DangerousTxAlert from "./components/DangerousTxAlert";
 import Main from "./components/Main";
 
 const systemStatus = [
