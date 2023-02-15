@@ -7,7 +7,7 @@ import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
-import FieldDetail from "src/components/FieldDetail";
+import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import TransactionInfo from "src/components/TransactionInfo";
@@ -190,6 +190,23 @@ const Main = () => {
     }
     return null;
   };
+
+  const TransactionContent = () => (
+    <FieldDetail
+      badgeText={
+        <FormattedMessage
+          intlKey={
+            verifiedTx
+              ? "app.authz.operationVerified"
+              : "app.authz.operationNotVerified"
+          }
+        />
+      }
+      badgeType={verifiedTx ? BadgeType.Verified : BadgeType.Unverified}
+    >
+      {getTransactionData()}
+    </FieldDetail>
+  );
   return (
     <Box>
       <Header
@@ -208,11 +225,7 @@ const Main = () => {
           <>
             <Field
               title={<FormattedMessage intlKey="app.authz.operation" />}
-              hidableInfo={
-                <FieldDetail verified={verifiedTx}>
-                  {getTransactionData()}
-                </FieldDetail>
-              }
+              hidableInfo={<TransactionContent />}
               icon={
                 verifiedTx ? (
                   <Check width="16px" height="16px" />
@@ -241,7 +254,7 @@ const Main = () => {
             <Box height="10px" bg="background.tertiary" mx="-20px" />
             <Field
               title={<FormattedMessage intlKey="app.authz.script" />}
-              hidableInfo={<FieldDetail>{getTransactionData()}</FieldDetail>}
+              hidableInfo={<TransactionContent />}
               icon={<CheckAlert width="16px" height="16px" />}
             >
               <FormattedMessage intlKey="app.authz.transactionContainsScript" />

@@ -6,7 +6,7 @@ import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
-import FieldDetail from "src/components/FieldDetail";
+import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import TransactionInfo from "src/components/TransactionInfo";
@@ -148,7 +148,14 @@ const Main = () => {
           title={<FormattedMessage intlKey="app.authz.script" />}
           hidableInfo={
             !!rawObject.convertedTx && (
-              <FieldDetail>{rawObject.convertedTx}</FieldDetail>
+              <FieldDetail
+                badgeText={
+                  <FormattedMessage intlKey="app.authz.operationNotVerified" />
+                }
+                badgeType={BadgeType.Unverified}
+              >
+                {rawObject.convertedTx}
+              </FieldDetail>
             )
           }
           icon={<CheckAlert width="16px" height="16px" />}
