@@ -96,21 +96,11 @@ const Main = () => {
   }, [user, dapp, transaction, dappDomain, send]);
 
   const handleClose = useCallback(async () => {
-    const { sessionId, authorizationId = "" } = context.user;
-    const { blockchain } = context.dapp;
-    if (authorizationId) {
-      await updateAuthorization({
-        authorizationId,
-        action: "decline",
-        sessionId,
-        blockchain,
-      });
-    }
     send({
       type: "reject",
       data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
     });
-  }, [context.dapp, context.user, send]);
+  }, [send]);
 
   const getTransactionFeeField = useCallback(() => {
     return (
