@@ -14,6 +14,7 @@ import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { EvmTransaction } from "src/types";
+import { ERROR_MESSAGES } from "src/utils/constants";
 import useTransactionDetail from "../hooks/useTransactionDetail";
 
 const Main = () => {
@@ -63,8 +64,8 @@ const Main = () => {
   }, [sessionId, rawObject, blockchain, send]);
 
   const approve = useCallback(async () => {
-    const { sessionId, authorizationId = "" } = user;
-    const { fee, discount } = transaction;
+    const { sessionId = "", authorizationId = "" } = user;
+    const { fee = 0, discount = 0 } = transaction;
     const { id = "", blockchain, url = "", name = "" } = dapp;
 
     await updateAuthorization({
@@ -91,6 +92,13 @@ const Main = () => {
       });
     } else send({ type: "reject", data: { error: reason } });
   }, [user, dapp, transaction, dappDomain, send]);
+
+  const handleClose = useCallback(async () => {
+    send({
+      type: "reject",
+      data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
+    });
+  }, [send]);
 
   const getTransactionFeeField = useCallback(() => {
     return (
@@ -139,14 +147,15 @@ const Main = () => {
     <Box>
       <Header
         bg="background.secondary"
-        onClose={() => send({ type: "close" })}
+        onClose={handleClose}
         blockchain={dapp?.blockchain}
       />
       <TransactionInfo
         host={dappDomain}
         transactionDetail={{
           usdValue,
-          tokenAmount: `${tokenAmount} ${tokenName}`,
+          tokenAmount:
+            tokenAmount && tokenName && `${tokenAmount} ${tokenName}`,
         }}
       >
         <DappLogo url={dapp.logo || ""} mb="space.s" />

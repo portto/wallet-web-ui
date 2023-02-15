@@ -134,8 +134,8 @@ export const updateSignatureDetails = ({
 }: {
   signatureId: string;
   sessionId: string;
-  action: string;
   blockchain: Chains;
+  action: "approve" | "decline";
 }) =>
   apiPut<
     | FlowUpdateSignatureDetailsResponse
@@ -178,12 +178,12 @@ export const getAuthorization = ({
 export const updateAuthentication = ({
   authenticationId,
   action,
-  blockchain = "flow",
+  blockchain = Chains.flow,
   data,
 }: {
   authenticationId: string;
-  action: string;
-  blockchain: string;
+  action: "approve" | "decline";
+  blockchain: Chains;
   data?: any;
 }) =>
   apiPut({
@@ -199,11 +199,11 @@ export const updateAuthentication = ({
 export const updatePreAuthz = ({
   preauthId,
   action,
-  blockchain = "flow",
+  blockchain = Chains.flow,
 }: {
   preauthId: string;
-  action: string;
-  blockchain: string;
+  action: "approve" | "decline";
+  blockchain: Chains;
 }) =>
   apiPut({
     url: `api/${blockchain}/pre-authz`,
@@ -259,13 +259,20 @@ export const createDAppAuthorization = ({
   });
 
 export const updateAuthorization = ({
-  authorizationId,
+  authorizationId = "",
   action,
-  sessionId,
-  blockchain = "flow",
-  cost,
-  discount,
-}: any) =>
+  sessionId = "",
+  blockchain = Chains.flow,
+  cost = 0,
+  discount = 0,
+}: {
+  authorizationId: string;
+  action: "decline" | "approve";
+  sessionId: string;
+  blockchain: Chains;
+  cost?: number;
+  discount?: number;
+}) =>
   apiPut({
     url: `api/${blockchain}/authz`,
     request: {

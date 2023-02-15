@@ -1,13 +1,14 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { getAccountAssets, getAuthorization, getUserInfo } from "src/apis";
 import Loading from "src/components/Loading";
 import { useTransactionMachine } from "src/machines/transaction";
 import { AccountAsset } from "src/types";
+import { ERROR_MESSAGES } from "src/utils/constants";
 import fetchDappInfo from "src/utils/fetchDappInfo";
 
 const Connecting = () => {
   const { context, send } = useTransactionMachine();
-
+  const { blockchain } = context.dapp;
   // gather current dapp info
   useEffect(() => {
     const { name, logo, id, url = "" } = context.dapp || {};
@@ -62,7 +63,14 @@ const Connecting = () => {
     // intentionally run once
   }, []);
 
-  return <Loading />;
+  const handleClose = useCallback(async () => {
+    send({
+      type: "reject",
+      data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
+    });
+  }, [send]);
+
+  return <Loading onClose={handleClose} blockchain={blockchain} />;
 };
 
 export default Connecting;
