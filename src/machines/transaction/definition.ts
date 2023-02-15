@@ -16,7 +16,6 @@ export const machineStates = {
   IDLE: "idle",
   CONNECTING: "connecting",
   DANGEROUS: "dangerous",
-  PRE_AUTHZ: "pre-authz",
   MAIN: "main",
   NON_CUSTODIAL: "nonCustodial",
   FINISH_PROCESS: "finishProcess",
