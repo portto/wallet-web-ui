@@ -42,9 +42,8 @@ const EnableBlockchain = () => {
 
     if (status !== AssetStatus.CONFIRMED) {
       timerRef.current = setTimeout(
-        getWalletStatus,
-        ACCOUNT_POLLING_INTERVAL,
-        resolve
+        () => getWalletStatus(resolve),
+        ACCOUNT_POLLING_INTERVAL
       );
     } else {
       const addresses = mapAssetsToAddresses(assets);
