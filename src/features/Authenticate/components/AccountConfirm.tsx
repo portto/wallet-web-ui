@@ -5,7 +5,7 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createHandshake } from "src/apis";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
@@ -14,12 +14,24 @@ import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { logAuthenticated } from "src/services/Amplitude";
+import { checkCollectionEnabled, enableCollection } from "src/services/Flow";
 import { KEY_SESSION_ID, setItem } from "src/services/LocalStorage";
+import { Chains, CompositeSignature } from "src/types";
 import formatAddress from "src/utils/formatAddress";
+
+const PRE_ENABLE_HOSTS = [
+  "nft-store.blocto.app",
+  "nft-store-staging.blocto.app",
+];
 
 const AccountConifrm = () => {
   const { context, send } = useAuthenticateMachine();
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [handshakeData, setHandshakeData] = useState<{
+    paddr?: string;
+    code?: string;
+    signatures?: CompositeSignature[];
+  }>({});
   const {
     dapp: { id: dAppId = "", name: dAppName = "", logo, url = "", blockchain },
     user: {
@@ -33,12 +45,11 @@ const AccountConifrm = () => {
     },
     blockchainIcon,
   } = context;
+  const domain = url ? new URL(url).host : "";
 
-  const approve = async () => {
-    setHasSubmitted(true);
-    const domain = url ? new URL(url).host : "";
+  useEffect(() => {
     // create session with api server
-    const handshakeData = await createHandshake({
+    createHandshake({
       blockchain,
       email,
       userId,
@@ -53,23 +64,55 @@ const AccountConifrm = () => {
       deviceKey,
       deviceId,
       signatureData,
+    }).then(({ paddr, code, signatures = [] }) => {
+      setHandshakeData({ paddr, code, signatures });
+      setItem(KEY_SESSION_ID, code);
+      // log authenticated event
+      logAuthenticated({ chain: blockchain, domain, dAppName, dAppId });
     });
-    const { paddr, code, signatures = [] } = handshakeData;
-    setItem(KEY_SESSION_ID, code);
+    // intentionally run once
+    // eslint-disable-next-line
+  }, []);
 
-    // log authenticated event
-    logAuthenticated({ chain: blockchain, domain, dAppName, dAppId });
+  // @todo: Move to {RunInitScripts}
+  const checkAccountPreEnable = async () => {
+    const isFlow = blockchain === Chains.flow;
+    const shouldPreEnable = isFlow && PRE_ENABLE_HOSTS.includes(domain);
 
-    send({
-      type: userType === "normal" ? "approve" : "nonCustodialApprove",
-      data: {
-        accountInfo: {
-          paddr,
-          code,
+    // if shouldn't check, assume locked address created
+    const maybeCheckPreEnabled = shouldPreEnable
+      ? checkCollectionEnabled
+      : () => Promise.resolve(true);
+
+    const flowAddress = addresses?.[blockchain] || "";
+    const isEnabled = await maybeCheckPreEnabled(flowAddress);
+    if (isEnabled) {
+      return;
+    }
+
+    return enableCollection(flowAddress, domain);
+  };
+
+  const approve = async () => {
+    setHasSubmitted(true);
+
+    try {
+      await checkAccountPreEnable();
+
+      const { paddr, code, signatures } = handshakeData;
+      send({
+        type: userType === "normal" ? "approve" : "nonCustodialApprove",
+        data: {
+          accountInfo: {
+            paddr,
+            code,
+          },
+          signatures,
         },
-        signatures,
-      },
-    });
+      });
+    } catch (error) {
+      setHasSubmitted(false);
+    }
   };
 
   const switchAccount = useCallback(async () => {

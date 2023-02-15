@@ -5,6 +5,7 @@ import {
   AptosNonCustodialSigningResponse,
   Chains,
   EVMNonCustodialSigningResponse,
+  FlowNonCustodialSigningResponse,
   NonCustodialTxResponse,
 } from "src/types";
 import { apiGet, apiPost } from "../axios";
@@ -228,49 +229,14 @@ export const enableSolana = () =>
     isAuthorized: true,
   });
 
-export const createSharedAccountScript = () =>
-  apiPost({
-    url: "blocto/flow/createScript",
-    request: {
-      action: "create_shared_account",
-    },
-    isAuthorized: true,
-  });
-
-export const createSharedAccountTransaction = ({
-  script = "",
-  args = [],
-  authorizers = [],
-}) =>
-  apiPost({
-    url: "blocto/flow/createTransaction",
-    request: {
-      action: "create_shared_account",
-      script,
-      args,
-      authorizers,
-    },
-    isAuthorized: true,
-  });
-
-export const createSharedAccount = ({
-  data,
-  signature,
-}: {
-  data: string;
-  signature: string;
-}) =>
-  apiPost({
-    url: "blocto/flow/createSharedAccount",
-    request: {
-      data,
-      signature,
-    },
-    isAuthorized: true,
-  });
-
 export const signTransaction = ({ data }: { data: string }) =>
-  apiPost({
+  apiPost<{
+    id: string;
+    address: string;
+    signature: string;
+    envelope_signatures: string[];
+    payload_signatures: [] | null;
+  }>({
     url: "blocto/flow/signTransaction",
     request: {
       raw_payload: data,
@@ -292,20 +258,28 @@ export const signPayer = ({
   payerId,
 }: {
   data: string;
-  payerId: string;
+  payerId?: string;
 }) =>
-  apiPost({
-    url: "blocto/flow/signPayer",
-    request: {
-      raw_payload: data,
-      payer_id: payerId,
-    },
-    isAuthorized: true,
-  });
+  apiPost<{ signature: string; id: number; address: string; payer_id: string }>(
+    {
+      url: "blocto/flow/signPayer",
+      request: {
+        raw_payload: data,
+        payer_id: payerId,
+      },
+      isAuthorized: true,
+    }
+  );
 
 export const createSigningRequest = ({
   blockchain = Chains.flow,
   ...payload
+}: {
+  blockchain: Chains;
+  title: string;
+  image: string;
+  url: string;
+  [key: string]: any;
 }) =>
   apiPost<{ id: string }>({
     url: `blocto/nonCustodial/signingRequest/${blockchain}`,
@@ -322,6 +296,7 @@ export const getSigningRequest = ({
 }) =>
   apiGet<
     | NonCustodialTxResponse
+    | FlowNonCustodialSigningResponse
     | EVMNonCustodialSigningResponse
     | AptosNonCustodialSigningResponse
   >({

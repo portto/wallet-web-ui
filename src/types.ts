@@ -134,6 +134,12 @@ export interface NonCustodialTxResponse extends NonCustodialResponse {
   tx_hash: string;
 }
 
+export interface FlowNonCustodialSigningResponse extends NonCustodialResponse {
+  signature: string;
+  address: string;
+  id: string;
+}
+
 export interface EVMNonCustodialSigningResponse extends NonCustodialResponse {
   signature: string;
 }
@@ -147,4 +153,12 @@ export interface AptosNonCustodialSigningResponse extends NonCustodialResponse {
   chain_id?: number;
   message: string;
   nonce: string;
+}
+
+export interface CompositeSignature {
+  f_type: "CompositeSignature";
+  f_vsn: string;
+  addr: string;
+  keyId: number;
+  signature: string;
 }

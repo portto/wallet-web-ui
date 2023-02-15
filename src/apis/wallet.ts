@@ -3,6 +3,7 @@ import {
   AptosTransaction,
   AptosUpdateSignatureDetailsResponse,
   Chains,
+  CompositeSignature,
   EVMSignatureDetails,
   EVMUpdateSignatureDetailsResponse,
   EvmTransaction,
@@ -24,7 +25,7 @@ export const createHandshake = (params: any) =>
   apiPost<{
     paddr: string;
     code: string;
-    signatures: string[];
+    signatures: CompositeSignature[];
   }>({
     url: "api/createHandshake",
     request: params,
@@ -288,5 +289,11 @@ export const updateNonCustodial = ({
       authorizationId,
       sessionId,
     },
+    isAuthorized: true,
+  });
+
+export const createSharedAccount = () =>
+  apiPost<{ request_id: string; tx_hash: string }>({
+    url: "api/flow/create-script",
     isAuthorized: true,
   });

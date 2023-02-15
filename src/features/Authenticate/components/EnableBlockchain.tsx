@@ -1,6 +1,8 @@
 import { Center, Button as ChakraButton, Flex, Text } from "@chakra-ui/react";
+import * as fcl from "@onflow/fcl";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  createSharedAccount,
   enableBlockchain,
   estimateEnableBlockchain,
   getAccountAssets,
@@ -10,7 +12,9 @@ import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useAuthenticateMachine } from "src/machines/authenticate";
-import { AssetStatus } from "src/types";
+import { logSendTx } from "src/services/Amplitude";
+import { getLockedAddress } from "src/services/Flow";
+import { AssetStatus, Chains } from "src/types";
 import getBlockchainStatus from "src/utils/getBlockchainStatus";
 import mapAssetsToAddresses from "src/utils/mapAssetsToAddresses";
 
@@ -26,20 +30,62 @@ const EnableBlockchain = () => {
   const { context, send } = useAuthenticateMachine();
   const [isEnough, setIsEnough] = useState(true);
 
-  const { blockchain } = context.dapp;
+  const { blockchain, id = "", url = "", name = "" } = context.dapp;
   const { points = 0 } = context.user;
+  const domain = url ? new URL(url).host : "";
 
-  const pollWalletStatus = async () => {
+  const getWalletStatus = async (
+    resolve: (value: { [k: string]: string }) => void
+  ) => {
     const { assets } = await getAccountAssets();
     const status = getBlockchainStatus(assets, blockchain);
 
     if (status !== AssetStatus.CONFIRMED) {
-      timerRef.current = setTimeout(pollWalletStatus, ACCOUNT_POLLING_INTERVAL);
-      return;
+      timerRef.current = setTimeout(
+        () => getWalletStatus(resolve),
+        ACCOUNT_POLLING_INTERVAL
+      );
+    } else {
+      const addresses = mapAssetsToAddresses(assets);
+      resolve(addresses);
     }
+  };
 
-    const addresses = mapAssetsToAddresses(assets);
-    send({ type: "done", data: { addresses } });
+  const pollWalletStatus = () => new Promise(getWalletStatus);
+
+  const handleCreateSharedAccount = async (addresses: {
+    [k: string]: string;
+  }) => {
+    try {
+      const { tx_hash } = await createSharedAccount();
+      logSendTx({
+        domain,
+        url,
+        chain: blockchain,
+        type: "authz",
+        dAppName: name,
+        dAppId: id,
+      });
+      await fcl.tx(tx_hash).onceExecuted();
+    } finally {
+      send({ type: "done", data: { addresses } });
+    }
+  };
+
+  const postCreation = (addresses: { [k: string]: string }) => {
+    // if shouldn't check, assume locked address created
+    const maybeGetLockedAddress =
+      domain === "port.onflow.org" && blockchain === Chains.flow
+        ? getLockedAddress // post-creation setup for flow accounts
+        : () => Promise.resolve();
+
+    const flowAddress = addresses[blockchain];
+    maybeGetLockedAddress(flowAddress)
+      .then(() => send({ type: "done", data: { addresses } }))
+      // cannot find locked address, run create shared account script
+      .catch(() => {
+        handleCreateSharedAccount(addresses);
+      });
   };
 
   const tryEnable = async () => {
@@ -53,11 +99,9 @@ const EnableBlockchain = () => {
         pointDiscount: point_discount,
         blockchain,
       });
-      pollWalletStatus();
-      // post-creation setup for flow accounts
-      if (blockchain === "flow") {
-        // @todo: implementation
-      }
+
+      const addresses = await pollWalletStatus();
+      postCreation(addresses);
     } else {
       setIsEnough(false);
     }
