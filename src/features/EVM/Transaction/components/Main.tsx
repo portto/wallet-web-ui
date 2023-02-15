@@ -1,11 +1,12 @@
-import { Box, Flex, HStack, Link, Spinner } from "@chakra-ui/react";
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { Box, Flex, HStack, Spinner } from "@chakra-ui/react";
+import { useCallback, useEffect, useState } from "react";
 import { estimatePoint, getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
 import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
+import EstimatePointErrorField from "src/components/EstimatePointErrorField";
 import Field, { FieldLine } from "src/components/Field";
 import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
@@ -168,39 +169,6 @@ const Main = () => {
     </Field>
   );
 
-  const EstimatePointErrorField = () => (
-    <Field
-      title={<FormattedMessage intlKey="app.authz.transactionFeeError" />}
-      hidableInfo={
-        <FieldDetail
-          badgeText={<FormattedMessage intlKey="app.authz.errorMessage" />}
-          badgeType={BadgeType.Unverified}
-          warningText={
-            <FormattedMessage
-              intlKey="app.authz.goToHelpCenter"
-              values={{
-                a: (chunks: ReactNode) => (
-                  <Link
-                    href="https://portto.zendesk.com/hc"
-                    isExternal
-                    rel="noopener noreferrer"
-                  >
-                    {chunks}
-                  </Link>
-                ),
-              }}
-            />
-          }
-        >
-          {failReason}
-        </FieldDetail>
-      }
-      icon={<CheckAlert width="16px" height="16px" />}
-    >
-      <FormattedMessage intlKey="app.authz.errorMessage" />
-    </Field>
-  );
-
   return (
     <Box>
       <Header
@@ -240,12 +208,20 @@ const Main = () => {
                 <FieldLine />
               </>
             )}
-            {mayFail ? <EstimatePointErrorField /> : <TransactionFeeField />}
+            {mayFail ? (
+              <EstimatePointErrorField content={failReason} />
+            ) : (
+              <TransactionFeeField />
+            )}
             <FieldLine />
           </>
         ) : (
           <>
-            {mayFail ? <EstimatePointErrorField /> : <TransactionFeeField />}
+            {mayFail ? (
+              <EstimatePointErrorField content={failReason} />
+            ) : (
+              <TransactionFeeField />
+            )}
             {!isNativeTransferring && (
               <>
                 <Box height="10px" bg="background.tertiary" mx="-20px" />
