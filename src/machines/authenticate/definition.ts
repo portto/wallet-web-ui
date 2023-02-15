@@ -23,7 +23,6 @@ export const machineStates = {
   VERIFY_USER: "systemProcessing",
   ENABLE_BLOCKCHAIN: "enableBlockchain",
   ACCOUNT_CONFIRM: "accountConfirm",
-  RUN_INIT_SCRIPTS: "runInitScripts",
   RESET_AUTH: "resetAuth",
   FINISH_PROCESS: "finishProcess",
   MAINTENANCE: "maintenance",
@@ -190,10 +189,6 @@ const machine = createMachine<AuthenticateMachineContext>(
             target: machineStates.FINISH_PROCESS,
             actions: "updateUser",
           },
-          nonCustodialApprove: {
-            target: machineStates.RUN_INIT_SCRIPTS,
-            actions: "updateUser",
-          },
           switchAccount: machineStates.RESET_AUTH,
         },
       },
@@ -206,9 +201,6 @@ const machine = createMachine<AuthenticateMachineContext>(
           },
         },
         tags: ["System"],
-      },
-      [machineStates.RUN_INIT_SCRIPTS]: {
-        on: { done: machineStates.FINISH_PROCESS },
       },
       [machineStates.FINISH_PROCESS]: {
         invoke: { src: "finish", onDone: machineStates.FINAL },
