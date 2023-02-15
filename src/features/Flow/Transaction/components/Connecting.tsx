@@ -1,10 +1,5 @@
 import { useCallback, useEffect } from "react";
-import {
-  getAccountAssets,
-  getAuthorization,
-  getUserInfo,
-  updateAuthorization,
-} from "src/apis";
+import { getAccountAssets, getAuthorization, getUserInfo } from "src/apis";
 import Loading from "src/components/Loading";
 import { useTransactionMachine } from "src/machines/transaction";
 import { AccountAsset } from "src/types";
@@ -72,21 +67,11 @@ const Connecting = () => {
   }, []);
 
   const handleClose = useCallback(async () => {
-    const { sessionId, authorizationId = "" } = context.user;
-    const { blockchain } = context.dapp;
-    if (authorizationId) {
-      await updateAuthorization({
-        authorizationId,
-        action: "decline",
-        sessionId,
-        blockchain,
-      });
-    }
     send({
       type: "reject",
       data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
     });
-  }, [context, send]);
+  }, [send]);
   return <Loading onClose={handleClose} blockchain={blockchain} />;
 };
 

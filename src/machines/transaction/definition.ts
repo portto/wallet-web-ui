@@ -88,6 +88,7 @@ const machine = createMachine<TransactionMachineContext>(
             target: machineStates.NON_CUSTODIAL,
             actions: "updateUserAndTx",
           },
+          reject: { target: machineStates.CLOSE, actions: "updateTransaction" },
         },
       },
       [machineStates.DANGEROUS]: {

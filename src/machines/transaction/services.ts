@@ -31,10 +31,13 @@ export const abort = async (context: TransactionMachineContext) => {
   });
 
   onReject?.(ERROR_MESSAGES.AUTHZ_DECLINE_ERROR);
-  await updateAuthorization({
-    authorizationId,
-    action: "reject",
-    sessionId,
-    blockchain,
-  });
+
+  if (authorizationId) {
+    await updateAuthorization({
+      authorizationId,
+      action: "decline",
+      sessionId,
+      blockchain,
+    });
+  }
 };
