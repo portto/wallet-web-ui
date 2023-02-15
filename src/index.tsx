@@ -42,6 +42,12 @@ const defaultLocale = getLocale();
 const root = createRoot(document.getElementById("root") as Element);
 
 const render = (messages: any) => {
+  // eslint-disable-next-line no-console
+  console.info(
+    "%cWallet Web UI 2.0.0%c by portto",
+    "color: #0075FF;font-size: 3em;",
+    "color: inhert;font-size: 1em;"
+  );
   root.render(
     <ChakraProvider theme={theme}>
       <IntlProvider
