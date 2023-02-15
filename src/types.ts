@@ -70,6 +70,7 @@ export interface FlowTransaction {
         value: string;
       }
     ];
+    authorizers: string[];
   };
 }
 

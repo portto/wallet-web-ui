@@ -15,6 +15,7 @@ const defaultContext = {
 export const machineStates = {
   IDLE: "idle",
   CONNECTING: "connecting",
+  DANGEROUS: "dangerous",
   MAIN: "main",
   NON_CUSTODIAL: "nonCustodial",
   FINISH_PROCESS: "finishProcess",
@@ -89,6 +90,11 @@ const machine = createMachine<TransactionMachineContext>(
           },
         },
       },
+      [machineStates.DANGEROUS]: {
+        on: {
+          reject: { target: machineStates.CLOSE },
+        },
+      },
       [machineStates.MAIN]: {
         on: {
           reject: { target: machineStates.CLOSE, actions: "updateTransaction" },
@@ -96,6 +102,7 @@ const machine = createMachine<TransactionMachineContext>(
             target: machineStates.FINISH_PROCESS,
             actions: "updateTransaction",
           },
+          dangerousTx: machineStates.DANGEROUS,
         },
       },
       [machineStates.NON_CUSTODIAL]: {
