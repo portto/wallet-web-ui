@@ -5,6 +5,7 @@ import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-aler
 import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
+import EstimatePointErrorField from "src/components/EstimatePointErrorField";
 import Field, { FieldLine } from "src/components/Field";
 import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
@@ -19,7 +20,7 @@ const Main = () => {
 
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
-  const { rawObject } = transaction;
+  const { rawObject, mayFail, failReason } = transaction;
 
   const hasDiscount = (transaction.discount || 0) > 0;
   const realTransactionFee =
@@ -41,8 +42,8 @@ const Main = () => {
         data: {
           fee: cost,
           discount,
-          mayFail: error_code === "tx_may_fail",
-          error: chain_error_msg,
+          mayFail: !!error_code,
+          failReason: chain_error_msg || error_code,
         },
       })
     );
@@ -119,7 +120,13 @@ const Main = () => {
         )}
       </HStack>
     );
-  }, [transaction.fee, hasDiscount]);
+  }, [transaction.fee, realTransactionFee, hasDiscount]);
+
+  const TransactionFeeField = () => (
+    <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
+      {getTransactionFeeField()}
+    </Field>
+  );
 
   const handleClose = useCallback(async () => {
     send({
@@ -140,9 +147,11 @@ const Main = () => {
       </TransactionInfo>
 
       <Box px="space.l">
-        <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
-          {getTransactionFeeField()}
-        </Field>
+        {mayFail ? (
+          <EstimatePointErrorField content={failReason} />
+        ) : (
+          <TransactionFeeField />
+        )}
         <Box height="10px" bg="background.tertiary" mx="-20px" />
         <Field
           title={<FormattedMessage intlKey="app.authz.script" />}

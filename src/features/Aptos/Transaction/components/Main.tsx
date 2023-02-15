@@ -6,6 +6,7 @@ import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg"
 import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
+import EstimatePointErrorField from "src/components/EstimatePointErrorField";
 import Field, { FieldLine } from "src/components/Field";
 import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
@@ -23,7 +24,7 @@ const Main = () => {
 
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
-  const { rawObject } = transaction;
+  const { rawObject, mayFail, failReason } = transaction;
   const {
     type,
     arguments: args = [],
@@ -52,8 +53,8 @@ const Main = () => {
           data: {
             fee: cost,
             discount,
-            mayFail: error_code === "tx_may_fail",
-            error: chain_error_msg,
+            mayFail: !!error_code,
+            failReason: chain_error_msg || error_code,
           },
         })
     );
@@ -207,6 +208,12 @@ const Main = () => {
       {getTransactionData()}
     </FieldDetail>
   );
+
+  const TransactionFeeField = () => (
+    <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
+      {getTransactionFeeField()}
+    </Field>
+  );
   return (
     <Box>
       <Header
@@ -237,20 +244,20 @@ const Main = () => {
               {`${moduleName}::${methodName}`}
             </Field>
             <FieldLine />
-            <Field
-              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-            >
-              {getTransactionFeeField()}
-            </Field>
+            {mayFail ? (
+              <EstimatePointErrorField content={failReason} />
+            ) : (
+              <TransactionFeeField />
+            )}
             <FieldLine />
           </>
         ) : (
           <>
-            <Field
-              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-            >
-              {getTransactionFeeField()}
-            </Field>
+            {mayFail ? (
+              <EstimatePointErrorField content={failReason} />
+            ) : (
+              <TransactionFeeField />
+            )}
             <Box height="10px" bg="background.tertiary" mx="-20px" />
             <Field
               title={<FormattedMessage intlKey="app.authz.script" />}

@@ -28,7 +28,6 @@ const Main = () => {
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject, failReason, mayFail } = transaction;
-  console.log(rawObject);
 
   const transactionData = rawObject.transactions
     .filter(({ data }: EvmTransaction) => data)
