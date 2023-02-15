@@ -32,7 +32,7 @@ export const abort = async (context: TransactionMachineContext) => {
 
   onReject?.(ERROR_MESSAGES.AUTHZ_DECLINE_ERROR);
 
-  if (authorizationId) {
+  if (authorizationId && sessionId) {
     await updateAuthorization({
       authorizationId,
       action: "decline",

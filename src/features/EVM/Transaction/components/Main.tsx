@@ -64,8 +64,8 @@ const Main = () => {
   }, [sessionId, rawObject, blockchain, send]);
 
   const approve = useCallback(async () => {
-    const { sessionId, authorizationId = "" } = user;
-    const { fee, discount } = transaction;
+    const { sessionId = "", authorizationId = "" } = user;
+    const { fee = 0, discount = 0 } = transaction;
     const { id = "", blockchain, url = "", name = "" } = dapp;
 
     await updateAuthorization({

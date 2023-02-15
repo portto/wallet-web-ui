@@ -278,13 +278,20 @@ export const createDAppAuthorization = ({
   });
 
 export const updateAuthorization = ({
-  authorizationId,
+  authorizationId = "",
   action,
-  sessionId,
-  blockchain = "flow",
-  cost,
-  discount,
-}: any) =>
+  sessionId = "",
+  blockchain = Chains.flow,
+  cost = 0,
+  discount = 0,
+}: {
+  authorizationId: string;
+  action: "decline" | "approve";
+  sessionId: string;
+  blockchain: Chains;
+  cost?: number;
+  discount?: number;
+}) =>
   apiPut({
     url: `api/${blockchain}/authz`,
     request: {
