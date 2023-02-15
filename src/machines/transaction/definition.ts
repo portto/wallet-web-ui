@@ -70,7 +70,6 @@ const machine = createMachine<TransactionMachineContext>(
       updateDapp: { actions: "updateDapp" },
       updateUser: { actions: "updateUser" },
       updateTransaction: { actions: "updateTransaction" },
-      dangerousTx: machineStates.DANGEROUS,
       serviceInvalid: machineStates.MAINTENANCE,
       close: machineStates.CLOSE,
       error: { target: machineStates.ERROR, actions: "setError" },
@@ -103,6 +102,7 @@ const machine = createMachine<TransactionMachineContext>(
             target: machineStates.FINISH_PROCESS,
             actions: "updateTransaction",
           },
+          dangerousTx: machineStates.DANGEROUS,
         },
       },
       [machineStates.NON_CUSTODIAL]: {
