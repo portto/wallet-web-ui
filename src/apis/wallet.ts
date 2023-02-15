@@ -218,11 +218,11 @@ export const updateAuthentication = ({
 export const updatePreAuthz = ({
   preauthId,
   action,
-  blockchain = "flow",
+  blockchain = Chains.flow,
 }: {
   preauthId: string;
   action: "approve" | "decline";
-  blockchain: string;
+  blockchain: Chains;
 }) =>
   apiPut({
     url: `api/${blockchain}/pre-authz`,
