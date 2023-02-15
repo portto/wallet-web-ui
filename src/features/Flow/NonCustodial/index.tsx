@@ -1,117 +1,79 @@
-import { memo, useEffect, useMemo, useState } from "react";
+import { Box, Center, Flex, Text } from "@chakra-ui/react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getMaintenanceStatus } from "src/apis";
-import { useLayoutContext } from "src/context/layout";
-import {
-  machineStates,
-  useTransactionMachine,
-  withTransactionContext,
-} from "src/machines/transaction";
-import {
-  KEY_EMAIL,
-  KEY_SESSION_ID,
-  KEY_USER_ID,
-  KEY_USER_TYPE,
-  getItem,
-} from "src/services/LocalStorage";
-import Connecting from "./components/Connecting";
-import Main from "./components/Main";
+import { updateNonCustodial } from "src/apis";
+import FormattedMessage from "src/components/FormattedMessage";
+import Header from "src/components/Header";
+import LoadingLogo from "src/components/LoadingLogo";
+import { onTransactionDecline } from "src/services/Frame";
+import { KEY_SESSION_ID, getItem } from "src/services/LocalStorage";
+import { Chains } from "src/types";
+import { ERROR_MESSAGES } from "src/utils/constants";
+import fetchDappInfo from "src/utils/fetchDappInfo";
 
-const systemStatus = [
-  machineStates.IDLE,
-  machineStates.FINISH_PROCESS,
-  machineStates.CLOSE,
-  machineStates.FINAL,
-];
-
-const stageComponentMapping: Record<
-  string,
-  { component: () => JSX.Element; layoutSize: "sm" | "lg" }
-> = {
-  [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
-  [machineStates.MAIN]: { component: Main, layoutSize: "sm" },
-};
-
-const useDefaultStateFromProps = (props: any) => {
-  const { blockchain, authorizationId, appId } = useParams<{
-    appId: string;
-    blockchain: string;
-    authorizationId: string;
-  }>();
-
-  const noop = () => undefined;
-
+const NonCustodial = () => {
   const {
-    appId: id = appId,
-    name,
-    logo,
-    onApprove = noop,
-    onReject = noop,
-  } = props;
+    authorizationId,
+    blockchain = Chains.flow,
+    appId,
+  } = useParams<{
+    authorizationId?: string;
+    blockchain?: Chains;
+    appId?: string;
+  }>();
+  const [dAppInfo, setdAppInfo] = useState<{ url?: string }>({ url: "" });
+  const sessionId = getItem(KEY_SESSION_ID);
 
-  return useMemo(
-    () => ({
-      dapp: {
-        id,
-        name,
-        logo,
-        blockchain,
-      },
-      user: {
-        id: getItem(KEY_USER_ID),
-        authorizationId,
-        sessionId: getItem(KEY_SESSION_ID),
-        email: getItem(KEY_EMAIL),
-        addresses: {},
-        type: getItem(KEY_USER_TYPE),
-        onApprove,
-        onReject,
-      },
-      transaction: {},
-    }),
-    [authorizationId, id, name, logo, blockchain, onApprove, onReject]
+  useEffect(() => {
+    fetchDappInfo({ id: appId }).then((data) => {
+      setdAppInfo(data);
+    });
+  }, [appId]);
+
+  // @todo: fetchDapp info
+  const handleClose = useCallback(() => {
+    const { url = "" } = dAppInfo;
+    if (authorizationId && sessionId) {
+      updateNonCustodial({ authorizationId, sessionId }).then(() => {
+        onTransactionDecline({
+          blockchain,
+          l6n: url,
+          errorMessage: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR,
+        });
+      });
+    }
+  }, [authorizationId, blockchain, sessionId]);
+
+  return (
+    <Box position="relative">
+      <Header blockchain={blockchain} onClose={handleClose} />
+      <Box
+        position="absolute"
+        top="0"
+        left="0"
+        zIndex={-1}
+        width="100%"
+        height="100%"
+      >
+        <Center height="100%">
+          <Flex flexDirection="column" alignItems="center">
+            <LoadingLogo mb="space.s" />
+            <Text
+              fontSize="size.heading.4"
+              fontWeight="weight.l"
+              lineHeight="line.height.subheading.1"
+              mb="space.2xs"
+            >
+              <FormattedMessage intlKey="feature.authz.nonCustodial.title" />
+            </Text>
+            <Text fontSize="size.body.3" textAlign="center">
+              <FormattedMessage intlKey="feature.authz.nonCustodial.description" />
+            </Text>
+          </Flex>
+        </Center>
+      </Box>
+    </Box>
   );
 };
-
-const Noop = () => null;
-
-const NonCustodial = withTransactionContext(
-  memo((props) => {
-    const state = useDefaultStateFromProps(props);
-    const { value, send } = useTransactionMachine();
-    const [stage, setStage] = useState(machineStates.IDLE);
-    const { setLayoutSize } = useLayoutContext();
-
-    // initialization
-    useEffect(() => {
-      send({ type: "init", data: state });
-      // intentionally run once
-      // eslint-disable-next-line
-    }, []);
-
-    // check maintenance status for chain
-    useEffect(() => {
-      getMaintenanceStatus(state.dapp.blockchain).then(
-        (status) => status.isUnderMaintenance && send("serviceInvalid")
-      );
-    }, [send, state.dapp.blockchain]);
-
-    // only set UI stages, skip system stages
-    useEffect(() => {
-      if (!systemStatus.includes(value as string)) {
-        setStage(value as string);
-      }
-    }, [value]);
-
-    useEffect(() => {
-      if (setLayoutSize && stageComponentMapping[stage]?.layoutSize)
-        setLayoutSize(stageComponentMapping[stage]?.layoutSize);
-    }, [stage, setLayoutSize]);
-
-    const Component = stageComponentMapping[stage]?.component ?? Noop;
-
-    return <Component />;
-  })
-);
 
 export default NonCustodial;
