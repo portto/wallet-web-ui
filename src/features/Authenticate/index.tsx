@@ -110,7 +110,6 @@ const useDefaultStateFromProps = (props: any) => {
         accessToken: getItem(KEY_ACCESS_TOKEN),
         deviceKey: getItem(KEY_DEVICE_KEY),
         deviceId: getItem(KEY_DEVICE_ID),
-        action: "register",
         addresses: {},
         type: getItem(KEY_USER_TYPE),
         nonce,

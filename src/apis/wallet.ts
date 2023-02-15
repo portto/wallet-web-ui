@@ -107,26 +107,6 @@ export const signAptosMessage = ({
     isAuthorized: true,
   });
 
-interface SignatureDetails {
-  message: string;
-  origin: string | undefined;
-  sessionId: string;
-  status: "PENDING" | "APPROVED" | "DECLINED";
-  appId: string;
-  signatureId?: string;
-  vsn?: number;
-  reason?: string | null;
-  data?: unknown;
-  /* Attributes for Aptos */
-  nonce?: string;
-  prefix?: string;
-  fullMessage?: string;
-  address?: string;
-  application?: string;
-  chainId?: number;
-  /* Attributes for Aptos */
-}
-
 export const getSignatureDetails = ({
   blockchain,
   signatureId,

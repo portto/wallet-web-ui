@@ -114,7 +114,10 @@ const machine = createMachine<AuthenticateMachineContext>(
         },
       },
       [machineStates.QUEUEING]: {
-        on: { ready: machineStates.INPUT_EMAIL },
+        on: {
+          ready: machineStates.INPUT_EMAIL,
+          otp: { target: machineStates.INPUT_OTP, actions: "updateUser" },
+        },
       },
       [machineStates.INPUT_EMAIL]: {
         on: {
