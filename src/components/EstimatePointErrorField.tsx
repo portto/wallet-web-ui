@@ -23,6 +23,7 @@ const EstimatePointErrorField = ({
             values={{
               a: (chunks: ReactNode) => (
                 <Link
+                  textDecoration="underline"
                   href="https://portto.zendesk.com/hc"
                   isExternal
                   rel="noopener noreferrer"
