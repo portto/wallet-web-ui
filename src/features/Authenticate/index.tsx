@@ -112,6 +112,7 @@ const useDefaultStateFromProps = (props: any) => {
         nonce,
         onConfirm,
         onReject,
+        authenticationId,
       },
     }),
     [location]
