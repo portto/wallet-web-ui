@@ -113,6 +113,7 @@ export default function useTransactionDetail(
         isSupportedTokenTransferring: !!nativeToken,
         tokenName: nativeTokenName,
         tokenAmount: nativeTokenAmount,
+        tokenBalance: userBalance,
         usdValue: (
           parseFloat(nativeTokenAmount) * parseFloat(nativeTokenValue)
         ).toFixed(2),
@@ -142,6 +143,7 @@ export default function useTransactionDetail(
       isSupportedTokenTransferring: !!tokenDetail && isERC20Transferring,
       tokenName,
       tokenAmount,
+      tokenBalance,
       usdValue: `${(parseFloat(usdPrice) * parseFloat(tokenAmount)).toFixed(
         2
       )}`,
