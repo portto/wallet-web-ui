@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import Web3 from "web3";
 import { useTransactionMachine } from "src/machines/transaction";
 import { Chains, EvmTransaction } from "src/types";
+import { ChainCoinSymbols } from "../constants";
 
 const { toBN, hexToNumberString, fromWei } = Web3.utils;
 
@@ -11,32 +12,6 @@ interface Transaction {
   };
   txHash?: string;
 }
-
-interface IChainCoinSymbols {
-  [key: string]: {
-    native: string;
-    moonpay: string;
-  };
-}
-
-const ChainCoinSymbols: IChainCoinSymbols = {
-  ethereum: {
-    native: "ETH",
-    moonpay: "eth",
-  },
-  bsc: {
-    native: "BNB",
-    moonpay: "bnb_bsc",
-  },
-  polygon: {
-    native: "MATIC",
-    moonpay: "matic_polygon",
-  },
-  avalanche: {
-    native: "AVAX",
-    moonpay: "avax_cchain",
-  },
-};
 
 const TRANSFER_FUNCTION_HASH = "0xa9059cbb";
 
@@ -72,11 +47,10 @@ const isNativeBalanceEnough = (
   return userBalanceBN.gte(transactionValueBN);
 };
 
-export default function useTransactionDetail(
-  transaction: Transaction,
-  userBalance = 0
-) {
+export default function useTransactionDetail(transaction: Transaction) {
   const { context } = useTransactionMachine();
+  const { user } = context;
+  const userBalance = user.balance || 0;
   const { dapp } = context;
   const { assets = [] } = context.user;
   const ethAssets = Object.fromEntries(

@@ -1,11 +1,11 @@
-import { uuid as uuidv4 } from "uuidv4";
+import { v4 as uuidv4 } from "uuid";
 import { signMoonPayUrl } from "src/apis";
 import { IS_MAINNET } from "src/services/Env";
 
 const MOONPAY_API_KEY = process.env.REACT_APP_MOONPAY_API_KEY;
 const MOON_PAY_URL = `https://buy${IS_MAINNET ? "" : "-sandbox"}.moonpay.com/`;
 
-const openPurchasePage = ({
+const openMoonPayPage = ({
   currency,
   address,
   email,
@@ -21,7 +21,6 @@ const openPurchasePage = ({
     "@",
     "%40"
   )}&externalCustomerId=${userId}&externalTransactionId=${uuidv4()}`;
-
   const newTabInstance = window.open("");
   signMoonPayUrl({ query }).then(({ signature }) => {
     if (newTabInstance) {
@@ -32,4 +31,4 @@ const openPurchasePage = ({
   });
 };
 
-export default openPurchasePage;
+export default openMoonPayPage;
