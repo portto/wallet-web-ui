@@ -40,8 +40,15 @@ const Main = () => {
     (transaction.fee || 0) - (transaction.discount || 0);
 
   const txDetailData = useTransactionDetail(rawObject.transaction);
-  const { tokenAmount = "", usdValue = "" } = txDetailData || {};
-
+  const {
+    tokenAmount = "",
+    tokenBalance,
+    tokenName,
+    usdValue = "",
+    hasEnoughBalance,
+    hasValue,
+  } = txDetailData || {};
+  const showInsufficientBalance = hasValue && !hasEnoughBalance;
   const { sessionId = "" } = user;
   const { blockchain } = dapp;
 
@@ -210,13 +217,27 @@ const Main = () => {
     </Field>
   );
 
+  const InsufficientBalanceField = () => (
+    <Field title={<FormattedMessage intlKey="app.authz.balance" />}>
+      <Box color="font.alert">
+        {`${tokenBalance} ${tokenName} `}
+        (<FormattedMessage intlKey="app.authz.insufficientBalance" />)
+      </Box>
+    </Field>
+  );
+
   const getTransactionFeeField = () => {
+    if (showInsufficientBalance) {
+      return <InsufficientBalanceField />;
+    }
+
     return mayFail ? (
       <EstimatePointErrorField content={failReason} />
     ) : (
       <TransactionFeeField />
     );
   };
+
   return (
     <Box>
       <Header
@@ -267,7 +288,7 @@ const Main = () => {
       </Box>
 
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
-        <Button onClick={approve}>
+        <Button onClick={approve} disabled={showInsufficientBalance}>
           <FormattedMessage intlKey="app.authz.approve" />
         </Button>
       </Flex>
