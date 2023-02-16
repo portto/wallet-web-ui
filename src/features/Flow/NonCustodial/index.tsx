@@ -30,7 +30,6 @@ const NonCustodial = () => {
     });
   }, [appId]);
 
-  // @todo: fetchDapp info
   const handleClose = useCallback(() => {
     const { url = "" } = dAppInfo;
     if (authorizationId && sessionId) {
@@ -42,7 +41,7 @@ const NonCustodial = () => {
         });
       });
     }
-  }, [authorizationId, blockchain, sessionId]);
+  }, [authorizationId, blockchain, dAppInfo, sessionId]);
 
   return (
     <Box position="relative">
