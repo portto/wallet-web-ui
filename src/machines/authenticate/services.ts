@@ -89,7 +89,7 @@ export const finish = async (context: AuthenticateMachineContext) => {
     nonce,
     onConfirm,
   } = context.user;
-  const { blockchain, url = "" } = context.dapp;
+  const { blockchain, url = "", id: appId } = context.dapp;
 
   const l6n = url;
 
@@ -104,6 +104,7 @@ export const finish = async (context: AuthenticateMachineContext) => {
     userId: id,
     signatureData,
     signatures,
+    appId,
     ...accountInfo,
   });
 

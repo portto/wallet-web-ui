@@ -93,6 +93,7 @@ const useDefaultStateFromProps = (props: any) => {
   return useMemo(
     () => ({
       isThroughBackChannel,
+      authenticationId,
       dapp: {
         id,
         name,

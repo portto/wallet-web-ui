@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { createAuthnQueue } from "src/apis";
+import { createAuthnQueue, getAuthn } from "src/apis";
 import Loading from "src/components/Loading";
 import { useAuthenticateMachine } from "src/machines/authenticate";
 import { KEY_EMAIL, getItem } from "src/services/LocalStorage";
@@ -7,29 +7,48 @@ import fetchDappInfo from "src/utils/fetchDappInfo";
 
 const Connecting = () => {
   const { context, send } = useAuthenticateMachine();
+  const { authenticationId, isThroughBackChannel } = context;
   const { accessToken, email } = context.user;
-  const { name, logo, id, url } = context.dapp;
+  const { id, url = "" } = context.dapp;
 
-  // enqueue current user into request waiting queue
   useEffect(() => {
-    createAuthnQueue().then((data) => send({ type: "updateQueue", data }));
-  }, [send]);
+    const requests =
+      authenticationId && isThroughBackChannel
+        ? Promise.all([
+            createAuthnQueue(), // enqueue current user into request waiting queue
+            fetchDappInfo({ id, url }), // gather current dapp info
+            getAuthn(authenticationId),
+          ])
+        : Promise.all([
+            createAuthnQueue(), // enqueue current user into request waiting queue
+            fetchDappInfo({ id, url }), // gather current dapp info
+          ]);
 
-  // gather current dapp info
-  useEffect(() => {
-    if (!(name && logo)) {
-      fetchDappInfo({ id, url }).then((data) => {
-        send({ type: "updateDapp", data });
-        let action = "skipLogin";
-        if (!accessToken || (email && email !== getItem(KEY_EMAIL))) {
-          action = "ready";
-        }
-        send(action);
+    requests.then(([authnQueuedata, metadata, authentication = {}]) => {
+      let type = "skipLogin";
+      if (!accessToken || (email && email !== getItem(KEY_EMAIL))) {
+        type = "ready";
+      }
+      send({
+        type,
+        data: {
+          queue: authnQueuedata,
+          dapp: metadata,
+          user:
+            authentication && authentication.nonce
+              ? {
+                  signatureData: {
+                    nonce: authentication.nonce,
+                    appIdentifier: authentication.appIdentifier,
+                  },
+                }
+              : {},
+        },
       });
-    }
-    // Shouldn't include {name}, {logo} and {url} since {fetchDappInfo} is meant to update them
+    });
+    // Shouldn't include {url} since {fetchDappInfo} might update it
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accessToken, id, send]);
+  }, [accessToken, authenticationId, isThroughBackChannel, id, send]);
 
   const handleClose = useCallback(() => send("close"), [send]);
 

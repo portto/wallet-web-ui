@@ -2,6 +2,7 @@ import {
   AptosSignatureDetails,
   AptosTransaction,
   AptosUpdateSignatureDetailsResponse,
+  Authentication,
   Chains,
   CompositeSignature,
   EVMSignatureDetails,
@@ -49,6 +50,14 @@ export const getAuthnQueue = (queueId: number) =>
       queueId,
     },
     isAuthorized: true,
+  });
+
+export const getAuthn = (authenticationId: string) =>
+  apiGet<Authentication | null>({
+    url: "api/flow/authn-details",
+    request: {
+      authenticationId,
+    },
   });
 
 export const estimatePoint = ({

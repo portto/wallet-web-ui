@@ -34,6 +34,7 @@ export const machineStates = {
 export interface AuthenticateMachineContext {
   isThroughBackChannel?: boolean;
   blockchainIcon?: string;
+  authenticationId?: string;
   error?: unknown;
   queue?: {
     queueId: number;
@@ -105,8 +106,11 @@ const machine = createMachine<AuthenticateMachineContext>(
       },
       [machineStates.CONNECTING]: {
         on: {
-          ready: machineStates.QUEUEING,
-          skipLogin: machineStates.VERIFY_USER,
+          ready: { target: machineStates.QUEUEING, actions: "updateState" },
+          skipLogin: {
+            target: machineStates.VERIFY_USER,
+            actions: "updateState",
+          },
         },
       },
       [machineStates.QUEUEING]: {
