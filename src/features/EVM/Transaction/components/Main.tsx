@@ -6,10 +6,11 @@ import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg"
 import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
+import EstimatePointErrorField from "src/components/EstimatePointErrorField";
 import Field, { FieldLine } from "src/components/Field";
+import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
-import TransactionContent from "src/components/TransactionContent";
 import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
@@ -26,7 +27,7 @@ const Main = () => {
 
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
-  const { rawObject } = transaction;
+  const { rawObject, failReason, mayFail } = transaction;
 
   const transactionData = rawObject.transactions
     .filter(({ data }: EvmTransaction) => data)
@@ -50,16 +51,17 @@ const Main = () => {
 
   useEffect(() => {
     estimatePoint({ rawObject, sessionId, blockchain }).then(
-      ({ cost, discount, error_code, chain_error_msg }) =>
+      ({ cost, discount, error_code, chain_error_msg }) => {
         send({
           type: "updateTransaction",
           data: {
             fee: cost,
             discount,
-            mayFail: error_code === "tx_may_fail",
-            error: chain_error_msg,
+            mayFail: !!error_code,
+            failReason: chain_error_msg || error_code,
           },
-        })
+        });
+      }
     );
   }, [sessionId, rawObject, blockchain, send]);
 
@@ -100,8 +102,26 @@ const Main = () => {
     });
   }, [send]);
 
-  const getTransactionFeeField = useCallback(() => {
-    return (
+  const TransactionContent = () => (
+    <FieldDetail
+      title={<FormattedMessage intlKey="app.authz.operation" />}
+      badgeText={
+        <FormattedMessage
+          intlKey={
+            verifiedTx
+              ? "app.authz.operationVerified"
+              : "app.authz.operationNotVerified"
+          }
+        />
+      }
+      badgeType={verifiedTx ? BadgeType.Verified : BadgeType.Unverified}
+    >
+      {transactionData}
+    </FieldDetail>
+  );
+
+  const TransactionFeeField = () => (
+    <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
       <HStack>
         {transaction.fee ? (
           <>
@@ -140,8 +160,16 @@ const Main = () => {
           <Spinner width="15px" height="15px" color="icon.tertiary" />
         )}
       </HStack>
+    </Field>
+  );
+
+  const getTransactionFeeField = () => {
+    return mayFail ? (
+      <EstimatePointErrorField content={failReason} />
+    ) : (
+      <TransactionFeeField />
     );
-  }, [transaction.fee, realTransactionFee, hasDiscount]);
+  };
 
   return (
     <Box>
@@ -163,79 +191,47 @@ const Main = () => {
       <Box px="space.l">
         {recognizedTx ? (
           <>
-            <Field
-              title={<FormattedMessage intlKey="app.authz.operation" />}
-              hidableInfo={
-                !isNativeTransferring && (
-                  <TransactionContent verified={verifiedTx}>
-                    {transactionData}
-                  </TransactionContent>
-                )
-              }
-              icon={
-                verifiedTx ? (
-                  <Check width="16px" height="16px" />
-                ) : (
-                  <CheckAlert width="16px" height="16px" />
-                )
-              }
-            >
-              {/* // @todo: add operation detection logic. */}
-              Operation Name
-            </Field>
-            <FieldLine />
-            <Field
-              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-            >
-              {getTransactionFeeField()}
-            </Field>
+            {!isNativeTransferring && (
+              <>
+                <Field
+                  title={<FormattedMessage intlKey="app.authz.operation" />}
+                  hidableInfo={<TransactionContent />}
+                  icon={
+                    verifiedTx ? (
+                      <Check width="16px" height="16px" />
+                    ) : (
+                      <CheckAlert width="16px" height="16px" />
+                    )
+                  }
+                >
+                  {/* // @todo: add operation detection logic. */}
+                  Operation Name
+                </Field>
+                <FieldLine />
+              </>
+            )}
+            {getTransactionFeeField()}
             <FieldLine />
           </>
         ) : (
           <>
-            <Field
-              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-            >
-              {getTransactionFeeField()}
-            </Field>
-            <Box height="10px" bg="background.tertiary" mx="-20px" />
-            <Field
-              title={<FormattedMessage intlKey="app.authz.script" />}
-              hidableInfo={
-                !isNativeTransferring && (
-                  <TransactionContent>{transactionData}</TransactionContent>
-                )
-              }
-              icon={<CheckAlert width="16px" height="16px" />}
-            >
-              <FormattedMessage intlKey="app.authz.transactionContainsScript" />
-            </Field>
+            {getTransactionFeeField()}
+            {!isNativeTransferring && (
+              <>
+                <Box height="10px" bg="background.tertiary" mx="-20px" />
+                <Field
+                  title={<FormattedMessage intlKey="app.authz.script" />}
+                  hidableInfo={<TransactionContent />}
+                  icon={<CheckAlert width="16px" height="16px" />}
+                >
+                  <FormattedMessage intlKey="app.authz.transactionContainsScript" />
+                </Field>
+              </>
+            )}
             <FieldLine />
           </>
         )}
       </Box>
-      {/* // @todo: remove testing data. */}
-      {/* <Box>Dapp</Box>
-      <Box px={4}>
-        <Box>Dapp name: {dapp.name}</Box>
-      </Box> */}
-      {/* <Box>User</Box>
-      <Box px={4}>
-        <Box>Points: {user.points}</Box>
-        <Box>
-          Assets:{" "}
-          {user.assets?.map((asset) => (
-            <Box px={4} key={asset.name}>
-              {asset.name} {asset.value} {asset.usd_price}
-            </Box>
-          ))}
-        </Box>
-      </Box>
-      <Box>Transaction</Box>
-      <Box px={4}>
-        <Box>May Fail?: {transaction.mayFail ? "true" : "false"}</Box>
-        <Box>Error: {transaction.error}</Box>
-      </Box> */}
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
         <Button onClick={approve}>
           <FormattedMessage intlKey="app.authz.approve" />

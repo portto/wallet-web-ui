@@ -6,10 +6,11 @@ import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg"
 import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
+import EstimatePointErrorField from "src/components/EstimatePointErrorField";
 import Field, { FieldLine } from "src/components/Field";
+import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
-import TransactionContent from "src/components/TransactionContent";
 import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
@@ -23,7 +24,7 @@ const Main = () => {
 
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
-  const { rawObject } = transaction;
+  const { rawObject, mayFail, failReason } = transaction;
   const {
     type,
     arguments: args = [],
@@ -52,8 +53,8 @@ const Main = () => {
           data: {
             fee: cost,
             discount,
-            mayFail: error_code === "tx_may_fail",
-            error: chain_error_msg,
+            mayFail: !!error_code,
+            failReason: chain_error_msg || error_code,
           },
         })
     );
@@ -102,49 +103,6 @@ const Main = () => {
     });
   }, [send]);
 
-  const getTransactionFeeField = useCallback(() => {
-    return (
-      <HStack>
-        {transaction.fee ? (
-          <>
-            <Flex
-              bg="background.secondary"
-              borderRadius="50%"
-              width="20px"
-              height="20px"
-              justifyContent="center"
-              alignItems="center"
-              mr="space.3xs"
-              p="space.4xs"
-            >
-              <Logo />
-            </Flex>
-            <Box>
-              <FormattedMessage
-                intlKey="app.authz.transactionFeePoints"
-                values={{ points: realTransactionFee }}
-              />
-              {hasDiscount && (
-                <Box as="span" pl="space.3xs">
-                  (
-                  <Box as="del">
-                    <FormattedMessage
-                      intlKey="app.authz.transactionFeePoints"
-                      values={{ points: transaction.fee }}
-                    />
-                  </Box>
-                  )
-                </Box>
-              )}
-            </Box>
-          </>
-        ) : (
-          <Spinner width="15px" height="15px" color="icon.tertiary" />
-        )}
-      </HStack>
-    );
-  }, [transaction.fee, realTransactionFee, hasDiscount]);
-
   const getTransactionData = () => {
     if (functionName) {
       return (
@@ -190,6 +148,75 @@ const Main = () => {
     }
     return null;
   };
+
+  const TransactionContent = () => (
+    <FieldDetail
+      title={<FormattedMessage intlKey="app.authz.operation" />}
+      badgeText={
+        <FormattedMessage
+          intlKey={
+            verifiedTx
+              ? "app.authz.operationVerified"
+              : "app.authz.operationNotVerified"
+          }
+        />
+      }
+      badgeType={verifiedTx ? BadgeType.Verified : BadgeType.Unverified}
+    >
+      {getTransactionData()}
+    </FieldDetail>
+  );
+
+  const TransactionFeeField = () => (
+    <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
+      <HStack>
+        {transaction.fee ? (
+          <>
+            <Flex
+              bg="background.secondary"
+              borderRadius="50%"
+              width="20px"
+              height="20px"
+              justifyContent="center"
+              alignItems="center"
+              mr="space.3xs"
+              p="space.4xs"
+            >
+              <Logo />
+            </Flex>
+            <Box>
+              <FormattedMessage
+                intlKey="app.authz.transactionFeePoints"
+                values={{ points: realTransactionFee }}
+              />
+              {hasDiscount && (
+                <Box as="span" pl="space.3xs">
+                  (
+                  <Box as="del">
+                    <FormattedMessage
+                      intlKey="app.authz.transactionFeePoints"
+                      values={{ points: transaction.fee }}
+                    />
+                  </Box>
+                  )
+                </Box>
+              )}
+            </Box>
+          </>
+        ) : (
+          <Spinner width="15px" height="15px" color="icon.tertiary" />
+        )}
+      </HStack>
+    </Field>
+  );
+
+  const getTransactionFeeField = () => {
+    return mayFail ? (
+      <EstimatePointErrorField content={failReason} />
+    ) : (
+      <TransactionFeeField />
+    );
+  };
   return (
     <Box>
       <Header
@@ -208,11 +235,7 @@ const Main = () => {
           <>
             <Field
               title={<FormattedMessage intlKey="app.authz.operation" />}
-              hidableInfo={
-                <TransactionContent verified={verifiedTx}>
-                  {getTransactionData()}
-                </TransactionContent>
-              }
+              hidableInfo={<TransactionContent />}
               icon={
                 verifiedTx ? (
                   <Check width="16px" height="16px" />
@@ -224,26 +247,16 @@ const Main = () => {
               {`${moduleName}::${methodName}`}
             </Field>
             <FieldLine />
-            <Field
-              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-            >
-              {getTransactionFeeField()}
-            </Field>
+            {getTransactionFeeField()}
             <FieldLine />
           </>
         ) : (
           <>
-            <Field
-              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-            >
-              {getTransactionFeeField()}
-            </Field>
+            {getTransactionFeeField()}
             <Box height="10px" bg="background.tertiary" mx="-20px" />
             <Field
               title={<FormattedMessage intlKey="app.authz.script" />}
-              hidableInfo={
-                <TransactionContent>{getTransactionData()}</TransactionContent>
-              }
+              hidableInfo={<TransactionContent />}
               icon={<CheckAlert width="16px" height="16px" />}
             >
               <FormattedMessage intlKey="app.authz.transactionContainsScript" />

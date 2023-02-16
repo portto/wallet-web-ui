@@ -5,10 +5,11 @@ import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-aler
 import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
+import EstimatePointErrorField from "src/components/EstimatePointErrorField";
 import Field, { FieldLine } from "src/components/Field";
+import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
-import TransactionContent from "src/components/TransactionContent";
 import TransactionInfo from "src/components/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
@@ -19,7 +20,7 @@ const Main = () => {
 
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
-  const { rawObject } = transaction;
+  const { rawObject, mayFail, failReason } = transaction;
 
   const hasDiscount = (transaction.discount || 0) > 0;
   const realTransactionFee =
@@ -41,8 +42,8 @@ const Main = () => {
         data: {
           fee: cost,
           discount,
-          mayFail: error_code === "tx_may_fail",
-          error: chain_error_msg,
+          mayFail: !!error_code,
+          failReason: chain_error_msg || error_code,
         },
       })
     );
@@ -78,8 +79,8 @@ const Main = () => {
     } else send({ type: "reject", data: { error: reason } });
   }, [user, dapp, transaction, dappDomain, send]);
 
-  const getTransactionFeeField = useCallback(() => {
-    return (
+  const TransactionFeeField = () => (
+    <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
       <HStack>
         {transaction.fee ? (
           <>
@@ -118,8 +119,16 @@ const Main = () => {
           <Spinner width="15px" height="15px" color="icon.tertiary" />
         )}
       </HStack>
+    </Field>
+  );
+
+  const getTransactionFeeField = () => {
+    return mayFail ? (
+      <EstimatePointErrorField content={failReason} />
+    ) : (
+      <TransactionFeeField />
     );
-  }, [transaction.fee, hasDiscount]);
+  };
 
   const handleClose = useCallback(async () => {
     send({
@@ -140,15 +149,21 @@ const Main = () => {
       </TransactionInfo>
 
       <Box px="space.l">
-        <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
-          {getTransactionFeeField()}
-        </Field>
+        {getTransactionFeeField()}
         <Box height="10px" bg="background.tertiary" mx="-20px" />
         <Field
           title={<FormattedMessage intlKey="app.authz.script" />}
           hidableInfo={
             !!rawObject.convertedTx && (
-              <TransactionContent>{rawObject.convertedTx}</TransactionContent>
+              <FieldDetail
+                title={<FormattedMessage intlKey="app.authz.operation" />}
+                badgeText={
+                  <FormattedMessage intlKey="app.authz.operationNotVerified" />
+                }
+                badgeType={BadgeType.Unverified}
+              >
+                {rawObject.convertedTx}
+              </FieldDetail>
             )
           }
           icon={<CheckAlert width="16px" height="16px" />}
