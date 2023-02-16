@@ -102,8 +102,25 @@ const Main = () => {
     });
   }, [send]);
 
-  const getTransactionFeeField = useCallback(() => {
-    return (
+  const TransactionContent = () => (
+    <FieldDetail
+      badgeText={
+        <FormattedMessage
+          intlKey={
+            verifiedTx
+              ? "app.authz.operationVerified"
+              : "app.authz.operationNotVerified"
+          }
+        />
+      }
+      badgeType={verifiedTx ? BadgeType.Verified : BadgeType.Unverified}
+    >
+      {transactionData}
+    </FieldDetail>
+  );
+
+  const TransactionFeeField = () => (
+    <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
       <HStack>
         {transaction.fee ? (
           <>
@@ -142,31 +159,16 @@ const Main = () => {
           <Spinner width="15px" height="15px" color="icon.tertiary" />
         )}
       </HStack>
-    );
-  }, [transaction.fee, realTransactionFee, hasDiscount]);
-
-  const TransactionContent = () => (
-    <FieldDetail
-      badgeText={
-        <FormattedMessage
-          intlKey={
-            verifiedTx
-              ? "app.authz.operationVerified"
-              : "app.authz.operationNotVerified"
-          }
-        />
-      }
-      badgeType={verifiedTx ? BadgeType.Verified : BadgeType.Unverified}
-    >
-      {transactionData}
-    </FieldDetail>
-  );
-
-  const TransactionFeeField = () => (
-    <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
-      {getTransactionFeeField()}
     </Field>
   );
+
+  const getTransactionFeeField = () => {
+    return mayFail ? (
+      <EstimatePointErrorField content={failReason} />
+    ) : (
+      <TransactionFeeField />
+    );
+  };
 
   return (
     <Box>
@@ -207,20 +209,12 @@ const Main = () => {
                 <FieldLine />
               </>
             )}
-            {mayFail ? (
-              <EstimatePointErrorField content={failReason} />
-            ) : (
-              <TransactionFeeField />
-            )}
+            {getTransactionFeeField()}
             <FieldLine />
           </>
         ) : (
           <>
-            {mayFail ? (
-              <EstimatePointErrorField content={failReason} />
-            ) : (
-              <TransactionFeeField />
-            )}
+            {getTransactionFeeField()}
             {!isNativeTransferring && (
               <>
                 <Box height="10px" bg="background.tertiary" mx="-20px" />

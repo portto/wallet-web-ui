@@ -103,49 +103,6 @@ const Main = () => {
     });
   }, [send]);
 
-  const getTransactionFeeField = useCallback(() => {
-    return (
-      <HStack>
-        {transaction.fee ? (
-          <>
-            <Flex
-              bg="background.secondary"
-              borderRadius="50%"
-              width="20px"
-              height="20px"
-              justifyContent="center"
-              alignItems="center"
-              mr="space.3xs"
-              p="space.4xs"
-            >
-              <Logo />
-            </Flex>
-            <Box>
-              <FormattedMessage
-                intlKey="app.authz.transactionFeePoints"
-                values={{ points: realTransactionFee }}
-              />
-              {hasDiscount && (
-                <Box as="span" pl="space.3xs">
-                  (
-                  <Box as="del">
-                    <FormattedMessage
-                      intlKey="app.authz.transactionFeePoints"
-                      values={{ points: transaction.fee }}
-                    />
-                  </Box>
-                  )
-                </Box>
-              )}
-            </Box>
-          </>
-        ) : (
-          <Spinner width="15px" height="15px" color="icon.tertiary" />
-        )}
-      </HStack>
-    );
-  }, [transaction.fee, realTransactionFee, hasDiscount]);
-
   const getTransactionData = () => {
     if (functionName) {
       return (
@@ -211,9 +168,54 @@ const Main = () => {
 
   const TransactionFeeField = () => (
     <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
-      {getTransactionFeeField()}
+      <HStack>
+        {transaction.fee ? (
+          <>
+            <Flex
+              bg="background.secondary"
+              borderRadius="50%"
+              width="20px"
+              height="20px"
+              justifyContent="center"
+              alignItems="center"
+              mr="space.3xs"
+              p="space.4xs"
+            >
+              <Logo />
+            </Flex>
+            <Box>
+              <FormattedMessage
+                intlKey="app.authz.transactionFeePoints"
+                values={{ points: realTransactionFee }}
+              />
+              {hasDiscount && (
+                <Box as="span" pl="space.3xs">
+                  (
+                  <Box as="del">
+                    <FormattedMessage
+                      intlKey="app.authz.transactionFeePoints"
+                      values={{ points: transaction.fee }}
+                    />
+                  </Box>
+                  )
+                </Box>
+              )}
+            </Box>
+          </>
+        ) : (
+          <Spinner width="15px" height="15px" color="icon.tertiary" />
+        )}
+      </HStack>
     </Field>
   );
+
+  const getTransactionFeeField = () => {
+    return mayFail ? (
+      <EstimatePointErrorField content={failReason} />
+    ) : (
+      <TransactionFeeField />
+    );
+  };
   return (
     <Box>
       <Header
@@ -244,20 +246,12 @@ const Main = () => {
               {`${moduleName}::${methodName}`}
             </Field>
             <FieldLine />
-            {mayFail ? (
-              <EstimatePointErrorField content={failReason} />
-            ) : (
-              <TransactionFeeField />
-            )}
+            {getTransactionFeeField()}
             <FieldLine />
           </>
         ) : (
           <>
-            {mayFail ? (
-              <EstimatePointErrorField content={failReason} />
-            ) : (
-              <TransactionFeeField />
-            )}
+            {getTransactionFeeField()}
             <Box height="10px" bg="background.tertiary" mx="-20px" />
             <Field
               title={<FormattedMessage intlKey="app.authz.script" />}

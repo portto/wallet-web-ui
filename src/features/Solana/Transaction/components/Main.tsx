@@ -79,8 +79,8 @@ const Main = () => {
     } else send({ type: "reject", data: { error: reason } });
   }, [user, dapp, transaction, dappDomain, send]);
 
-  const getTransactionFeeField = useCallback(() => {
-    return (
+  const TransactionFeeField = () => (
+    <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
       <HStack>
         {transaction.fee ? (
           <>
@@ -119,14 +119,16 @@ const Main = () => {
           <Spinner width="15px" height="15px" color="icon.tertiary" />
         )}
       </HStack>
-    );
-  }, [transaction.fee, realTransactionFee, hasDiscount]);
-
-  const TransactionFeeField = () => (
-    <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
-      {getTransactionFeeField()}
     </Field>
   );
+
+  const getTransactionFeeField = () => {
+    return mayFail ? (
+      <EstimatePointErrorField content={failReason} />
+    ) : (
+      <TransactionFeeField />
+    );
+  };
 
   const handleClose = useCallback(async () => {
     send({
@@ -147,11 +149,7 @@ const Main = () => {
       </TransactionInfo>
 
       <Box px="space.l">
-        {mayFail ? (
-          <EstimatePointErrorField content={failReason} />
-        ) : (
-          <TransactionFeeField />
-        )}
+        {getTransactionFeeField()}
         <Box height="10px" bg="background.tertiary" mx="-20px" />
         <Field
           title={<FormattedMessage intlKey="app.authz.script" />}
