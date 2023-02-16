@@ -174,7 +174,7 @@ const Main = () => {
       </Box>
 
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
-        <Button onClick={approve}>
+        <Button onClick={approve} disabled={mayFail}>
           <FormattedMessage intlKey="app.authz.approve" />
         </Button>
       </Flex>

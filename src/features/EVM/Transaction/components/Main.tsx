@@ -284,7 +284,7 @@ const Main = () => {
             <FormattedMessage intlKey="app.authz.purchaseonmoonpay" />
           </Button>
         ) : (
-          <Button onClick={approve}>
+          <Button onClick={approve} disabled={mayFail}>
             <FormattedMessage intlKey="app.authz.approve" />
           </Button>
         )}
