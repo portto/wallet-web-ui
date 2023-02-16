@@ -162,3 +162,97 @@ export interface CompositeSignature {
   keyId: number;
   signature: string;
 }
+
+export interface FlowAuthentication {
+  authenticationId: string;
+  vsn: number;
+  origin: string | undefined;
+  appId: string | undefined;
+  status: "PENDING" | "APPROVED" | "DECLINED";
+  reason: string | null;
+  nonce: string | undefined;
+  appIdentifier: string | undefined;
+  data?: {
+    l6n: string;
+    addr: string;
+    paddr: string;
+    code: string;
+    exp: number;
+    email: string;
+    userId: string;
+    signatures: CompositeSignature[];
+  };
+}
+
+type ServiceType =
+  | "authn"
+  | "authz"
+  | "user-signature"
+  | "pre-authz"
+  | "open-id"
+  | "back-channel-rpc"
+  | "authn-refresh"
+  | "account-proof";
+
+type ServiceMethod =
+  | "HTTP/POST"
+  | "IFRAME/RPC"
+  | "POP/RPC"
+  | "TAB/RPC"
+  | "EXT/RPC"
+  | "DATA";
+
+export interface ChallengeResponse {
+  f_type: "PollingResponse";
+  f_vsn: string;
+  status: "PENDING" | "APPROVED" | "DECLINED";
+  data: {
+    addr: string;
+    paddr: string;
+    code: string;
+    expires: number;
+    hks: string;
+    l6n: string;
+    services: Array<{
+      f_type: "Service";
+      f_vsn: string;
+      type: ServiceType;
+      uid: string;
+      method: ServiceMethod;
+      id?: string;
+      identity?: {
+        f_type: "Identity";
+        f_vsn: string;
+        address: string;
+        keyId?: number;
+        addr?: string;
+      };
+      scoped?: { email?: string };
+      provider?: {
+        f_type: "ServiceProvider";
+        f_vsn: string;
+        address: string;
+        name: string;
+        icon: string;
+        description: string;
+      };
+      authn?: string;
+      address?: string;
+      addr?: string;
+      keyId?: number;
+      endpoint?: string;
+      params?: Record<string, any>;
+      data?: {
+        f_type: string;
+        f_vsn: string;
+        email?: {
+          email: string;
+          email_verified: boolean;
+        };
+        address?: string;
+        nonce?: string;
+        signatures?: CompositeSignature[];
+      };
+    }>;
+  };
+}

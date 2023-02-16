@@ -7,6 +7,7 @@ import {
   EVMSignatureDetails,
   EVMUpdateSignatureDetailsResponse,
   EvmTransaction,
+  FlowAuthentication,
   FlowSignatureDetails,
   FlowTransaction,
   FlowUpdateSignatureDetailsResponse,
@@ -49,6 +50,14 @@ export const getAuthnQueue = (queueId: number) =>
       queueId,
     },
     isAuthorized: true,
+  });
+
+export const getAuthn = (authenticationId: string) =>
+  apiGet<FlowAuthentication | null>({
+    url: "api/flow/authn-details",
+    request: {
+      authenticationId,
+    },
   });
 
 export const estimatePoint = ({

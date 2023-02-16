@@ -1,6 +1,5 @@
-import semver from "semver";
-import { Chains } from "src/types";
-import { EVM_CHAINS } from "src/utils/constants";
+import { Chains, ChallengeResponse } from "src/types";
+import { DEFAULT_APP_ID, EVM_CHAINS } from "src/utils/constants";
 import {
   CLOSE_EVENTS,
   FCL_EVENTS,
@@ -52,28 +51,36 @@ export const onChallengeResponse = ({
   userId,
   signatureData,
   signatures = [],
+  appId,
 }: any) => {
-  let services = [
+  let services: ChallengeResponse["data"]["services"] = [
     // authentication service
     {
       f_type: "Service",
       f_vsn: "1.0.0",
       type: "authn",
+      method: "DATA",
       uid: "blocto#authn", // used to dedupe services Private > Public
       id: userId, // wallet providers internal id representation for the user
       identity: {
+        f_type: "Identity",
+        f_vsn: "1.0.0",
         address: addr, // users flow address
       },
       scoped: {
         email,
       },
       provider: {
-        address: BLOCTO_ADDRESS, // providers flow address
+        f_type: "ServiceProvider",
+        f_vsn: "1.0.0",
+        address: BLOCTO_ADDRESS || "", // providers flow address
         name: "Blocto",
         icon: "https://blocto.portto.io/icons/icon-512x512.png",
         description: "Blocto is your entrance to blockchain world.",
       },
-      authn: `${window.location.origin}/authn`,
+      authn: `${window.location.origin}/${appId || DEFAULT_APP_ID}/${
+        Chains.flow
+      }/authn`,
       // it needs to stay the same every time the user authenticates
     },
     // autherization service
@@ -84,6 +91,8 @@ export const onChallengeResponse = ({
       uid: "blocto#authz",
       method: "HTTP/POST",
       identity: {
+        f_type: "Identity",
+        f_vsn: "1.0.0",
         address: addr,
         keyId: 1,
         addr,
@@ -139,17 +148,7 @@ export const onChallengeResponse = ({
   ];
 
   if (signatures.length) {
-    const {
-      fclVersion,
-      nonce: authNounce,
-      timestamp,
-      appDomainTag,
-    } = signatureData;
-    const useV2ProvableAuthn =
-      fclVersion &&
-      (fclVersion === "0.0.79-alpha.4" ||
-        // @ts-expect-error fcl version
-        semver.gte(semver.coerce(fclVersion), "0.0.80"));
+    const { nonce: authNounce } = signatureData;
     services = [
       ...services,
       // Account Proof Service
@@ -161,13 +160,9 @@ export const onChallengeResponse = ({
         uid: "blocto#account-proof",
         data: {
           f_type: "account-proof",
-          f_vsn: useV2ProvableAuthn ? "2.0.0" : "1.0.0",
-          // @ts-expect-error signatures
+          f_vsn: "2.0.0",
           signatures,
           address: addr, // The user's address
-          timestamp, // UNIX timestamp
-          domainTag: appDomainTag,
-          appDomainTag,
           nonce: authNounce,
         },
       },
@@ -309,7 +304,7 @@ export const onReady = ({
   blockchain,
 }: {
   l6n: string;
-  blockchain: string;
+  blockchain: Chains;
 }) => {
   const isEvmChain = EVM_CHAINS.includes(blockchain);
   const targetEvents = isEvmChain

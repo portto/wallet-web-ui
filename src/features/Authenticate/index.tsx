@@ -7,6 +7,7 @@ import {
   useAuthenticateMachine,
   withAuthenticateContext,
 } from "src/machines/authenticate";
+import { FCL_EVENTS, onReady } from "src/services/Frame";
 import {
   KEY_ACCESS_TOKEN,
   KEY_DEVICE_ID,
@@ -92,6 +93,7 @@ const useDefaultStateFromProps = (props: any) => {
   return useMemo(
     () => ({
       isThroughBackChannel,
+      authenticationId,
       dapp: {
         id,
         name,
@@ -125,12 +127,40 @@ const Authenticate = withAuthenticateContext(
     const [stage, setStage] = useState(machineStates.IDLE);
     const { setLayoutSize } = useLayoutContext();
 
+    const handleMessage = (event: MessageEvent) => {
+      if (
+        state.dapp.url === event.origin &&
+        event.data.type === FCL_EVENTS.READY_RESPONSE
+      ) {
+        const { body = {} } = event.data || {};
+        const { nonce, appIdentifier } = body;
+        send({
+          type: "updateUser",
+          data: {
+            signatureData: {
+              nonce,
+              appIdentifier,
+            },
+          },
+        });
+      }
+    };
+
     // initialization
     useEffect(() => {
+      window.addEventListener("message", handleMessage);
       send({ type: "init", data: state });
+
+      return () => window.removeEventListener("message", handleMessage);
       // intentionally run once
       // eslint-disable-next-line
     }, []);
+
+    // Post the ready event for receiving the data for account proof service
+    useEffect(() => {
+      const l6n = state.dapp.url ? state.dapp.url : "";
+      onReady({ l6n, blockchain: state.dapp.blockchain });
+    }, [state.dapp.blockchain, state.dapp.url]);
 
     // check maintenance status for blockchain
     useEffect(() => {
