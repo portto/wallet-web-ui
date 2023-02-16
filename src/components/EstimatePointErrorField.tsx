@@ -14,6 +14,7 @@ const EstimatePointErrorField = ({
     title={<FormattedMessage intlKey="app.authz.transactionFeeError" />}
     hidableInfo={
       <FieldDetail
+        title={<FormattedMessage intlKey="app.authz.transactionFeeError" />}
         badgeText={<FormattedMessage intlKey="app.authz.errorMessage" />}
         badgeType={BadgeType.Unverified}
         warningText={

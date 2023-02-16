@@ -156,6 +156,7 @@ const Main = () => {
           hidableInfo={
             !!rawObject.convertedTx && (
               <FieldDetail
+                title={<FormattedMessage intlKey="app.authz.operation" />}
                 badgeText={
                   <FormattedMessage intlKey="app.authz.operationNotVerified" />
                 }

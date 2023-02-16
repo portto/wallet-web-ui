@@ -151,6 +151,7 @@ const Main = () => {
 
   const TransactionContent = () => (
     <FieldDetail
+      title={<FormattedMessage intlKey="app.authz.operation" />}
       badgeText={
         <FormattedMessage
           intlKey={

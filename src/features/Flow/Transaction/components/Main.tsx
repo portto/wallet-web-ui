@@ -125,6 +125,7 @@ const Main = () => {
               title={<FormattedMessage intlKey="app.authz.operation" />}
               hidableInfo={
                 <FieldDetail
+                  title={<FormattedMessage intlKey="app.authz.operation" />}
                   badgeText={
                     <FormattedMessage intlKey="app.authz.operationVerified" />
                   }
@@ -180,6 +181,7 @@ const Main = () => {
               title={<FormattedMessage intlKey="app.authz.script" />}
               hidableInfo={
                 <FieldDetail
+                  title={<FormattedMessage intlKey="app.authz.operation" />}
                   badgeText={
                     <FormattedMessage intlKey="app.authz.operationNotVerified" />
                   }
