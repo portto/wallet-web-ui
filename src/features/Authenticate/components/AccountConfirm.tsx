@@ -101,7 +101,7 @@ const AccountConifrm = () => {
 
       const { paddr, code, signatures } = handshakeData;
       send({
-        type: userType === "normal" ? "approve" : "nonCustodialApprove",
+        type: "approve",
         data: {
           accountInfo: {
             paddr,

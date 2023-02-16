@@ -25,7 +25,6 @@ import InputEmail from "./components/InputEmail";
 import InputOTP from "./components/InputOTP";
 import Maintenance from "./components/Maintenance";
 import Queueing from "./components/Queueing";
-import RunInitScripts from "./components/RunInitScripts";
 
 const systemStatus = [
   machineStates.IDLE,
@@ -53,10 +52,6 @@ const stageComponentMapping: Record<
   [machineStates.ACCOUNT_CONFIRM]: {
     component: AccountConfirm,
     layoutSize: "lg",
-  },
-  [machineStates.RUN_INIT_SCRIPTS]: {
-    component: RunInitScripts,
-    layoutSize: "sm",
   },
   [machineStates.MAINTENANCE]: { component: Maintenance, layoutSize: "sm" },
 };
