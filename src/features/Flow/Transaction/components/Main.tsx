@@ -65,7 +65,6 @@ const Main = () => {
     tokenBalances,
   } = useTransactionDetail(transaction);
   const showInsufficientAmountHint = !hasEnoughBalance && !!recognizedTx;
-  console.log("recognizedTx :", recognizedTx);
 
   useEffect(() => {
     if (isMaliciousTx(transaction, dappDomain)) {
