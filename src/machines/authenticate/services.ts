@@ -80,14 +80,13 @@ export const verifyUser =
   };
 
 export const finish = async (context: AuthenticateMachineContext) => {
-  const { isThroughBackChannel, requestId } = context;
+  const { isThroughBackChannel, requestId, authenticationId } = context;
   const {
     id,
     addresses,
     accountInfo,
     accessToken = "",
     email = "",
-    authenticationId = "",
     signatureData,
     signatures,
     nonce,
@@ -111,7 +110,7 @@ export const finish = async (context: AuthenticateMachineContext) => {
     ...accountInfo,
   });
 
-  if (isThroughBackChannel) {
+  if (isThroughBackChannel && authenticationId) {
     await updateAuthentication({
       authenticationId,
       blockchain,
@@ -156,14 +155,14 @@ export const cleanUpLocalStorage =
   };
 
 export const abort = async (context: AuthenticateMachineContext) => {
-  const { isThroughBackChannel, requestId } = context;
+  const { isThroughBackChannel, requestId, authenticationId } = context;
   const { blockchain, url = "" } = context.dapp;
-  const { authenticationId = "", nonce = "" } = context.user;
+  const { nonce = "" } = context.user;
 
   const l6n = url;
   onClose({ l6n, nonce, blockchain });
 
-  if (isThroughBackChannel) {
+  if (isThroughBackChannel && authenticationId) {
     await updateAuthentication({
       authenticationId,
       blockchain,
