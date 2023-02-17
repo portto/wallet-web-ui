@@ -14,7 +14,6 @@ import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useAuthenticateMachine } from "src/machines/authenticate";
-import { logLogin, logRegister } from "src/services/Amplitude";
 import loginAndAcquireToken from "src/utils/loginAndAcquireToken";
 
 const COOLDOWN_TIME = 60;
@@ -28,7 +27,7 @@ const InputOTP = () => {
 
   const {
     user: { action, email, authCode, authCodeId = "" },
-    dapp: { id = "", blockchain, url = "", name: dAppName = "" },
+    dapp: { id = "", blockchain },
   } = context;
 
   useEffect(() => {
@@ -85,14 +84,6 @@ const InputOTP = () => {
 
     authenticate()
       .then(({ jwt, key }) => {
-        const logAction = action === "register" ? logRegister : logLogin;
-        logAction({
-          domain: url ? new URL(url).host : "",
-          chain: blockchain,
-          dAppName,
-          dAppId: id,
-        });
-
         send({
           type: "next",
           data: { accessToken: jwt, deviceKey: key },

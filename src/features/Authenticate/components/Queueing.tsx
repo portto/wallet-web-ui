@@ -5,7 +5,6 @@ import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useAuthenticateMachine } from "src/machines/authenticate";
-import { KEY_EMAIL, getItem } from "src/services/LocalStorage";
 import checkEmailFormat from "src/utils/checkEmailFormat";
 
 const getQueueReady = ({

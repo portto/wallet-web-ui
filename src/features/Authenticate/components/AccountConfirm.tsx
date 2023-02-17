@@ -13,6 +13,7 @@ import Field, { FieldLine } from "src/components/Field";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import { useAuthenticateMachine } from "src/machines/authenticate";
+import { logLogin, logRegister } from "src/services/Amplitude";
 import { checkCollectionEnabled, enableCollection } from "src/services/Flow";
 import { KEY_SESSION_ID, setItem } from "src/services/LocalStorage";
 import { Chains, CompositeSignature } from "src/types";
@@ -41,6 +42,7 @@ const AccountConifrm = () => {
       deviceKey,
       deviceId,
       signatureData,
+      action,
     },
     blockchainIcon,
   } = context;
@@ -92,6 +94,13 @@ const AccountConifrm = () => {
 
   const approve = async () => {
     setHasSubmitted(true);
+    const logAction = action === "register" ? logRegister : logLogin;
+    logAction({
+      domain: url ? new URL(url).host : "",
+      chain: blockchain,
+      dAppName,
+      dAppId,
+    });
 
     try {
       await checkAccountPreEnable();

@@ -2,6 +2,7 @@ import { useCallback, useEffect } from "react";
 import { createAuthnQueue, getAuthn } from "src/apis";
 import Loading from "src/components/Loading";
 import { useAuthenticateMachine } from "src/machines/authenticate";
+import { logRequestAccount } from "src/services/Amplitude";
 import { KEY_EMAIL, getItem } from "src/services/LocalStorage";
 import fetchDappInfo from "src/utils/fetchDappInfo";
 
@@ -9,7 +10,7 @@ const Connecting = () => {
   const { context, send } = useAuthenticateMachine();
   const { authenticationId, isThroughBackChannel } = context;
   const { accessToken, email } = context.user;
-  const { id, url } = context.dapp;
+  const { id, url = "", blockchain } = context.dapp;
 
   useEffect(() => {
     const requests =
@@ -29,6 +30,13 @@ const Connecting = () => {
       if (!accessToken || (email && email !== getItem(KEY_EMAIL))) {
         type = "ready";
       }
+
+      logRequestAccount({
+        domain: (url ? new URL(url) : {}).host || undefined,
+        chain: blockchain,
+        dAppName: metadata?.name,
+        dAppId: id,
+      });
       send({
         type,
         data: {
