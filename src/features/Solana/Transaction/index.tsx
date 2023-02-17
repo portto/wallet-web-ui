@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { getMaintenanceStatus } from "src/apis";
 import { useLayoutContext } from "src/context/layout";
 import {
@@ -35,28 +35,25 @@ const stageComponentMapping: Record<
   [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "sm" },
 };
 
-const useDefaultStateFromProps = (props: any) => {
-  const { blockchain, authorizationId, appId } = useParams<{
+const useDefaultStateFromProps = () => {
+  const {
+    blockchain,
+    authorizationId,
+    appId: id,
+  } = useParams<{
     appId: string;
     blockchain: string;
     authorizationId: string;
   }>();
+  const location = useLocation();
 
-  const id = props?.appId || appId;
-
-  const name = props?.name;
-  const logo = props?.logo;
-
-  const noop = () => undefined;
-  const onApprove = props?.onApprove || noop;
-  const onReject = props?.onReject || noop;
+  const search = new URLSearchParams(location.search);
+  const requestId = search.get("requestId");
 
   return useMemo(
     () => ({
       dapp: {
         id,
-        name,
-        logo,
         blockchain,
         url: document.referrer ? new URL(document.referrer).origin : "",
       },
@@ -67,20 +64,19 @@ const useDefaultStateFromProps = (props: any) => {
         email: getItem(KEY_EMAIL),
         addresses: {},
         type: getItem(KEY_USER_TYPE),
-        onApprove,
-        onReject,
       },
       transaction: {},
+      requestId,
     }),
-    [authorizationId, blockchain, id, logo, name, onApprove, onReject]
+    [authorizationId, blockchain, id, requestId]
   );
 };
 
 const Noop = () => null;
 
 const Transaction = withTransactionContext(
-  memo((props) => {
-    const state = useDefaultStateFromProps(props);
+  memo(() => {
+    const state = useDefaultStateFromProps();
     const { value, send } = useTransactionMachine();
     const [stage, setStage] = useState(machineStates.IDLE);
     const { setLayoutSize } = useLayoutContext();

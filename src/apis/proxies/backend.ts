@@ -161,7 +161,7 @@ export const getAccountAsset = ({
   blockchain: Chains;
   force?: boolean;
 }) =>
-  apiGet<{ value: string }>({
+  apiGet<{ value: string; wallet_address: string }>({
     url: "blocto/account/asset",
     request: {
       blockchain,
@@ -314,6 +314,11 @@ export const signMoonPayUrl = ({ query }: { query: string }) =>
   });
 
 export const getDappInfo = ({ id }: { id: string }) =>
-  apiGet<{ name: string; logo: string; web: { web_domain: string } }>({
+  apiGet<{
+    name: string;
+    logo: string;
+    web: { web_domain: string };
+    blockchains: Chains[];
+  }>({
     url: `blocto/dapps/${id}/info`,
   });

@@ -13,7 +13,11 @@ import {
   setItem,
 } from "src/services/LocalStorage";
 import checkBlockchainEnabled from "src/utils/checkBlockchainEnabled";
-import { EXP_TIME, INTERNAL_WL_DOMAINS } from "src/utils/constants";
+import {
+  EXP_TIME,
+  FALLBACK_ERROR_MESSAGES,
+  INTERNAL_WL_DOMAINS,
+} from "src/utils/constants";
 import getBlockchainIcon from "src/utils/getBlockchainIcon";
 import mapAssetsToAddresses from "src/utils/mapAssetsToAddresses";
 import { AuthenticateMachineContext } from "./definition";
@@ -76,7 +80,7 @@ export const verifyUser =
   };
 
 export const finish = async (context: AuthenticateMachineContext) => {
-  const { isThroughBackChannel } = context;
+  const { isThroughBackChannel, requestId } = context;
   const {
     id,
     addresses,
@@ -87,7 +91,6 @@ export const finish = async (context: AuthenticateMachineContext) => {
     signatureData,
     signatures,
     nonce,
-    onConfirm,
   } = context.user;
   const { blockchain, url = "", id: appId } = context.dapp;
 
@@ -135,8 +138,10 @@ export const finish = async (context: AuthenticateMachineContext) => {
     });
   }
 
-  // try to call callback
-  onConfirm(addresses?.[blockchain]);
+  // Redirect to app deep link
+  if (requestId) {
+    window.location.href = `blocto://?request_id=${requestId}&address=${addresses?.[blockchain]}`;
+  }
 };
 
 export const cleanUpLocalStorage =
@@ -151,9 +156,9 @@ export const cleanUpLocalStorage =
   };
 
 export const abort = async (context: AuthenticateMachineContext) => {
-  const { isThroughBackChannel } = context;
+  const { isThroughBackChannel, requestId } = context;
   const { blockchain, url = "" } = context.dapp;
-  const { authenticationId = "", nonce = "", onReject } = context.user;
+  const { authenticationId = "", nonce = "" } = context.user;
 
   const l6n = url;
   onClose({ l6n, nonce, blockchain });
@@ -165,6 +170,9 @@ export const abort = async (context: AuthenticateMachineContext) => {
       action: "decline",
     });
   }
-  // try to call reject callback
-  onReject();
+
+  // Redirect to app deep link
+  if (requestId) {
+    window.location.href = `blocto://?request_id=${requestId}&error=${FALLBACK_ERROR_MESSAGES.userRejected}`;
+  }
 };

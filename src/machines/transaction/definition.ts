@@ -5,10 +5,7 @@ const defaultContext = {
   dapp: {
     blockchain: Chains.flow,
   },
-  user: {
-    onApprove: () => undefined,
-    onReject: () => undefined,
-  },
+  user: {},
   transaction: {},
 };
 
@@ -45,8 +42,6 @@ export interface TransactionMachineContext {
     assets?: any[];
     balance?: number;
     address?: string;
-    onApprove: (arg: any) => void;
-    onReject: (arg: any) => void;
   };
   transaction: {
     rawObject?: any;
@@ -57,6 +52,7 @@ export interface TransactionMachineContext {
     mayFail?: boolean;
     error?: string;
   };
+  requestId?: string;
 }
 
 const machine = createMachine<TransactionMachineContext>(

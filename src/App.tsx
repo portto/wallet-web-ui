@@ -27,6 +27,8 @@ const Aptos = {
   Signing: React.lazy(() => import("src/features/Aptos/Signing")),
 };
 
+const AppSDKFallback = React.lazy(() => import("src/features/AppSDKFallback"));
+
 const supportedEVMChains = EVM_CHAINS.join("|");
 
 const App = () => {
@@ -79,6 +81,10 @@ const App = () => {
         <Route
           path={`/:appId/:blockchain(aptos)/user-signature/:signatureId?`}
           render={() => <Aptos.Signing />}
+        />
+        <Route
+          path={`/:appId/:blockchain/sdk`}
+          render={() => <AppSDKFallback />}
         />
       </Switch>
     </Suspense>

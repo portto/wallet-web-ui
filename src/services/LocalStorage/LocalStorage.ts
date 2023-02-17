@@ -17,7 +17,7 @@ const isSupported = () => {
 
 const storage = isSupported() ? window.localStorage : MemoryStorage;
 
-export const getItem = (key, defaultValue = null) => {
+export const getItem = (key, defaultValue: unknown = null) => {
   const value = storage.getItem(key);
 
   try {

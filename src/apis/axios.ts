@@ -11,7 +11,6 @@ const instance = axios.create({
   baseURL: WALLET_API_BASE,
   headers: {
     Accept: "application/json",
-    web_version: VERSION,
   },
 });
 axiosRetry(instance, { retries: 1 });
@@ -21,8 +20,9 @@ export const apiGet = <T>({
   request = {},
   isAuthorized = false,
   headers = {},
-}) =>
-  instance
+}) => {
+  const updatedHeaders = { ...headers, web_version: VERSION };
+  return instance
     .get<undefined, { data: T }>(`/${url}?${stringify(request)}`, {
       headers: {
         ...(isAuthorized
@@ -30,19 +30,28 @@ export const apiGet = <T>({
               authorization: getItem(KEY_ACCESS_TOKEN),
             }
           : {}),
-        ...headers,
+        ...updatedHeaders,
       },
     })
     .then((response) => Promise.resolve(response.data))
     .catch((e) => captureApiError(e));
+};
 
 export const apiPost = <T>({
   url = "",
   request = {},
   isAuthorized = false,
   headers = {},
-}) =>
-  instance
+  baseURL = "",
+}) => {
+  const updatedHeaders = baseURL
+    ? headers
+    : {
+        ...headers,
+        web_version: VERSION,
+        nonce: Date.now(),
+      };
+  return instance
     .post<undefined, { data: T }>(`/${url}`, request, {
       headers: {
         "Content-Type": "application/json",
@@ -51,20 +60,26 @@ export const apiPost = <T>({
               authorization: getItem(KEY_ACCESS_TOKEN),
             }
           : {}),
-        nonce: Date.now(),
-        ...headers,
+        ...updatedHeaders,
       },
+      ...(baseURL ? { baseURL } : {}),
     })
     .then((response) => Promise.resolve(response.data))
     .catch((e) => captureApiError(e));
+};
 
 export const apiPut = <T>({
   url = "",
   request = {},
   isAuthorized = false,
   headers = {},
-}) =>
-  instance
+}) => {
+  const updatedHeaders = {
+    ...headers,
+    web_version: VERSION,
+    nonce: Date.now(),
+  };
+  return instance
     .put<undefined, { data: T }>(`/${url}`, request, {
       headers: {
         "Content-Type": "application/json",
@@ -73,11 +88,11 @@ export const apiPut = <T>({
               authorization: getItem(KEY_ACCESS_TOKEN),
             }
           : {}),
-        nonce: Date.now(),
-        ...headers,
+        ...updatedHeaders,
       },
     })
     .then((response) => Promise.resolve(response.data))
     .catch((e) => captureApiError(e));
+};
 
 export default instance;

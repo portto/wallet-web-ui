@@ -117,6 +117,27 @@ export const signAptosMessage = ({
     isAuthorized: true,
   });
 
+export const createSignatureDetails = ({
+  sessionId,
+  blockchain,
+  message,
+  method,
+}: {
+  sessionId: string;
+  blockchain: Chains;
+  message: string;
+  method: string;
+}) =>
+  apiPost<{ signatureId: string; status: "PENDING"; reason: null }>({
+    url: `api/${blockchain}/user-signature`,
+    request: {
+      sessionId,
+      message,
+      method,
+    },
+    isAuthorized: true,
+  });
+
 export const getSignatureDetails = ({
   blockchain,
   signatureId,
@@ -241,8 +262,6 @@ export const checkPreAuthzQueue = ({
     isAuthorized: true,
   });
 
-type NewType = string[];
-
 export const createDAppAuthorization = ({
   sessionId,
   blockchain = "flow",
@@ -255,10 +274,15 @@ export const createDAppAuthorization = ({
   blockchain: string;
   message: string;
   isInvokeWrapped: boolean;
-  publicKeySignaturePairs: string[];
-  appendTx: NewType;
+  publicKeySignaturePairs: Record<string, string>;
+  appendTx: Record<string, string>;
 }) =>
-  apiPost({
+  apiPost<{
+    authorizationId: string;
+    status: "PENDING";
+    reason: null;
+    transactionHash: null;
+  }>({
     url: `api/${blockchain}/authz-dapp`,
     request: {
       sessionId,
@@ -268,6 +292,22 @@ export const createDAppAuthorization = ({
       appendTx,
     },
     isAuthorized: true,
+  });
+
+export const createAuthorization = ({
+  txs,
+  blockchain = "ethereum",
+  sessionId,
+  isInDApp,
+}: any) =>
+  apiPost<{
+    authorizationId: string;
+    status: "PENDING";
+    reason: null;
+    transactionHash: null;
+  }>({
+    url: `api/${blockchain}/authz?code=${sessionId}&isInDApp=${isInDApp}`,
+    request: txs,
   });
 
 export const updateAuthorization = ({

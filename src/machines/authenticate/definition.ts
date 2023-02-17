@@ -6,10 +6,7 @@ const defaultContext = {
   dapp: {
     blockchain: Chains.flow,
   },
-  user: {
-    onConfirm: () => undefined,
-    onReject: () => undefined,
-  },
+  user: {},
 };
 
 export const machineStates = {
@@ -75,9 +72,8 @@ export interface AuthenticateMachineContext {
       nonce?: string;
     };
     signatures?: string[];
-    onConfirm: (arg: unknown) => void;
-    onReject: () => void;
   };
+  requestId?: string;
 }
 
 const machine = createMachine<AuthenticateMachineContext>(

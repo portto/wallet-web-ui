@@ -5,10 +5,7 @@ const defaultContext = {
   dapp: {
     blockchain: Chains.flow,
   },
-  user: {
-    onApprove: () => undefined,
-    onReject: () => undefined,
-  },
+  user: {},
   message: {},
 };
 
@@ -37,10 +34,9 @@ export interface SigningMachineContext {
   user: {
     type?: string;
     sessionId?: string;
-    onApprove: (arg: any) => void;
-    onReject: (arg: any) => void;
   };
   signatureId?: string;
+  requestId?: string;
   message: {
     // raw message input
     raw?: string;
