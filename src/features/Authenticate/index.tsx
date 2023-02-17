@@ -17,6 +17,7 @@ import {
   KEY_USER_TYPE,
   getItem,
 } from "src/services/LocalStorage";
+import { Chains } from "src/types";
 
 import AccountConfirm from "./components/AccountConfirm";
 import Connecting from "./components/Connecting";
@@ -145,7 +146,7 @@ const Authenticate = withAuthenticateContext(
     // Post the ready event for receiving the data for account proof service
     useEffect(() => {
       const l6n = state.dapp.url ? state.dapp.url : "";
-      onReady({ l6n, blockchain: state.dapp.blockchain });
+      onReady({ l6n, blockchain: state.dapp.blockchain as Chains });
     }, [state.dapp.blockchain, state.dapp.url]);
 
     // check maintenance status for blockchain
