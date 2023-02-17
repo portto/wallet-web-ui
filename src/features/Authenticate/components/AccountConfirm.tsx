@@ -13,7 +13,6 @@ import Field, { FieldLine } from "src/components/Field";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import { useAuthenticateMachine } from "src/machines/authenticate";
-import { logAuthenticated } from "src/services/Amplitude";
 import { checkCollectionEnabled, enableCollection } from "src/services/Flow";
 import { KEY_SESSION_ID, setItem } from "src/services/LocalStorage";
 import { Chains, CompositeSignature } from "src/types";
@@ -67,8 +66,6 @@ const AccountConifrm = () => {
     }).then(({ paddr, code, signatures = [] }) => {
       setHandshakeData({ paddr, code, signatures });
       setItem(KEY_SESSION_ID, code);
-      // log authenticated event
-      logAuthenticated({ chain: blockchain, domain, dAppName, dAppId });
     });
     // intentionally run once
     // eslint-disable-next-line

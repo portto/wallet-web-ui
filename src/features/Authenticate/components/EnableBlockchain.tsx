@@ -60,9 +60,7 @@ const EnableBlockchain = () => {
       const { tx_hash } = await createSharedAccount();
       logSendTx({
         domain,
-        url,
         chain: blockchain,
-        type: "authz",
         dAppName: name,
         dAppId: id,
       });

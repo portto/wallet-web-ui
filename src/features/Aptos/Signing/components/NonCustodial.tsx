@@ -9,7 +9,7 @@ import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useSigningMachine } from "src/machines/signing";
-import { logSignTx } from "src/services/Amplitude";
+import { logSignature } from "src/services/Amplitude";
 import { AptosNonCustodialSigningResponse } from "src/types";
 import { ERROR_MESSAGES } from "src/utils/constants";
 
@@ -103,9 +103,8 @@ const NonCustodial = () => {
     }
 
     if (status === "approve") {
-      logSignTx({
+      logSignature({
         domain,
-        url,
         chain: blockchain,
         dAppName: name,
         dAppId: appId,

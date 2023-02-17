@@ -115,9 +115,7 @@ const Main = () => {
       send({ type: "approve", data: { txHash: transactionHash } });
       logSendTx({
         domain: dappDomain,
-        url,
         chain: blockchain,
-        type: "authz",
         dAppName: name,
         dAppId: id,
       });
