@@ -5,7 +5,13 @@ import { FlowTransaction, RecognizedFlowTx } from "src/types";
 import hashMsg from "src/utils/hashMsg";
 
 // @todo: Get recognized transactions from @blocto/flow-transactions for sandboxnet
-const transactions = (): { [key: string]: any } => {
+const transactions = (): {
+  [id: string]: {
+    arguments?: string[];
+    messages: Record<string, string>;
+    balances?: Record<string, string>;
+  };
+} => {
   if (IS_SANDBOXNET || IS_TESTNET) return transactionsTestnet;
   if (IS_MAINNET) return transactionsMainnet;
   return {};
@@ -46,7 +52,8 @@ export const recognizeTx = (
   const args: { [key: string]: string } = {};
 
   transaction.voucher.arguments.forEach((item, index) => {
-    args[recognizedTx.arguments[index]] = item.value;
+    if (recognizedTx.arguments?.[index] != null)
+      args[recognizedTx.arguments[index]] = item.value;
   });
 
   return {

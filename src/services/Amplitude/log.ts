@@ -15,6 +15,7 @@ const logCore = (
   );
 
   if (IS_LOCAL) {
+    // eslint-disable-next-line no-console
     console.debug(`[Amplitude] Event: ${name}, properties:`, properties);
   } else {
     getInstance().logEvent(

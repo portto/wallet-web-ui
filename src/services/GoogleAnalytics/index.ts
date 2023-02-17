@@ -12,6 +12,7 @@ export const loadGA = () => {
 
 export const sendPageView = (path) => {
   if (IS_LOCAL) {
+    // eslint-disable-next-line no-console
     console.debug(`[GA-PV]: ${path}`);
   }
   if (window.ga) {

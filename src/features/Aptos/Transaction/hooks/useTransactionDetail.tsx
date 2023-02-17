@@ -10,10 +10,11 @@ export default function useTransactionDetail(transaction: AptosTransaction) {
 
   const { arguments: args = [], function: functionName = "" } =
     transaction || {};
-
-  const { usd_price: usdPrice } = user.assets?.find(
-    (asset: AccountAsset) => asset.type === "native"
+  const aptosTokenAsset = user.assets?.find(
+    (asset: AccountAsset) => asset.type === "native" && asset.name === "Aptos"
   );
+
+  const usdPrice = parseFloat(aptosTokenAsset?.usd_price ?? "0");
 
   return useMemo(() => {
     // @todo: support other types of txs that has coin value
