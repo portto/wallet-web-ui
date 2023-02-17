@@ -59,10 +59,7 @@ const useDefaultStateFromProps = () => {
   const urlParam = formatUrlParam();
 
   const is_invoke_wrapped = urlParam.is_invoke_wrapped;
-  const isInvokeWrapped: boolean =
-    is_invoke_wrapped === "true" || is_invoke_wrapped === "false"
-      ? JSON.parse(is_invoke_wrapped)
-      : false;
+  const isInvokeWrapped: boolean = is_invoke_wrapped === "true";
 
   return useMemo(
     () => ({
