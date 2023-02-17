@@ -69,14 +69,12 @@ const Connecting = () => {
     });
 
     // gather current dapp info
-    if (!(name && logo)) {
-      fetchDappInfo({ id, url }).then((data) =>
-        send({ type: "updateDapp", data })
-      );
-    }
-    // Shouldn't include {name}, {logo} and {url} since {fetchDappInfo} is meant to update them
+    fetchDappInfo({ id, url }).then((data) =>
+      send({ type: "updateDapp", data })
+    );
+    // Shouldn't include {url} since {fetchDappInfo} is meant to update them
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blockchain, id, send, signatureId]);
+  }, [blockchain, id, send, sessionId, signatureId]);
 
   const handleClose = useCallback(() => {
     if (signatureId) {

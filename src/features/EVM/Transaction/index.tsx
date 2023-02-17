@@ -68,7 +68,7 @@ const useDefaultStateFromProps = () => {
       transaction: {},
       requestId,
     }),
-    [authorizationId, blockchain, id, logo, name, onApprove, onReject]
+    [authorizationId, blockchain, id, requestId]
   );
 };
 

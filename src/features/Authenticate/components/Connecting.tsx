@@ -9,7 +9,7 @@ const Connecting = () => {
   const { context, send } = useAuthenticateMachine();
   const { authenticationId, isThroughBackChannel } = context;
   const { accessToken, email } = context.user;
-  const { id, url = "" } = context.dapp;
+  const { id, url } = context.dapp;
 
   useEffect(() => {
     const requests =

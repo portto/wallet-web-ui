@@ -55,12 +55,10 @@ const Connecting = () => {
 
   useEffect(() => {
     // gather current dapp info
-    const { name, logo, id, url } = context.dapp || {};
-    if (!(name && logo)) {
-      fetchDappInfo({ id, url }).then((data) =>
-        send({ type: "updateDapp", data })
-      );
-    }
+    const { id, url } = context.dapp || {};
+    fetchDappInfo({ id, url }).then((data) =>
+      send({ type: "updateDapp", data })
+    );
     // get transaction info
     fetchTransaction();
     // intentionally run once
