@@ -36,7 +36,7 @@ const Connecting = () => {
         (asset: AccountAsset) => asset.blockchain === blockchain
       );
 
-      const [{ value: balance = 0 }] = assets.filter(
+      const [{ value: balance = 0, wallet_address: address }] = assets.filter(
         (asset: AccountAsset) => asset.type === "native"
       );
 
@@ -48,6 +48,7 @@ const Connecting = () => {
         assets,
         sessionId,
         balance,
+        address,
       };
 
       send({

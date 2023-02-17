@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useTransactionMachine } from "src/machines/transaction";
 import { AccountAsset, AptosTransaction } from "src/types";
 
+const TOKEN_NAME = "APT";
 export default function useTransactionDetail(transaction: AptosTransaction) {
   const {
     context: { user },
@@ -23,9 +24,11 @@ export default function useTransactionDetail(transaction: AptosTransaction) {
       hasValue,
       hasEnoughBalance: (user.balance || 0) > cost,
       ...(hasValue && {
+        tokenBalance: user.balance,
+        tokenName: TOKEN_NAME,
         tokenAmount: `${(cost * 1e-8)
           .toFixed(8)
-          .replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, "$1")} APT`,
+          .replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, "$1")} ${TOKEN_NAME}`,
         usdValue: (usdPrice * cost * 1e-8).toFixed(2),
       }),
     };

@@ -16,14 +16,16 @@ import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { EvmTransaction } from "src/types";
 import { ERROR_MESSAGES } from "src/utils/constants";
+import openMoonPayPage from "src/utils/openMoonPayPage";
+import { ChainCoinSymbols } from "../constants";
 import useTransactionDetail from "../hooks/useTransactionDetail";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
   // @todo: add operation detection logic
-  const [recognizedTx] = useState(false);
+  const [recognizedTx, setIsRecognizedTx] = useState(false);
   // @todo: add operation verified logic
-  const [verifiedTx] = useState(false);
+  const [verifiedTx, setVerifiedTx] = useState(false);
 
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
@@ -38,16 +40,29 @@ const Main = () => {
   const realTransactionFee =
     (transaction.fee || 0) - (transaction.discount || 0);
 
-  const txDetailData = useTransactionDetail(transaction, user.balance);
+  const txDetailData = useTransactionDetail(transaction);
   const {
     isNativeTransferring,
+    isSupportedTokenTransferring,
     usdValue = "0",
     tokenName,
     tokenAmount,
+    hasEnoughBalance,
+    tokenBalance,
   } = txDetailData || {};
+
+  useEffect(() => {
+    // For now we only set native transferring as recognized tx
+    if (isNativeTransferring) {
+      setIsRecognizedTx(true);
+      setVerifiedTx(true);
+    }
+  }, [isNativeTransferring]);
 
   const { sessionId = "" } = user;
   const { blockchain } = dapp;
+  const showInsufficientAmountHint =
+    !hasEnoughBalance && isSupportedTokenTransferring;
 
   useEffect(() => {
     estimatePoint({ rawObject, sessionId, blockchain }).then(
@@ -64,6 +79,21 @@ const Main = () => {
       }
     );
   }, [sessionId, rawObject, blockchain, send]);
+
+  const handlePurchase = useCallback(() => {
+    const { address = "", email = "", id = "" } = context.user;
+    if (!email || !id || !address) return;
+
+    const getMoonpayCoinSymbol = () =>
+      (ChainCoinSymbols[blockchain] && ChainCoinSymbols[blockchain].moonpay) ||
+      "eth";
+    openMoonPayPage({
+      currency: getMoonpayCoinSymbol(),
+      address: address.toLowerCase(),
+      email,
+      userId: id,
+    });
+  }, [blockchain, context.user]);
 
   const approve = useCallback(async () => {
     const { sessionId = "", authorizationId = "" } = user;
@@ -163,7 +193,19 @@ const Main = () => {
     </Field>
   );
 
+  const InsufficientBalanceField = () => (
+    <Field title={<FormattedMessage intlKey="app.authz.balance" />}>
+      <Box color="font.alert">
+        {`${tokenBalance} ${tokenName} `}
+        (<FormattedMessage intlKey="app.authz.insufficientBalance" />)
+      </Box>
+    </Field>
+  );
+
   const getTransactionFeeField = () => {
+    if (showInsufficientAmountHint) {
+      return <InsufficientBalanceField />;
+    }
     return mayFail ? (
       <EstimatePointErrorField content={failReason} />
     ) : (
@@ -191,25 +233,29 @@ const Main = () => {
       <Box px="space.l">
         {recognizedTx ? (
           <>
-            {!isNativeTransferring && (
-              <>
-                <Field
-                  title={<FormattedMessage intlKey="app.authz.operation" />}
-                  hidableInfo={<TransactionContent />}
-                  icon={
-                    verifiedTx ? (
-                      <Check width="16px" height="16px" />
-                    ) : (
-                      <CheckAlert width="16px" height="16px" />
-                    )
-                  }
-                >
-                  {/* // @todo: add operation detection logic. */}
-                  Operation Name
-                </Field>
-                <FieldLine />
-              </>
-            )}
+            <>
+              <Field
+                title={<FormattedMessage intlKey="app.authz.operation" />}
+                hidableInfo={transactionData && <TransactionContent />}
+                icon={
+                  verifiedTx ? (
+                    <Check width="16px" height="16px" />
+                  ) : (
+                    <CheckAlert width="16px" height="16px" />
+                  )
+                }
+              >
+                {/* // @todo: add operation detection logic. */}
+                <FormattedMessage
+                  intlKey="app.authz.transferNativeToken"
+                  values={{
+                    amount: tokenAmount,
+                    token: tokenName,
+                  }}
+                />
+              </Field>
+              <FieldLine />
+            </>
             {getTransactionFeeField()}
             <FieldLine />
           </>
@@ -233,9 +279,15 @@ const Main = () => {
         )}
       </Box>
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
-        <Button onClick={approve}>
-          <FormattedMessage intlKey="app.authz.approve" />
-        </Button>
+        {showInsufficientAmountHint ? (
+          <Button onClick={handlePurchase}>
+            <FormattedMessage intlKey="app.authz.purchaseonmoonpay" />
+          </Button>
+        ) : (
+          <Button onClick={approve} disabled={mayFail}>
+            <FormattedMessage intlKey="app.authz.approve" />
+          </Button>
+        )}
       </Flex>
     </Box>
   );

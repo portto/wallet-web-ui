@@ -305,7 +305,7 @@ export const getSigningRequest = ({
   });
 
 export const signMoonPayUrl = ({ query }: { query: string }) =>
-  apiPost({
+  apiPost<{ signature: string }>({
     url: "blocto/moonpay/paymentRequest",
     request: {
       query,

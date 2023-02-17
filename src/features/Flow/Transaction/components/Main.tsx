@@ -17,7 +17,30 @@ import { getFlowScriptWithTemplate } from "src/services/Flow";
 import { ERROR_MESSAGES } from "src/utils/constants";
 import isMaliciousTx from "src/utils/isMaliciousTx";
 import { getTransactionLocale } from "src/utils/locales";
+import openMoonPayPage from "src/utils/openMoonPayPage";
+import { MoonpayCoinSymbols } from "../constants";
 import useTransactionDetail from "../hooks/useTransactionDetail";
+
+const TransactionFeeField = () => (
+  <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
+    <HStack>
+      <Flex
+        bg="background.secondary"
+        borderRadius="50%"
+        width="20px"
+        height="20px"
+        justifyContent="center"
+        alignItems="center"
+        p="space.4xs"
+      >
+        <Logo />
+      </Flex>
+      <Box>
+        <FormattedMessage intlKey="app.authz.free" />
+      </Box>
+    </HStack>
+  </Field>
+);
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
@@ -34,14 +57,42 @@ const Main = () => {
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const scriptInfo = getFlowScriptWithTemplate(transaction);
 
-  const { usdValue, tokenAmount, recognizedTx } =
-    useTransactionDetail(transaction);
+  const {
+    usdValue,
+    tokenAmount,
+    recognizedTx,
+    hasEnoughBalance,
+    tokenBalances,
+  } = useTransactionDetail(transaction);
+  const showInsufficientAmountHint = !hasEnoughBalance && !!recognizedTx;
 
   useEffect(() => {
     if (isMaliciousTx(transaction, dappDomain)) {
       setIsDangerousTx(true);
     }
   }, [dappDomain, transaction]);
+
+  const handlePurchase = useCallback(() => {
+    const { address = "", email = "", id: userId = "" } = context.user;
+
+    if (!recognizedTx || !recognizedTx.balances) {
+      return;
+    }
+
+    const firstBalance = Object.keys(recognizedTx.balances)[0];
+    const currency =
+      recognizedTx.balances[firstBalance as keyof typeof recognizedTx.balances];
+
+    openMoonPayPage({
+      currency:
+        MoonpayCoinSymbols[
+          currency.toLowerCase() as keyof typeof MoonpayCoinSymbols
+        ] || currency,
+      address,
+      email,
+      userId,
+    });
+  }, [context.user, recognizedTx]);
 
   const approve = useCallback(async () => {
     const { sessionId = "", authorizationId = "" } = user;
@@ -74,37 +125,31 @@ const Main = () => {
   }, [user, dapp, transaction, dappDomain, send]);
 
   const handleClose = useCallback(async () => {
-    const { sessionId, authorizationId = "" } = context.user;
-    const { blockchain } = context.dapp;
     send({
       type: "reject",
       data: { error: ERROR_MESSAGES.AUTHZ_DECLINE_ERROR },
     });
   }, [send]);
 
-  const getTransactionFeeField = () => (
-    <HStack>
-      <Flex
-        bg="background.secondary"
-        borderRadius="50%"
-        width="20px"
-        height="20px"
-        justifyContent="center"
-        alignItems="center"
-        p="space.4xs"
-      >
-        <Logo />
-      </Flex>
-      <Box>
-        <FormattedMessage intlKey="app.authz.free" />
-      </Box>
-    </HStack>
-  );
-
   if (isDangerousTx) {
     send({ type: "dangerousTx" });
   }
 
+  const InsufficientBalanceField = () => (
+    <Field title={<FormattedMessage intlKey="app.authz.balance" />}>
+      <Box color="font.alert">
+        {`${tokenBalances} `}
+        (<FormattedMessage intlKey="app.authz.insufficientBalance" />)
+      </Box>
+    </Field>
+  );
+
+  const getTransactionFeeField = () => {
+    if (showInsufficientAmountHint) {
+      return <InsufficientBalanceField />;
+    }
+    return <TransactionFeeField />;
+  };
   return (
     <Box>
       <Header
@@ -162,20 +207,12 @@ const Main = () => {
               />
             </Field>
             <FieldLine />
-            <Field
-              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-            >
-              {getTransactionFeeField()}
-            </Field>
+            {getTransactionFeeField()}
             <FieldLine />
           </>
         ) : (
           <>
-            <Field
-              title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-            >
-              {getTransactionFeeField()}
-            </Field>
+            {getTransactionFeeField()}
             <Box height="10px" bg="background.tertiary" mx="-20px" />
             <Field
               title={<FormattedMessage intlKey="app.authz.script" />}
@@ -209,9 +246,15 @@ const Main = () => {
         )}
       </Box>
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
-        <Button onClick={approve}>
-          <FormattedMessage intlKey="app.authz.approve" />
-        </Button>
+        {showInsufficientAmountHint ? (
+          <Button onClick={handlePurchase}>
+            <FormattedMessage intlKey="app.authz.purchaseonmoonpay" />
+          </Button>
+        ) : (
+          <Button onClick={approve}>
+            <FormattedMessage intlKey="app.authz.approve" />
+          </Button>
+        )}
       </Flex>
     </Box>
   );
