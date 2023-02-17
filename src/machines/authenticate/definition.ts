@@ -53,7 +53,6 @@ export interface AuthenticateMachineContext {
     type?: string;
     authCodeId?: string;
     authCode?: string;
-    authenticationId?: string;
     accessToken?: string;
     deviceKey?: string;
     deviceId?: string;
