@@ -32,51 +32,39 @@ const stageComponentMapping: Record<
   [machineStates.NON_CUSTODIAL]: { component: Main, layoutSize: "lg" },
 };
 
-const noop = () => undefined;
-
-const useDefaultStateFromProps = (props: any) => {
-  const { blockchain, appId, signatureId } = useParams<{
+const useDefaultStateFromProps = () => {
+  const {
+    blockchain,
+    appId: id,
+    signatureId,
+  } = useParams<{
     appId: string;
     blockchain: string;
     signatureId?: string;
   }>();
 
-  const {
-    appId: id = appId,
-    message,
-    name,
-    logo,
-    onApprove = noop,
-    onReject = noop,
-  } = props;
-
   return useMemo(
     () => ({
       dapp: {
         id,
-        name,
-        logo,
         blockchain,
         url: document.referrer ? new URL(document.referrer).origin : "",
       },
       user: {
         sessionId: getItem(KEY_SESSION_ID),
         type: getItem(KEY_USER_TYPE),
-        onApprove,
-        onReject,
       },
-      message,
       signatureId,
     }),
-    [blockchain, id, logo, message, name, onApprove, onReject, signatureId]
+    [blockchain, id, signatureId]
   );
 };
 
 const FallbackComponent = () => null;
 
 const Signing = withSigningContext(
-  memo((props) => {
-    const state = useDefaultStateFromProps(props);
+  memo(() => {
+    const state = useDefaultStateFromProps();
     const { value, send } = useSigningMachine();
     const [stage, setStage] = useState(machineStates.IDLE);
     const { setLayoutSize } = useLayoutContext();

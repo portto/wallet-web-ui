@@ -3,24 +3,27 @@ import {
   onTransactionDecline,
   onTransactionResponse,
 } from "src/services/Frame";
-import { ERROR_MESSAGES } from "src/utils/constants";
+import { ERROR_MESSAGES, FALLBACK_ERROR_MESSAGES } from "src/utils/constants";
 import { TransactionMachineContext } from "./definition";
 
 export const finish = async (context: TransactionMachineContext) => {
   const { url = "", blockchain } = context.dapp;
   const { txHash = "" } = context.transaction;
-  const { onApprove } = context.user;
+
   onTransactionResponse({
     blockchain,
     txHash,
     l6n: url,
   });
 
-  onApprove?.(txHash);
+  // Redirect to app deep link
+  if (context.requestId) {
+    window.location.href = `blocto://?request_id=${context.requestId}&tx_hash=${txHash}`;
+  }
 };
 
 export const abort = async (context: TransactionMachineContext) => {
-  const { sessionId, authorizationId, onReject } = context.user;
+  const { sessionId, authorizationId } = context.user;
   const { blockchain, url = "" } = context.dapp;
   const { error = "" } = context.transaction;
 
@@ -30,14 +33,21 @@ export const abort = async (context: TransactionMachineContext) => {
     errorMessage: error,
   });
 
-  onReject?.(ERROR_MESSAGES.AUTHZ_DECLINE_ERROR);
-
   if (authorizationId && sessionId) {
-    await updateAuthorization({
+    updateAuthorization({
       authorizationId,
       action: "decline",
       sessionId,
       blockchain,
     });
+  }
+
+  // Redirect to app deep link
+  if (context.requestId) {
+    window.location.href = `blocto://?request_id=${context.requestId}&error=${
+      error === ERROR_MESSAGES.AUTHZ_DECLINE_ERROR
+        ? FALLBACK_ERROR_MESSAGES.userRejected
+        : error
+    }`;
   }
 };

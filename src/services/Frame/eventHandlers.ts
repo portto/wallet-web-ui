@@ -329,7 +329,7 @@ export const onClose = ({
 }: {
   nonce: string;
   l6n: string;
-  blockchain: string;
+  blockchain: Chains;
 }) => {
   const isEvmChain = EVM_CHAINS.includes(blockchain);
 

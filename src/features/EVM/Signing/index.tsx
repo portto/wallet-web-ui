@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { getMaintenanceStatus } from "src/apis";
 import { useLayoutContext } from "src/context/layout";
 import {
@@ -32,50 +32,44 @@ const stageComponentMapping: Record<
   [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "sm" },
 };
 
-const useDefaultStateFromProps = (props: any) => {
-  const { blockchain, appId, signatureId } = useParams<{
+const useDefaultStateFromProps = () => {
+  const {
+    blockchain,
+    appId: id,
+    signatureId,
+  } = useParams<{
     appId: string;
     blockchain: string;
     signatureId: string;
   }>();
+  const location = useLocation();
 
-  const id = props?.appId || appId;
-  const message = props?.message;
-
-  const name = props?.name;
-  const logo = props?.logo;
-
-  const noop = () => undefined;
-  const onApprove = props?.onApprove || noop;
-  const onReject = props?.onReject || noop;
+  const search = new URLSearchParams(location.search);
+  const requestId = search.get("requestId");
 
   return useMemo(
     () => ({
       dapp: {
         id,
-        name,
-        logo,
         blockchain,
         url: document.referrer ? new URL(document.referrer).origin : "",
       },
       user: {
         sessionId: getItem(KEY_SESSION_ID),
         type: getItem(KEY_USER_TYPE),
-        onApprove,
-        onReject,
       },
+      requestId,
       signatureId,
-      message,
     }),
-    [blockchain, id, logo, message, name, onApprove, onReject, signatureId]
+    [blockchain, id, requestId, signatureId]
   );
 };
 
 const Noop = () => null;
 
 const Signing = withSigningContext(
-  memo((props) => {
-    const state = useDefaultStateFromProps(props);
+  memo(() => {
+    const state = useDefaultStateFromProps();
     const { value, send } = useSigningMachine();
     const [stage, setStage] = useState(machineStates.IDLE);
     const { setLayoutSize } = useLayoutContext();

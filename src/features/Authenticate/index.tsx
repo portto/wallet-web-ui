@@ -57,9 +57,9 @@ const stageComponentMapping: Record<
   [machineStates.MAINTENANCE]: { component: Maintenance, layoutSize: "sm" },
 };
 
-const useDefaultStateFromProps = (props: any) => {
+const useDefaultStateFromProps = () => {
   const {
-    appId,
+    appId: id,
     userEmail,
     blockchain: paramBlockchain,
   } = useParams<{
@@ -67,28 +67,17 @@ const useDefaultStateFromProps = (props: any) => {
     blockchain?: string;
     userEmail?: string;
   }>();
-  const location = useLocation<{
-    l6n: string;
-    channel?: string;
-    authenticationId?: string;
-  }>();
+  const location = useLocation();
 
   const search = new URLSearchParams(location.search);
   const url = search.get("l6n");
   const nonce = search.get("nonce");
   const channel = search.get("channel");
   const authenticationId = search.get("authenticationId");
-  const id = props?.appId || appId;
+  const requestId = search.get("requestId");
   const isThroughBackChannel = channel === "back" && Boolean(authenticationId);
-  const blockchain = paramBlockchain || props?.blockchain || "flow";
+  const blockchain = paramBlockchain || "flow";
   const email = userEmail || getItem(KEY_EMAIL);
-
-  const name = props?.name;
-  const logo = props?.logo;
-
-  const noop = () => undefined;
-  const onConfirm = props?.onConfirm || noop;
-  const onReject = props?.onReject || noop;
 
   return useMemo(
     () => ({
@@ -96,8 +85,6 @@ const useDefaultStateFromProps = (props: any) => {
       authenticationId,
       dapp: {
         id,
-        name,
-        logo,
         blockchain,
         url,
       },
@@ -110,10 +97,8 @@ const useDefaultStateFromProps = (props: any) => {
         addresses: {},
         type: getItem(KEY_USER_TYPE),
         nonce,
-        onConfirm,
-        onReject,
-        authenticationId,
       },
+      requestId,
     }),
     [location]
   );
@@ -122,8 +107,8 @@ const useDefaultStateFromProps = (props: any) => {
 const Noop = () => null;
 
 const Authenticate = withAuthenticateContext(
-  memo((props) => {
-    const state = useDefaultStateFromProps(props);
+  memo(() => {
+    const state = useDefaultStateFromProps();
     const { value, send } = useAuthenticateMachine();
     const [stage, setStage] = useState(machineStates.IDLE);
     const { setLayoutSize } = useLayoutContext();

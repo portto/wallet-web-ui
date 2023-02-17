@@ -32,29 +32,21 @@ const stageComponentMapping: Record<
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
 };
 
-const useDefaultStateFromProps = (props: any) => {
-  const { blockchain, authorizationId, appId } = useParams<{
+const useDefaultStateFromProps = () => {
+  const {
+    blockchain,
+    authorizationId,
+    appId: id,
+  } = useParams<{
     appId: string;
     blockchain: string;
     authorizationId: string;
   }>();
 
-  const noop = () => undefined;
-
-  const {
-    appId: id = appId,
-    name,
-    logo,
-    onApprove = noop,
-    onReject = noop,
-  } = props;
-
   return useMemo(
     () => ({
       dapp: {
         id,
-        name,
-        logo,
         blockchain,
         url: document.referrer ? new URL(document.referrer).origin : "",
       },
@@ -65,20 +57,18 @@ const useDefaultStateFromProps = (props: any) => {
         email: getItem(KEY_EMAIL),
         addresses: {},
         type: getItem(KEY_USER_TYPE),
-        onApprove,
-        onReject,
       },
       transaction: {},
     }),
-    [authorizationId, id, name, logo, blockchain, onApprove, onReject]
+    [authorizationId, blockchain, id]
   );
 };
 
 const Noop = () => null;
 
 const Transaction = withTransactionContext(
-  memo((props) => {
-    const state = useDefaultStateFromProps(props);
+  memo(() => {
+    const state = useDefaultStateFromProps();
     const { value, send } = useTransactionMachine();
     const [stage, setStage] = useState(machineStates.IDLE);
     const { setLayoutSize } = useLayoutContext();
