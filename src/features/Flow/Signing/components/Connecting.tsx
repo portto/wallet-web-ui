@@ -13,7 +13,7 @@ import fetchDappInfo from "src/utils/fetchDappInfo";
 const Connecting = () => {
   const { context, send } = useSigningMachine();
   const {
-    dapp: { blockchain, url, name, logo, id },
+    dapp: { blockchain, url, id },
     signatureId,
     user: { sessionId = "" },
   } = context;

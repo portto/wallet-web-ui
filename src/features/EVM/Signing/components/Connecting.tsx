@@ -57,7 +57,7 @@ const Connecting = () => {
         type: type === "normal" ? "ready" : "nonCustodial",
         data: {
           message: {
-            raw: message,
+            raw: dataType ? message : Buffer.from(message, "hex").toString(),
             toBeSigned,
             meta: { method, dataType },
           },
