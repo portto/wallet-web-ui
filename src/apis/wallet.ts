@@ -230,7 +230,10 @@ export const checkPreAuthzQueue = ({
   preauthId: string;
   blockchain: string;
 }) =>
-  apiGet({
+  apiGet<{
+    queueNumber: number;
+    readyNumber: number;
+  }>({
     url: `api/${blockchain}/pre-authz-queue`,
     request: {
       preauthId,

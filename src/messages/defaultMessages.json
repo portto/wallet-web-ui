@@ -29,6 +29,8 @@
   "feature.authn.otp.resend": "Resend",
   "feature.authn.queue.title": "There is too much activity on Blocto",
   "feature.authn.queue.description": "Please wait until it's your turn to proceed with authentication...",
+  "feature.preAuthz.queue.title": "There is too much activity on Blocto",
+  "feature.preAuthz.queue.description": "Please wait until it’s your turn to send your transaction. There are other {count} requests before you.",
   "app.authz.confirmTransactionFrom": "Confirm transaction from",
   "app.authz.operationVerified": "This transaction is verified.",
   "app.authz.operation": "Operation",
@@ -44,8 +46,8 @@
   "app.authz.errorMessage": "Error Message",
   "app.authz.goToHelpCenter": "If you need help, please contact with the <a>Help center</a>.",
   "feature.sign.title": "You are signing for",
-  "feature.transaction.nonCustodial.title": "Please verify in Blocto app",
-  "feature.transaction.nonCustodial.description": "Approve the transaction from Blocto app...",
+  "feature.authz.nonCustodial.title": "Please verify in Blocto app",
+  "feature.authz.nonCustodial.description": "Approve the transaction from Blocto app...",
   "app.authz.warning": "WARNING",
   "app.authz.maliciousHint": "We detected this transaction may contain malicious operation and suggest to terminate this transaction."
 }
