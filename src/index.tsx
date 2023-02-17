@@ -7,6 +7,7 @@
 
 // Import all the third party stuff
 
+import { Buffer } from "buffer";
 import { ChakraProvider } from "@chakra-ui/react";
 import { createRoot } from "react-dom/client";
 import { IntlProvider } from "react-intl";
@@ -30,6 +31,9 @@ import {
 import reportWebVitals from "./reportWebVitals";
 import theme from "./theme";
 import { getLocale } from "./utils/locales";
+
+// This is for @metamask/eth-sig-util, which accesses Buffer to generate data
+globalThis.Buffer = Buffer;
 
 loadGA();
 initAmplitude();
