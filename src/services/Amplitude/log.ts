@@ -2,9 +2,20 @@ import { getInstance } from "./system";
 
 const IS_LOCAL =
   process.env.REACT_APP_ENV === "local" || !process.env.REACT_APP_ENV;
-const logCore = (name: string, properties = {}, callback = () => undefined) => {
+
+const logCore = (
+  name: string,
+  rawProperties: { [key: string]: unknown } = {},
+  callback = () => undefined
+) => {
+  // strip undefined fields
+  const properties = Object.assign({}, rawProperties);
+  Object.keys(properties).forEach(
+    (key) => properties[key] === undefined && delete properties[key]
+  );
+
   if (IS_LOCAL) {
-    console.debug(`[Sentry-Log] Event: ${name}, properties:`, properties);
+    console.debug(`[Amplitude] Event: ${name}, properties:`, properties);
   } else {
     getInstance().logEvent(
       name,
@@ -18,100 +29,125 @@ const logCore = (name: string, properties = {}, callback = () => undefined) => {
 };
 
 export const logPageView = ({ pathname }: { pathname: string }) => {
-  const event = {
-    authn: "web_sdk_authentication_viewed",
-    authz: "web_sdk_authorization_viewed",
-  }[pathname.split("/")[1]];
+  const pathnames = pathname.split("/");
+  const page = {
+    authn: "login",
+    authz: "send_tx",
+    "user-signature": "sign",
+  }[pathnames[3]];
+  const chain = pathnames[2];
 
-  if (event) {
-    logCore(event);
+  if (page && chain) {
+    logCore("web_view_page", {
+      page,
+      chain,
+    });
   }
 };
 
 export const logRegister = ({
+  registerFrom = "sdk_js",
   domain,
-  chain = "flow",
+  chain,
   dAppName,
   dAppId,
 }: {
-  domain: string;
+  registerFrom?: string;
+  domain?: string;
   chain: string;
-  dAppName: string;
-  dAppId: string;
+  dAppName?: string;
+  dAppId?: string;
 }) =>
-  logCore(
-    "web_sdk_register",
-    dAppId ? { domain, chain, dAppName, dAppId } : { domain, chain }
-  );
+  logCore("wallet_register", {
+    register_from: registerFrom,
+    domain,
+    dApp_name: dAppName,
+    dApp_app_id: dAppId,
+    chain,
+  });
 
 export const logLogin = ({
+  product = "sdk_js",
   domain,
-  chain = "flow",
+  chain,
   dAppName,
   dAppId,
 }: {
-  domain: string;
+  product?: string;
+  domain?: string;
   chain: string;
-  dAppName: string;
-  dAppId: string;
+  dAppName?: string;
+  dAppId?: string;
 }) =>
-  logCore(
-    "web_sdk_login",
-    dAppId ? { domain, chain, dAppName, dAppId } : { domain, chain }
-  );
+  logCore("wallet_log_in", {
+    product,
+    domain,
+    dApp_name: dAppName,
+    dApp_app_id: dAppId,
+    chain,
+  });
 
-export const logAuthenticated = ({
+// triggered whenever the dapps request user account,
+// the implementation is to send this event on authentication page first loaded
+export const logRequestAccount = ({
+  product = "sdk_js",
   domain,
-  chain = "flow",
+  chain,
   dAppName,
   dAppId,
 }: {
-  domain: string;
+  product?: string;
+  domain?: string;
   chain: string;
-  dAppName: string;
-  dAppId: string;
+  dAppName?: string;
+  dAppId?: string;
 }) =>
-  logCore(
-    "web_sdk_authenticated",
-    dAppId ? { domain, chain, dAppName, dAppId } : { domain, chain }
-  );
+  logCore("wallet_approve_request_account", {
+    product,
+    domain,
+    dApp_name: dAppName,
+    dApp_app_id: dAppId,
+    chain,
+  });
 
 export const logSendTx = ({
+  product = "sdk_js",
   domain,
-  chain = "flow",
-  url = window.location.href,
-  type = "authz",
+  chain,
   dAppName,
   dAppId,
 }: {
-  domain: string;
+  product?: string;
+  domain?: string;
   chain: string;
-  url: string;
-  type: string;
-  dAppName: string;
-  dAppId: string;
+  dAppName?: string;
+  dAppId?: string;
 }) =>
-  logCore(
-    "web_sdk_send_tx",
-    dAppId
-      ? { domain, chain, url, type, dAppName, dAppId }
-      : { domain, chain, url, type }
-  );
+  logCore("wallet_approve_confirm_tx", {
+    product,
+    domain,
+    dApp_name: dAppName,
+    dApp_app_id: dAppId,
+    chain,
+  });
 
-export const logSignTx = ({
+export const logSignature = ({
+  product = "sdk_js",
   domain,
-  chain = "flow",
-  url = window.location.href,
+  chain,
   dAppName,
   dAppId,
 }: {
-  domain: string;
+  product?: string;
+  domain?: string;
   chain: string;
-  url: string;
-  dAppName: string;
-  dAppId: string;
+  dAppName?: string;
+  dAppId?: string;
 }) =>
-  logCore(
-    "web_sdk_sign_tx",
-    dAppId ? { domain, chain, url, dAppName, dAppId } : { domain, chain, url }
-  );
+  logCore("wallet_approve_signature", {
+    product,
+    domain,
+    dApp_name: dAppName,
+    dApp_app_id: dAppId,
+    chain,
+  });

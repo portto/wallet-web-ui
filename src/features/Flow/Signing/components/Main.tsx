@@ -7,7 +7,7 @@ import Field, { FieldLine } from "src/components/Field";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import { useSigningMachine } from "src/machines/signing";
-import { logSignTx } from "src/services/Amplitude";
+import { logSignature } from "src/services/Amplitude";
 import { ERROR_MESSAGES } from "src/utils/constants";
 
 const Main = () => {
@@ -29,7 +29,7 @@ const Main = () => {
     }
 
     const domain = url ? new URL(url).host : "";
-    logSignTx({ domain, url, chain: blockchain, dAppName: name, dAppId: id });
+    logSignature({ domain, chain: blockchain, dAppName: name, dAppId: id });
 
     updateSignatureDetails({
       signatureId,

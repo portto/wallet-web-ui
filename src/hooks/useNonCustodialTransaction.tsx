@@ -35,9 +35,7 @@ export default function useNonCustodialTransaction(payload: {
       if (status === "approve") {
         logSendTx({
           domain,
-          url,
           chain: blockchain,
-          type: "authz",
           dAppName: name,
           dAppId: id,
         });
