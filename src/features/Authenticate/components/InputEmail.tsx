@@ -86,6 +86,18 @@ const InputEmail = () => {
     }
   }, [send, input, action]);
 
+  const handleKeyUp: React.KeyboardEventHandler<HTMLInputElement> = useCallback(
+    (event) => {
+      // Handle press enter to submit
+      if (event.keyCode === 13 || event.key === "Enter") {
+        if (input && !isChecking && !hasError && !hasSubmitted) {
+          onConfirm();
+        }
+      }
+    },
+    [hasError, hasSubmitted, input, isChecking, onConfirm]
+  );
+
   const handleClose = useCallback(() => send("close"), [send]);
 
   const clearInput = () => {
@@ -170,7 +182,10 @@ const InputEmail = () => {
             <Input
               value={input}
               onChange={handleChange}
+              onKeyUp={handleKeyUp}
               placeholder="Email"
+              type="email"
+              autoFocus
               height="auto"
               px="space.l"
               py="space.m"
