@@ -1,5 +1,5 @@
 import { assign, createMachine } from "xstate";
-import { Chains } from "src/types";
+import { AccountAsset, Chains } from "src/types";
 
 const defaultContext = {
   dapp: {
@@ -23,7 +23,7 @@ export const machineStates = {
 };
 
 export interface TransactionMachineContext {
-  error?: any;
+  error?: unknown;
   dapp: {
     id?: string;
     name?: string;
@@ -39,7 +39,7 @@ export interface TransactionMachineContext {
     authorizationId?: string;
     sessionId?: string;
     points?: number;
-    assets?: any[];
+    assets?: AccountAsset[];
     balance?: number;
     address?: string;
   };

@@ -52,7 +52,7 @@ const Main = () => {
   const approve = useCallback(async () => {
     const { sessionId = "", authorizationId = "" } = user;
     const { fee = 0, discount = 0 } = transaction;
-    const { id = "", blockchain, url = "", name = "" } = dapp;
+    const { id = "", blockchain, name = "" } = dapp;
 
     await updateAuthorization({
       authorizationId,

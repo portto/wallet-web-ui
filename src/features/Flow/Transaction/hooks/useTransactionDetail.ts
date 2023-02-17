@@ -78,9 +78,9 @@ export default function useTransactionDetail(transaction: FlowTransaction) {
     if (!balances || !args || !flowAssets) return null;
 
     return Object.entries(balances).reduce((acc, [argName, tokenName]) => {
-      const rawUSDPrice = flowAssets[tokenName]?.usd_price || 0;
+      const rawUSDPrice = parseFloat(flowAssets[tokenName]?.usd_price || "0");
       const tokenAmount = parseFloat(args[argName]) || 0;
-      const usdValue = (parseFloat(rawUSDPrice) * tokenAmount).toFixed(2);
+      const usdValue = (rawUSDPrice * tokenAmount).toFixed(2);
 
       acc[tokenName] = {
         tokenAmount,

@@ -13,7 +13,7 @@ const Input2FA = () => {
   const [isWrongCode, setIsWrongCode] = useState(false);
   const {
     user: { email, authCode, authCodeId },
-    dapp: { id: dAppId = "", url = "", name: dAppName = "", blockchain },
+    dapp: { blockchain },
   } = context;
 
   const handleChange = (value: string) => {

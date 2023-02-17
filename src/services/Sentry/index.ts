@@ -1,4 +1,6 @@
-/* eslint-disable camelcase */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import * as Sentry from "@sentry/browser";
 import { getLocale } from "src/utils/locales";
 
@@ -17,7 +19,10 @@ const isWhiteListError = (errorCode: string) =>
 const isWhiteListStatus = (errorStatus: number) =>
   API_STATUS_WHITE_LIST.indexOf(errorStatus) !== 0;
 
-export const captureException = (error: any, { tags, fingerprint }: any) => {
+export const captureException = (
+  error: unknown,
+  { tags, fingerprint }: { tags: unknown; fingerprint: unknown }
+) => {
   if (error) {
     Sentry.withScope((scope) => {
       scope.setExtra("tags", tags);
@@ -27,7 +32,12 @@ export const captureException = (error: any, { tags, fingerprint }: any) => {
   }
 };
 
-export const captureApiError = (error: any) => {
+export const captureApiError = (error: {
+  message: unknown;
+  request: { method: string; url: string };
+  response: unknown;
+  status: unknown;
+}) => {
   const errorForSentry = { ...error };
   const {
     message,
@@ -80,6 +90,7 @@ export function initSentry() {
     beforeSend(event) {
       // If in local development, log events in console instead of send them to server
       if (IS_LOCAL) {
+        // eslint-disable-next-line no-console
         console.debug("Sentry event: ", event);
         return null;
       }

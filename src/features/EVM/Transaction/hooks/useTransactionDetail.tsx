@@ -73,14 +73,16 @@ export default function useTransactionDetail(transaction: Transaction) {
 
   return useMemo(() => {
     if (isNativeTransferring) {
-      const nativeToken = ethAssets && ethAssets[nativeTokenName];
+      const nativeToken = ethAssets?.[nativeTokenName];
       const nativeTokenAmount = fromWei(
         transactions
           .map(({ value }) => toBN(hexToNumberString(value || "0")))
           .reduce((acc, cur) => acc.add(cur), toBN(0))
       );
 
-      const nativeTokenValue = nativeToken ? nativeToken.usd_price : 0;
+      const nativeTokenValue = nativeToken
+        ? parseFloat(nativeToken.usd_price)
+        : 0;
 
       return {
         isNativeTransferring,
@@ -88,9 +90,7 @@ export default function useTransactionDetail(transaction: Transaction) {
         tokenName: nativeTokenName,
         tokenAmount: nativeTokenAmount,
         tokenBalance: userBalance,
-        usdValue: (
-          parseFloat(nativeTokenAmount) * parseFloat(nativeTokenValue)
-        ).toFixed(2),
+        usdValue: (parseFloat(nativeTokenAmount) * nativeTokenValue).toFixed(2),
         hasEnoughBalance: isNativeBalanceEnough(transactions, userBalance),
       };
     }
@@ -104,11 +104,10 @@ export default function useTransactionDetail(transaction: Transaction) {
     const tokenAmount = transferParams ? fromWei(transferParams[1]) : "0";
 
     const tokenName =
-      ethAssets &&
       Object.keys(ethAssets).find(
         (key) => ethAssets[key].contract_address === txContractAddress
-      );
-    const tokenDetail = ethAssets && ethAssets[tokenName];
+      ) ?? "";
+    const tokenDetail = ethAssets?.[tokenName];
 
     const { usd_price: usdPrice, value: tokenBalance } = tokenDetail || {};
 

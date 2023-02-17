@@ -39,6 +39,7 @@ export const onInternalConfirm = ({
 };
 
 export const onChallengeResponse = ({
+  // @todo: rename this field as it's actually the aggregation of addresses for all chains
   address,
   // keep 'addr' field for backward compatibility, will be removed one day
   addr,
@@ -209,7 +210,7 @@ export const onSignatureResponse = ({
   blockchain: Exclude<Chains, Chains.flow>;
   l6n: string;
   signature: string | string[];
-  [key: string]: any;
+  [key: string]: unknown;
 }) => {
   const isEvmChain = EVM_CHAINS.includes(blockchain);
   const targetEvents = isEvmChain
@@ -349,7 +350,15 @@ export const onClose = ({
   });
 };
 
-export const onResponse = ({ l6n, blockchain, ...args }: any) => {
+export const onResponse = ({
+  l6n,
+  blockchain,
+  ...args
+}: {
+  l6n: string;
+  blockchain: Chains;
+  [key: string]: unknown;
+}) => {
   const isEvmChain = EVM_CHAINS.includes(blockchain);
   const targetEvents = isEvmChain
     ? RESPONSE_EVENTS.ethereum

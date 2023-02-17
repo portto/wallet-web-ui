@@ -93,7 +93,7 @@ const Transaction = withTransactionContext(
       getMaintenanceStatus(state.dapp.blockchain).then(
         (status) => status.isUnderMaintenance && send("serviceInvalid")
       );
-    }, [send]);
+    }, [send, state.dapp.blockchain]);
 
     // only set UI stages, skip system stages
     useEffect(() => {

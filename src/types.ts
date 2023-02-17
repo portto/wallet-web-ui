@@ -5,13 +5,21 @@ export enum AssetStatus {
 }
 
 export interface AccountAsset {
+  id: string;
+  background_color: string;
+  blockchain: string;
+  chain_white_icon: string;
+  color_icon: string;
+  contract_address: string;
+  decimals: number;
+  group: string;
   name: string;
   type: string;
   status: AssetStatus.PENDING | AssetStatus.CONFIRMED | AssetStatus.UNCREATED;
+  symbol: string;
   wallet_address: string;
-  blockchain: string;
-  color_icon: string;
-  value: number;
+  usd_price: string;
+  value: string;
 }
 
 export enum Chains {
@@ -37,7 +45,7 @@ export interface EvmTransaction {
 export interface RecognizedFlowTx {
   args: { [key: string]: string };
   hash: string;
-  balances?: { amount: string; buyPrice: string; maxAmountIn: string };
+  balances?: Record<string, string>;
   arguments?: string[];
   messages: { [key: string]: string };
 }
@@ -241,7 +249,7 @@ export interface ChallengeResponse {
       addr?: string;
       keyId?: number;
       endpoint?: string;
-      params?: Record<string, any>;
+      params?: Record<string, unknown>;
       data?: {
         f_type: string;
         f_vsn: string;
