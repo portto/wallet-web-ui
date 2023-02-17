@@ -5,7 +5,6 @@ import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import LoadingLogo from "src/components/LoadingLogo";
 import { useAuthenticateMachine } from "src/machines/authenticate";
-import { logLogin } from "src/services/Amplitude";
 import loginAndAcquireToken from "src/utils/loginAndAcquireToken";
 
 const Input2FA = () => {
@@ -42,12 +41,6 @@ const Input2FA = () => {
       chain: blockchain,
     })
       .then(({ jwt, key }) => {
-        logLogin({
-          chain: blockchain,
-          domain: url ? new URL(url).host : "",
-          dAppName,
-          dAppId,
-        });
         send({
           type: "next",
           data: { accessToken: jwt, deviceKey: key },

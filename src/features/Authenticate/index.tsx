@@ -101,6 +101,8 @@ const useDefaultStateFromProps = () => {
       },
       requestId,
     }),
+    // only update when location changes
+    // eslint-disable-next-line
     [location]
   );
 };
@@ -154,7 +156,7 @@ const Authenticate = withAuthenticateContext(
       getMaintenanceStatus(state.dapp.blockchain).then(
         (status) => status.isUnderMaintenance && send("serviceInvalid")
       );
-    }, [send]);
+    }, [send, state.dapp.blockchain]);
 
     // only set UI stages, skip system stages
     useEffect(() => {
