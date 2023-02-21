@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
+import ActivityDetail from "src/components/ActivityDetail";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
@@ -30,6 +31,7 @@ const Main = () => {
   const [verifiedTx, setVerifiedTx] = useState(false);
 
   const { user, transaction, dapp } = context;
+  const { name, blockchain } = dapp;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject, failReason, mayFail } = transaction;
 
@@ -57,7 +59,6 @@ const Main = () => {
     }
   }, [isNativeTransferring]);
 
-  const { blockchain } = dapp;
   const showInsufficientAmountHint =
     !hasEnoughBalance && isSupportedTokenTransferring;
 
@@ -199,6 +200,8 @@ const Main = () => {
             </>
             {getTransactionFeeField()}
             <FieldLine />
+            <ActivityDetail blockchain={blockchain} dAppName={name} />
+            <FieldLine />
           </>
         ) : (
           <>
@@ -215,6 +218,8 @@ const Main = () => {
                 </Field>
               </>
             )}
+            <FieldLine />
+            <ActivityDetail blockchain={blockchain} dAppName={name} />
             <FieldLine />
           </>
         )}
