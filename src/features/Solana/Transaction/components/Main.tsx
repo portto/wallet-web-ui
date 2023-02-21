@@ -2,6 +2,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
 import { getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
+import ActivityDetail from "src/components/ActivityDetail";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
@@ -23,8 +24,7 @@ const Main = () => {
 
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject, mayFail, failReason } = transaction;
-
-  const { blockchain } = dapp;
+  const { blockchain, name } = dapp;
   const actualTx = rawObject.convertedTx || rawObject.transaction;
 
   const [isReady] = useEstimatePoint({
@@ -111,6 +111,8 @@ const Main = () => {
         >
           <FormattedMessage intlKey="app.authz.transactionContainsScript" />
         </Field>
+        <FieldLine />
+        <ActivityDetail blockchain={blockchain} dAppName={name} />
         <FieldLine />
       </Box>
 
