@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
+import ActivityDetail from "src/components/ActivityDetail";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
@@ -35,6 +36,7 @@ const Main = () => {
   } = context;
   const { transaction } = rawObject;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
+  const { blockchain, name } = dapp;
   const scriptInfo = getFlowScriptWithTemplate(transaction);
 
   const {
@@ -66,7 +68,7 @@ const Main = () => {
     openMoonPayPage({
       currency:
         MoonpayCoinSymbols[
-          currency.toLowerCase() as keyof typeof MoonpayCoinSymbols
+        currency.toLowerCase() as keyof typeof MoonpayCoinSymbols
         ] || currency,
       address,
       email,
@@ -191,6 +193,8 @@ const Main = () => {
             <FieldLine />
             {getTransactionFeeField()}
             <FieldLine />
+            <ActivityDetail blockchain={blockchain} dAppName={name} />
+            <FieldLine />
           </>
         ) : (
           <>
@@ -223,6 +227,8 @@ const Main = () => {
             >
               <FormattedMessage intlKey="app.authz.transactionContainsScript" />
             </Field>
+            <FieldLine />
+            <ActivityDetail blockchain={blockchain} dAppName={name} />
             <FieldLine />
           </>
         )}
