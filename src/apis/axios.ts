@@ -15,29 +15,29 @@ const instance = axios.create({
   baseURL: WALLET_API_BASE,
   headers: {
     Accept: "application/json",
+    web_version: VERSION,
+    post: {
+      "Content-Type": "application/json",
+    },
+    put: {
+      "Content-Type": "application/json",
+    },
   },
 });
+
 axiosRetry(instance, { retries: 1 });
 
 export const apiGet = <T>({
   url = "",
   request = {},
   isAuthorized = false,
-  headers = {},
+  headers: rawHeaders = {},
 }) => {
+  const headers: any = Object.assign({}, rawHeaders);
+  headers["Blocto-Application-Identifier"] = getItem(KEY_APP_ID);
+  if (isAuthorized) headers.authorization = getItem(KEY_ACCESS_TOKEN);
   return instance
-    .get<undefined, { data: T }>(`/${url}?${stringify(request)}`, {
-      headers: {
-        "Blocto-Application-Identifier": getItem(KEY_APP_ID),
-        ...(isAuthorized
-          ? {
-              authorization: getItem(KEY_ACCESS_TOKEN),
-            }
-          : {}),
-        ...headers,
-        web_version: VERSION,
-      },
-    })
+    .get<undefined, { data: T }>(`/${url}?${stringify(request)}`, { headers })
     .then((response) => Promise.resolve(response.data))
     .catch((e) => captureApiError(e));
 };
@@ -46,30 +46,14 @@ export const apiPost = <T>({
   url = "",
   request = {},
   isAuthorized = false,
-  headers = {},
-  baseURL = "",
+  headers: rawHeaders = {},
 }) => {
-  const updatedHeaders = baseURL
-    ? headers
-    : {
-        ...headers,
-        web_version: VERSION,
-        nonce: Date.now(),
-      };
+  const headers: any = Object.assign({}, rawHeaders);
+  headers.nonce = Date.now();
+  headers["Blocto-Application-Identifier"] = getItem(KEY_APP_ID);
+  if (isAuthorized) headers.authorization = getItem(KEY_ACCESS_TOKEN);
   return instance
-    .post<undefined, { data: T }>(`/${url}`, request, {
-      headers: {
-        "Content-Type": "application/json",
-        "Blocto-Application-Identifier": getItem(KEY_APP_ID),
-        ...(isAuthorized
-          ? {
-              authorization: getItem(KEY_ACCESS_TOKEN),
-            }
-          : {}),
-        ...updatedHeaders,
-      },
-      ...(baseURL ? { baseURL } : {}),
-    })
+    .post<undefined, { data: T }>(`/${url}`, request, { headers })
     .then((response) => Promise.resolve(response.data))
     .catch((e) => captureApiError(e));
 };
@@ -78,23 +62,14 @@ export const apiPut = <T>({
   url = "",
   request = {},
   isAuthorized = false,
-  headers = {},
+  headers: rawHeaders = {},
 }) => {
+  const headers: any = Object.assign({}, rawHeaders);
+  headers.nonce = Date.now();
+  headers["Blocto-Application-Identifier"] = getItem(KEY_APP_ID);
+  if (isAuthorized) headers.authorization = getItem(KEY_ACCESS_TOKEN);
   return instance
-    .put<undefined, { data: T }>(`/${url}`, request, {
-      headers: {
-        "Blocto-Application-Identifier": getItem(KEY_APP_ID),
-        "Content-Type": "application/json",
-        ...(isAuthorized
-          ? {
-              authorization: getItem(KEY_ACCESS_TOKEN),
-            }
-          : {}),
-        ...headers,
-        web_version: VERSION,
-        nonce: Date.now(),
-      },
-    })
+    .put<undefined, { data: T }>(`/${url}`, request, { headers })
     .then((response) => Promise.resolve(response.data))
     .catch((e) => captureApiError(e));
 };
