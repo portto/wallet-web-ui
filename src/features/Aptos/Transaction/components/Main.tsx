@@ -71,7 +71,11 @@ const Main = () => {
       setRecognizedTx(true);
       setVerifiedTx(true);
     }
-  }, [sessionId, rawObject, blockchain, send, moduleAddress]);
+
+    if (type === "entry_function_payload") {
+      setRecognizedTx(true);
+    }
+  }, [sessionId, rawObject, blockchain, send, moduleAddress, type]);
 
   const approve = useCallback(async () => {
     const { sessionId = "", authorizationId = "" } = user;
