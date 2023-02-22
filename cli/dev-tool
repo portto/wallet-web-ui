@@ -54,7 +54,7 @@ def init_connection():
     server = os.environ['WALLET_DEV_SERVER'] 
   except:
     server = "wallet-v2.blocto.app"
-  connection = http.client.HTTPSConnection(server)
+  connection = http.client.HTTPConnection(server) if server.startswith("localhost") else http.client.HTTPSConnection(server)
   return connection
 
 def get_code():
