@@ -53,7 +53,7 @@
     "start": "react-scripts start",
     "lint": "eslint --ext .jsx,.js,.ts,.tsx src/ --fix",
     "extract-intl": "formatjs extract 'src/**/!(*.d).{ts,tsx,js}' --out-file tmp.json --flatten && formatjs compile tmp.json --out-file src/translations/en.json && rm tmp.json",
-    "build": "env-cmd -f ./.env react-scripts build",
+    "build": "env-cmd -f ./.env.example react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
