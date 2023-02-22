@@ -2,7 +2,10 @@ timeout: 1800s
 steps:
   - name: 'node:16'
     args:
-      - 'yarn'
+      ['yarn']
+  - name: 'node:16'
+    args:
+      ['yarn', 'run', 'build']
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
