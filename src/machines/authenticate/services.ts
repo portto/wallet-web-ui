@@ -3,6 +3,7 @@ import { getAccountAssets, getUserInfo, updateAuthentication } from "src/apis";
 import { onClose, onInternalConfirm, onResponse } from "src/services/Frame";
 import {
   KEY_ACCESS_TOKEN,
+  KEY_APP_ID,
   KEY_DEVICE_ID,
   KEY_DEVICE_KEY,
   KEY_EMAIL,
@@ -36,6 +37,7 @@ export const setCredentials =
       }
       setItem(KEY_ACCESS_TOKEN, event.data.accessToken);
       setItem(KEY_DEVICE_KEY, event.data?.deviceKey);
+      setItem(KEY_APP_ID, context.dapp.id);
     }
 
     return callback({ type: "verifyUser", data: { deviceId } });
@@ -151,6 +153,8 @@ export const cleanUpLocalStorage =
     removeItem(KEY_SESSION_ID);
     removeItem(KEY_USER_ID);
     removeItem(KEY_USER_TYPE);
+    removeItem(KEY_DEVICE_ID);
+    removeItem(KEY_APP_ID);
     callback("restart");
   };
 
