@@ -101,6 +101,28 @@ const theme = extendTheme(
               cursor: "not-allowed",
             },
           },
+          secondary: {
+            width: "100%",
+            height: "54px",
+            py: "space.m",
+            fontSize: "size.heading.5",
+            fontWeight: "weight.l",
+            lineHeight: "line.height.heading.4",
+            bg: "interaction.secondary",
+            color: "font.highlight",
+            borderRadius: "12px",
+            _hover: {
+              transform: "scale(0.98)",
+            },
+            _active: {
+              bg: "interaction.secondary.pressed",
+              transform: "scale(0.96)",
+            },
+            _disabled: {
+              bg: "interaction.secondary.disabled",
+              cursor: "not-allowed",
+            },
+          },
         },
       },
     },
