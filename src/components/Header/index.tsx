@@ -155,6 +155,9 @@ const Header = memo(
         py="space.s"
         justifyContent="space-between"
         alignItems="center"
+        position="relative"
+        zIndex="1"
+        width="100%"
         {...props}
       >
         <Flex alignItems="center">

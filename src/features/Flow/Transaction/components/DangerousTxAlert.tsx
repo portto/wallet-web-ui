@@ -1,5 +1,5 @@
-import { Box, Center, Flex, Text } from "@chakra-ui/react";
-import { useCallback } from "react";
+import { Box, Center, Flex, Link, Text } from "@chakra-ui/react";
+import { ReactNode, useCallback } from "react";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import Button from "src/components/Button";
 import FormattedMessage from "src/components/FormattedMessage";
@@ -14,14 +14,7 @@ const DangerousTxAlert = () => {
   return (
     <Box position="relative">
       <Header blockchain={context.dapp.blockchain} onClose={handleClose} />
-      <Box
-        position="absolute"
-        top="0"
-        left="0"
-        zIndex={-1}
-        width="100%"
-        height="100%"
-      >
+      <Box position="absolute" top="0" left="0" width="100%" height="100%">
         <Center height="100%">
           <Flex flexDirection="column" alignItems="center" px="space.s">
             <CheckAlert width={48} height={48} />
@@ -37,13 +30,27 @@ const DangerousTxAlert = () => {
             </Text>
 
             <Text textAlign="center">
-              <FormattedMessage intlKey="app.authz.maliciousHint" />
+              <FormattedMessage
+                intlKey="app.authz.maliciousHint"
+                values={{
+                  a: (chunks: ReactNode) => (
+                    <Link
+                      textDecoration="underline"
+                      href="https://portto.zendesk.com/hc"
+                      isExternal
+                      rel="noopener noreferrer"
+                    >
+                      {chunks}
+                    </Link>
+                  ),
+                }}
+              />
             </Text>
           </Flex>
         </Center>
       </Box>
       <Box position="absolute" bottom="space.l" px="space.l" width="100%">
-        <Button onClick={handleClose}>
+        <Button onClick={handleClose} variant="secondary">
           <FormattedMessage intlKey="app.authz.stopTransaction" />
         </Button>
       </Box>

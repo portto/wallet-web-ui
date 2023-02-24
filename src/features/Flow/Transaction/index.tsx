@@ -15,6 +15,7 @@ import {
   getItem,
 } from "src/services/LocalStorage";
 import Connecting from "./components/Connecting";
+import DangerousTxAlert from "./components/DangerousTxAlert";
 import Main from "./components/Main";
 
 const systemStatus = [
@@ -30,6 +31,10 @@ const stageComponentMapping: Record<
 > = {
   [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
+  [machineStates.DANGEROUS]: {
+    component: DangerousTxAlert,
+    layoutSize: "sm",
+  },
 };
 
 const useDefaultStateFromProps = () => {

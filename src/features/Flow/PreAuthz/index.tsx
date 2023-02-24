@@ -52,14 +52,7 @@ const PreAuthz = () => {
   return (
     <Box position="relative">
       <Header blockchain={blockchain} onClose={handleDecline} />
-      <Box
-        position="absolute"
-        top="0"
-        left="0"
-        zIndex={-1}
-        width="100%"
-        height="100%"
-      >
+      <Box position="absolute" top="0" left="0" width="100%" height="100%">
         <Center height="100%">
           <Flex flexDirection="column" alignItems="center" px="space.l">
             <LoadingLogo mb="space.s" />

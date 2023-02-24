@@ -50,7 +50,7 @@
   "feature.authz.nonCustodial.description": "Approve the transaction from Blocto app...",
   "app.authz.warning": "WARNING",
   "app.authz.balance": "Balance",
-  "app.authz.maliciousHint": "We detected this transaction may contain malicious operation and suggest to terminate this transaction.",
+  "app.authz.maliciousHint": "We detected this transaction may contain malicious operation and suggest to terminate this transaction. <a>Help Center</a>",
   "app.authz.purchaseonmoonpay": "Purchase on MoonPay",
   "app.authz.transferNativeToken": "Transfer {amount} {token}",
   "app.authz.insufficientBalance": "Insufficient balance"
