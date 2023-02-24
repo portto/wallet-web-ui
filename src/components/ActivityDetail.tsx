@@ -40,7 +40,7 @@ const ActivityDetail = ({
             )}
             {address && (
               <Field title={<FormattedMessage intlKey="app.authz.address" />}>
-                <Text textTransform="capitalize">{address}</Text>
+                <Text>{address}</Text>
               </Field>
             )}
           </>
