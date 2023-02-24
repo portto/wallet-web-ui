@@ -155,9 +155,7 @@ const Header = memo(
         py="space.s"
         justifyContent="space-between"
         alignItems="center"
-        position="absolute"
-        top="0"
-        left="0"
+        position="relative"
         zIndex="1"
         width="100%"
         {...props}
