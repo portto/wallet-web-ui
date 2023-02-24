@@ -10,6 +10,7 @@ import Field, { FieldLine } from "src/components/Field";
 import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
+import ScrollableContainer from "src/components/ScrollableContainer";
 import TransactionFeeField from "src/components/transaction/TransactionFeeField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
@@ -68,7 +69,7 @@ const Main = () => {
     openMoonPayPage({
       currency:
         MoonpayCoinSymbols[
-        currency.toLowerCase() as keyof typeof MoonpayCoinSymbols
+          currency.toLowerCase() as keyof typeof MoonpayCoinSymbols
         ] || currency,
       address,
       email,
@@ -147,7 +148,7 @@ const Main = () => {
       >
         <DappLogo url={dapp.logo || ""} mb="space.s" />
       </TransactionInfo>
-      <Box px="space.l">
+      <ScrollableContainer attachShadow maxH={220} px="space.l">
         {recognizedTx ? (
           <>
             <Field
@@ -232,7 +233,7 @@ const Main = () => {
             <FieldLine />
           </>
         )}
-      </Box>
+      </ScrollableContainer>
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
         {showInsufficientAmountHint ? (
           <Button onClick={handlePurchase}>

@@ -9,6 +9,7 @@ import Field, { FieldLine } from "src/components/Field";
 import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
+import ScrollableContainer from "src/components/ScrollableContainer";
 import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
 import TransactionFeeField from "src/components/transaction/TransactionFeeField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
@@ -88,8 +89,7 @@ const Main = () => {
       <TransactionInfo host={dappDomain}>
         <DappLogo url={dapp.logo || ""} mb="space.s" />
       </TransactionInfo>
-
-      <Box px="space.l">
+      <ScrollableContainer px="space.l" maxH={220}>
         {getTransactionFeeField()}
         <Box height="10px" bg="background.tertiary" mx="-20px" />
         <Field
@@ -114,8 +114,7 @@ const Main = () => {
         <FieldLine />
         <ActivityDetail blockchain={blockchain} dAppName={name} />
         <FieldLine />
-      </Box>
-
+      </ScrollableContainer>
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
         <Button
           onClick={approve}

@@ -10,7 +10,7 @@ import Field, { FieldLine } from "src/components/Field";
 import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
-import ScrollableContainer from "src/components/ScrollableSection";
+import ScrollableContainer from "src/components/ScrollableContainer";
 import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
 import TransactionFeeField from "src/components/transaction/TransactionFeeField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
@@ -173,59 +173,57 @@ const Main = () => {
       >
         <DappLogo url={dapp.logo || ""} mb="space.s" />
       </TransactionInfo>
-      <ScrollableContainer attachShadow maxH="220px">
-        <Box px="space.l">
-          {recognizedTx ? (
+      <ScrollableContainer attachShadow maxH={220} px="space.l">
+        {recognizedTx ? (
+          <>
             <>
+              <Field
+                title={<FormattedMessage intlKey="app.authz.operation" />}
+                hidableInfo={transactionData && <TransactionContent />}
+                icon={
+                  verifiedTx ? (
+                    <Check width="16px" height="16px" />
+                  ) : (
+                    <CheckAlert width="16px" height="16px" />
+                  )
+                }
+              >
+                {/* // @todo: add operation detection logic. */}
+                <FormattedMessage
+                  intlKey="app.authz.transferNativeToken"
+                  values={{
+                    amount: tokenAmount,
+                    token: tokenName,
+                  }}
+                />
+              </Field>
+              <FieldLine />
+            </>
+            {getTransactionFeeField()}
+            <FieldLine />
+            <ActivityDetail blockchain={blockchain} dAppName={name} />
+            <FieldLine />
+          </>
+        ) : (
+          <>
+            {getTransactionFeeField()}
+            {!isNativeTransferring && (
               <>
+                <Box height="10px" bg="background.tertiary" mx="-20px" />
                 <Field
-                  title={<FormattedMessage intlKey="app.authz.operation" />}
-                  hidableInfo={transactionData && <TransactionContent />}
-                  icon={
-                    verifiedTx ? (
-                      <Check width="16px" height="16px" />
-                    ) : (
-                      <CheckAlert width="16px" height="16px" />
-                    )
-                  }
+                  title={<FormattedMessage intlKey="app.authz.script" />}
+                  hidableInfo={<TransactionContent />}
+                  icon={<CheckAlert width="16px" height="16px" />}
                 >
-                  {/* // @todo: add operation detection logic. */}
-                  <FormattedMessage
-                    intlKey="app.authz.transferNativeToken"
-                    values={{
-                      amount: tokenAmount,
-                      token: tokenName,
-                    }}
-                  />
+                  <FormattedMessage intlKey="app.authz.transactionContainsScript" />
                 </Field>
-                <FieldLine />
               </>
-              {getTransactionFeeField()}
-              <FieldLine />
-              <ActivityDetail blockchain={blockchain} dAppName={name} />
-              <FieldLine />
-            </>
-          ) : (
-            <>
-              {getTransactionFeeField()}
-              {!isNativeTransferring && (
-                <>
-                  <Box height="10px" bg="background.tertiary" mx="-20px" />
-                  <Field
-                    title={<FormattedMessage intlKey="app.authz.script" />}
-                    hidableInfo={<TransactionContent />}
-                    icon={<CheckAlert width="16px" height="16px" />}
-                  >
-                    <FormattedMessage intlKey="app.authz.transactionContainsScript" />
-                  </Field>
-                </>
-              )}
-              <FieldLine />
-              <ActivityDetail blockchain={blockchain} dAppName={name} />
-              <FieldLine />
-            </>
-          )}
-        </Box>
+            )}
+            <FieldLine />
+            <ActivityDetail blockchain={blockchain} dAppName={name} />
+            <FieldLine />
+          </>
+        )}
       </ScrollableContainer>
       <Flex justify="center" p="space.m" pos="absolute" bottom="0" width="100%">
         {showInsufficientAmountHint ? (

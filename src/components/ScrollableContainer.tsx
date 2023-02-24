@@ -8,7 +8,7 @@ const ScrollableContainer = ({
   ...restProps
 }: {
   children: ReactNode;
-  maxH: string;
+  maxH: number;
   attachShadow?: boolean;
 } & BoxProps) => {
   const [hasShadow, setHasShadow] = useState<boolean>(false);
@@ -25,21 +25,17 @@ const ScrollableContainer = ({
 
   useEffect(() => {
     const container = containerRef.current;
-    if (container) {
-      container.addEventListener("scroll", handleScroll);
-    }
 
-    return () => {
-      if (container) {
-        container.removeEventListener("scroll", handleScroll);
-      }
-    };
+    if (!container) return;
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <Box
       ref={containerRef}
-      maxH={maxH}
+      maxH={`${maxH}px`}
       overflowY="auto"
       pb="space.4xl"
       boxShadow={
