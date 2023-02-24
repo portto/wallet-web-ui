@@ -67,5 +67,6 @@
   "app.authz.activityDetail": "Activity Detail",
   "app.authz.network": "Network",
   "app.authz.networkWithBlockchain": "{blockchain} Network",
-  "app.authz.dAppName": "Dapp Name"
+  "app.authz.dAppName": "Dapp Name",
+  "app.authz.address": "Address"
 }

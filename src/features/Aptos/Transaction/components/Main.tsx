@@ -188,6 +188,8 @@ const Main = () => {
     );
   };
 
+  const targetAddress = hasValue && args[0];
+
   return (
     <Box>
       <Header
@@ -221,7 +223,11 @@ const Main = () => {
             <FieldLine />
             {getTransactionFeeField()}
             <FieldLine />
-            <ActivityDetail blockchain={blockchain} dAppName={name} />
+            <ActivityDetail
+              blockchain={blockchain}
+              dAppName={name}
+              address={targetAddress}
+            />
             <FieldLine />
           </>
         ) : (
@@ -236,7 +242,11 @@ const Main = () => {
               <FormattedMessage intlKey="app.authz.transactionContainsScript" />
             </Field>
             <FieldLine />
-            <ActivityDetail blockchain={blockchain} dAppName={name} />
+            <ActivityDetail
+              blockchain={blockchain}
+              dAppName={name}
+              address={targetAddress}
+            />
             <FieldLine />
           </>
         )}

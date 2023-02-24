@@ -6,9 +6,11 @@ import FormattedMessage from "src/components/FormattedMessage";
 const ActivityDetail = ({
   blockchain,
   dAppName,
+  address,
 }: {
   blockchain: string;
   dAppName?: string;
+  address?: string;
 }) => {
   return (
     <>
@@ -34,6 +36,11 @@ const ActivityDetail = ({
             {dAppName && (
               <Field title={<FormattedMessage intlKey="app.authz.dAppName" />}>
                 <Text textTransform="capitalize">{dAppName}</Text>
+              </Field>
+            )}
+            {address && (
+              <Field title={<FormattedMessage intlKey="app.authz.address" />}>
+                <Text textTransform="capitalize">{address}</Text>
               </Field>
             )}
           </>

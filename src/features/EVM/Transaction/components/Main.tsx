@@ -40,6 +40,7 @@ const Main = () => {
     .filter(({ data }: EvmTransaction) => data)
     .map(({ data }: EvmTransaction) => data)
     .join("\n\n");
+  const firstTargetAddress = rawObject.transactions[0].to;
 
   const txDetailData = useTransactionDetail(transaction);
   const {
@@ -201,7 +202,11 @@ const Main = () => {
             </>
             {getTransactionFeeField()}
             <FieldLine />
-            <ActivityDetail blockchain={blockchain} dAppName={name} />
+            <ActivityDetail
+              blockchain={blockchain}
+              dAppName={name}
+              address={firstTargetAddress}
+            />
             <FieldLine />
           </>
         ) : (
@@ -220,7 +225,11 @@ const Main = () => {
               </>
             )}
             <FieldLine />
-            <ActivityDetail blockchain={blockchain} dAppName={name} />
+            <ActivityDetail
+              blockchain={blockchain}
+              dAppName={name}
+              address={firstTargetAddress}
+            />
             <FieldLine />
           </>
         )}
