@@ -62,12 +62,12 @@ export const getAuthn = (authenticationId: string) =>
 
 export const estimatePoint = ({
   sessionId,
-  blockchain = "ethereum",
+  blockchain = Chains.ethereum,
   rawObject,
 }: {
   sessionId: string;
-  blockchain: string;
-  rawObject: any;
+  blockchain: Chains;
+  rawObject: object;
 }) =>
   apiPost<{
     cost?: string;
