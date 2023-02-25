@@ -1,8 +1,7 @@
-import { Box, Flex, HStack, Spinner } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { estimatePoint, getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
-import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
@@ -11,6 +10,7 @@ import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
+import TransactionFeeField from "src/components/TransactionFeeField";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { ERROR_MESSAGES } from "src/utils/constants";
@@ -22,10 +22,6 @@ const Main = () => {
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject, mayFail, failReason } = transaction;
-
-  const hasDiscount = (transaction.discount || 0) > 0;
-  const realTransactionFee =
-    (transaction.fee || 0) - (transaction.discount || 0);
 
   const { sessionId = "" } = user;
 
@@ -82,54 +78,14 @@ const Main = () => {
     } else send({ type: "reject", data: { error: reason } });
   }, [user, dapp, transaction, dappDomain, send]);
 
-  const TransactionFeeField = () => (
-    <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
-      <HStack>
-        {transaction.fee ? (
-          <>
-            <Flex
-              bg="background.secondary"
-              borderRadius="50%"
-              width="20px"
-              height="20px"
-              justifyContent="center"
-              alignItems="center"
-              mr="space.3xs"
-              p="space.4xs"
-            >
-              <Logo />
-            </Flex>
-            <Box>
-              <FormattedMessage
-                intlKey="app.authz.transactionFeePoints"
-                values={{ points: realTransactionFee }}
-              />
-              {hasDiscount && (
-                <Box as="span" pl="space.3xs">
-                  (
-                  <Box as="del">
-                    <FormattedMessage
-                      intlKey="app.authz.transactionFeePoints"
-                      values={{ points: transaction.fee }}
-                    />
-                  </Box>
-                  )
-                </Box>
-              )}
-            </Box>
-          </>
-        ) : (
-          <Spinner width="15px" height="15px" color="icon.tertiary" />
-        )}
-      </HStack>
-    </Field>
-  );
-
   const getTransactionFeeField = () => {
     return mayFail ? (
       <EstimatePointErrorField content={failReason} />
     ) : (
-      <TransactionFeeField />
+      <TransactionFeeField
+        discount={transaction.discount}
+        originalTransactionFee={transaction.fee}
+      />
     );
   };
 
