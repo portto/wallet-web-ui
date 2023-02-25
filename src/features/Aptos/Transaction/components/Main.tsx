@@ -12,6 +12,7 @@ import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
+import TransactionFeeField from "src/components/TransactionFeeField";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { ERROR_MESSAGES } from "src/utils/constants";
@@ -183,49 +184,6 @@ const Main = () => {
     </FieldDetail>
   );
 
-  const TransactionFeeField = () => (
-    <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
-      <HStack>
-        {transaction.fee ? (
-          <>
-            <Flex
-              bg="background.secondary"
-              borderRadius="50%"
-              width="20px"
-              height="20px"
-              justifyContent="center"
-              alignItems="center"
-              mr="space.3xs"
-              p="space.4xs"
-            >
-              <Logo />
-            </Flex>
-            <Box>
-              <FormattedMessage
-                intlKey="app.authz.transactionFeePoints"
-                values={{ points: realTransactionFee }}
-              />
-              {hasDiscount && (
-                <Box as="span" pl="space.3xs">
-                  (
-                  <Box as="del">
-                    <FormattedMessage
-                      intlKey="app.authz.transactionFeePoints"
-                      values={{ points: transaction.fee }}
-                    />
-                  </Box>
-                  )
-                </Box>
-              )}
-            </Box>
-          </>
-        ) : (
-          <Spinner width="15px" height="15px" color="icon.tertiary" />
-        )}
-      </HStack>
-    </Field>
-  );
-
   const InsufficientBalanceField = () => (
     <Field title={<FormattedMessage intlKey="app.authz.balance" />}>
       <Box color="font.alert">
@@ -243,7 +201,10 @@ const Main = () => {
     return mayFail ? (
       <EstimatePointErrorField content={failReason} />
     ) : (
-      <TransactionFeeField />
+      <TransactionFeeField
+        discount={transaction.discount}
+        originalTransactionFee={transaction.fee}
+      />
     );
   };
 
