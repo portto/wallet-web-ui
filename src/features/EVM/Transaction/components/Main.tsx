@@ -1,6 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
-import { estimatePoint, getAuthorization, updateAuthorization } from "src/apis";
+import { getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
 import Button from "src/components/Button";
@@ -12,6 +12,7 @@ import Header from "src/components/Header";
 import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
 import TransactionFeeField from "src/components/TransactionFeeField";
+import useEstimatePointInterval from "src/hooks/useEstimatePointInteval";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { EvmTransaction } from "src/types";
@@ -23,7 +24,6 @@ import useTransactionDetail from "../hooks/useTransactionDetail";
 const Main = () => {
   const { context, send } = useTransactionMachine();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isReady, setIsReady] = useState(false);
   // @todo: add operation detection logic
   const [recognizedTx, setIsRecognizedTx] = useState(false);
   // @todo: add operation verified logic
@@ -62,22 +62,7 @@ const Main = () => {
   const showInsufficientAmountHint =
     !hasEnoughBalance && isSupportedTokenTransferring;
 
-  useEffect(() => {
-    estimatePoint({ rawObject, sessionId, blockchain }).then(
-      ({ cost, discount, error_code, chain_error_msg }) => {
-        setIsReady(true);
-        send({
-          type: "updateTransaction",
-          data: {
-            fee: cost,
-            discount,
-            mayFail: !!error_code,
-            failReason: chain_error_msg || error_code,
-          },
-        });
-      }
-    );
-  }, [sessionId, rawObject, blockchain, send]);
+  useEstimatePointInterval({ rawObject, sessionId, blockchain }, 10000);
 
   const handlePurchase = useCallback(() => {
     const { address = "", email = "", id = "" } = context.user;
@@ -244,11 +229,7 @@ const Main = () => {
             <FormattedMessage intlKey="app.authz.purchaseonmoonpay" />
           </Button>
         ) : (
-          <Button
-            onClick={approve}
-            disabled={mayFail || !isReady}
-            isLoading={isProcessing}
-          >
+          <Button onClick={approve} disabled={mayFail} isLoading={isProcessing}>
             <FormattedMessage intlKey="app.authz.approve" />
           </Button>
         )}
