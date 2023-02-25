@@ -150,49 +150,6 @@ const Main = () => {
     </FieldDetail>
   );
 
-  // const TransactionFeeField = () => (
-  //   <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
-  //     <HStack>
-  //       {transaction.fee ? (
-  //         <>
-  //           <Flex
-  //             bg="background.secondary"
-  //             borderRadius="50%"
-  //             width="20px"
-  //             height="20px"
-  //             justifyContent="center"
-  //             alignItems="center"
-  //             mr="space.3xs"
-  //             p="space.4xs"
-  //           >
-  //             <Logo />
-  //           </Flex>
-  //           <Box>
-  //             <FormattedMessage
-  //               intlKey="app.authz.transactionFeePoints"
-  //               values={{ points: realTransactionFee }}
-  //             />
-  //             {hasDiscount && (
-  //               <Box as="span" pl="space.3xs">
-  //                 (
-  //                 <Box as="del">
-  //                   <FormattedMessage
-  //                     intlKey="app.authz.transactionFeePoints"
-  //                     values={{ points: transaction.fee }}
-  //                   />
-  //                 </Box>
-  //                 )
-  //               </Box>
-  //             )}
-  //           </Box>
-  //         </>
-  //       ) : (
-  //         <Spinner width="15px" height="15px" color="icon.tertiary" />
-  //       )}
-  //     </HStack>
-  //   </Field>
-  // );
-
   const InsufficientBalanceField = () => (
     <Field title={<FormattedMessage intlKey="app.authz.balance" />}>
       <Box color="font.alert">

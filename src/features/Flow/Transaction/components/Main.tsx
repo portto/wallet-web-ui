@@ -1,9 +1,8 @@
-import { Box, Flex, HStack, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
 import { getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
-import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
@@ -11,6 +10,7 @@ import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
+import TransactionFeeField from "src/components/TransactionFeeField";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { getFlowScriptWithTemplate } from "src/services/Flow";
@@ -20,27 +20,6 @@ import { getTransactionLocale } from "src/utils/locales";
 import openMoonPayPage from "src/utils/openMoonPayPage";
 import { MoonpayCoinSymbols } from "../constants";
 import useTransactionDetail from "../hooks/useTransactionDetail";
-
-const TransactionFeeField = () => (
-  <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
-    <HStack>
-      <Flex
-        bg="background.secondary"
-        borderRadius="50%"
-        width="20px"
-        height="20px"
-        justifyContent="center"
-        alignItems="center"
-        p="space.4xs"
-      >
-        <Logo />
-      </Flex>
-      <Box>
-        <FormattedMessage intlKey="app.authz.free" />
-      </Box>
-    </HStack>
-  </Field>
-);
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
@@ -150,7 +129,8 @@ const Main = () => {
     if (showInsufficientAmountHint) {
       return <InsufficientBalanceField />;
     }
-    return <TransactionFeeField />;
+    // @todo: add estimatePoint logic for flow.
+    return <TransactionFeeField isFree />;
   };
   return (
     <Box>

@@ -3,18 +3,46 @@ import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Field from "src/components/Field";
 import FormattedMessage from "src/components/FormattedMessage";
 
+const FreeTransactionFeeField = () => (
+  <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
+    <HStack>
+      <Flex
+        bg="background.secondary"
+        borderRadius="50%"
+        width="20px"
+        height="20px"
+        justifyContent="center"
+        alignItems="center"
+        p="space.4xs"
+      >
+        <Logo />
+      </Flex>
+      <Box>
+        <FormattedMessage intlKey="app.authz.free" />
+      </Box>
+    </HStack>
+  </Field>
+);
+
 const TransactionFeeField = ({
   originalTransactionFee = 0,
   discount = 0,
+  isFree = false,
 }: {
   discount?: number;
   originalTransactionFee?: number;
+  isFree?: boolean;
 }) => {
   const isLoading = !originalTransactionFee;
   const hasDiscount = (discount || 0) > 0;
   const realTransactionFee = hasDiscount
     ? originalTransactionFee - discount
     : originalTransactionFee;
+
+  if (isFree) {
+    return <FreeTransactionFeeField />;
+  }
+
   return (
     <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
       <HStack>
