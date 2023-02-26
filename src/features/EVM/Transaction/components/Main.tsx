@@ -12,7 +12,7 @@ import Header from "src/components/Header";
 import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
 import TransactionFeeField from "src/components/TransactionFeeField";
-import useEstimatePointInterval from "src/hooks/useEstimatePointInteval";
+import useEstimatePointInterval from "src/hooks/useEstimatePointInterval";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { EvmTransaction } from "src/types";

@@ -1,9 +1,8 @@
-import { Box, Flex, HStack, Spinner } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { useCallback, useEffect, useState } from "react";
-import { estimatePoint, getAuthorization, updateAuthorization } from "src/apis";
+import { getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
-import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
@@ -13,6 +12,7 @@ import Header from "src/components/Header";
 import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
 import TransactionFeeField from "src/components/TransactionFeeField";
+import useEstimatePointInterval from "src/hooks/useEstimatePointInterval";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { ERROR_MESSAGES } from "src/utils/constants";
@@ -23,7 +23,6 @@ const Main = () => {
   const [recognizedTx, setRecognizedTx] = useState(false);
   const [verifiedTx, setVerifiedTx] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isReady, setIsReady] = useState(false);
 
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
@@ -38,10 +37,6 @@ const Main = () => {
   const [moduleAddress = "", moduleName, methodName] =
     functionName.split("::") || [];
 
-  const hasDiscount = (transaction.discount || 0) > 0;
-  const realTransactionFee =
-    (transaction.fee || 0) - (transaction.discount || 0);
-
   const txDetailData = useTransactionDetail(rawObject.transaction);
   const {
     tokenAmount = "",
@@ -55,22 +50,9 @@ const Main = () => {
   const { sessionId = "" } = user;
   const { blockchain } = dapp;
 
-  useEffect(() => {
-    estimatePoint({ rawObject, sessionId, blockchain }).then(
-      ({ cost, discount, error_code, chain_error_msg }) => {
-        setIsReady(true);
-        send({
-          type: "updateTransaction",
-          data: {
-            fee: cost,
-            discount,
-            mayFail: !!error_code,
-            failReason: chain_error_msg || error_code,
-          },
-        });
-      }
-    );
+  useEstimatePointInterval({ rawObject, sessionId, blockchain }, 10000);
 
+  useEffect(() => {
     // Framework module address range: 0x1 - 0xa
     if (Number(moduleAddress) >= 1 && Number(moduleAddress) <= 10) {
       setRecognizedTx(true);
@@ -260,7 +242,7 @@ const Main = () => {
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
         <Button
           onClick={approve}
-          disabled={showInsufficientBalance || mayFail || !isReady}
+          disabled={showInsufficientBalance || mayFail}
           isLoading={isProcessing}
         >
           <FormattedMessage intlKey="app.authz.approve" />

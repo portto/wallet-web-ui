@@ -11,7 +11,7 @@ interface EstimatePointParams {
 
 export default function useEstimatePointInterval(
   { rawObject, blockchain, sessionId }: EstimatePointParams,
-  delay = 100000
+  delay = 10000
 ) {
   const { send } = useTransactionMachine();
 
