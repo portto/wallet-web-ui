@@ -5,7 +5,7 @@ steps:
       ['yarn']
   - name: 'node:16'
     args:
-      ['node_modules/.bin/env-cmd', '-f', './env-configs/.env.develop', 'yarn', 'run', 'build']
+      ['node_modules/.bin/env-cmd', '-f', './env-configs/.env.production', 'yarn', 'run', 'build']
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [

@@ -1,0 +1,55 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wallet-web-ui-ingress
+  labels:
+    app: wallet-web-ui
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: wallet-web-ui-staging-ip
+    kubernetes.io/ingress.allow-http: "false"
+    kubernetes.io/ingress.class: "gce"
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  tls:
+    - hosts:
+        - wallet-v2-staging.blocto.app
+      secretName: cf-origin-cert-wallet-v2-staging
+  rules:
+    - host: wallet-v2-staging.blocto.app
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: wallet-web-backend-service
+                port:
+                  number: 80
+          - path: /blocto
+            pathType: Prefix
+            backend:
+              service:
+                name: wallet-web-backend-service
+                port:
+                  number: 80
+          - path: /access
+            pathType: Prefix
+            backend:
+              service:
+                name: wallet-web-backend-service
+                port:
+                  number: 80
+          - path: /bloctoWeb
+            pathType: Prefix
+            backend:
+              service:
+                name: wallet-web-backend-service
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: wallet-web-ui-service
+                port:
+                  number: 80
