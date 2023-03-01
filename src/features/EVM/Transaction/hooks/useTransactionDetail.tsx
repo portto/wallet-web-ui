@@ -63,12 +63,11 @@ export default function useTransactionDetail(transaction: Transaction) {
     },
     txHash,
   } = transaction;
-  const [{ value }] = transactions;
+  const [{ value, data }] = transactions;
 
   const txContractAddress = transactions[0].to;
-  const isNativeTransferring = !txHash && !!value;
-  const isERC20Transferring =
-    txHash && txHash.startsWith(TRANSFER_FUNCTION_HASH);
+  const isNativeTransferring = !data && !!value;
+  const isERC20Transferring = data && data.startsWith(TRANSFER_FUNCTION_HASH);
   const nativeTokenName = getNativeCoinSymbol(dapp.blockchain);
 
   return useMemo(() => {
