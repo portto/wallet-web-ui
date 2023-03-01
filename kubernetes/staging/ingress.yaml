@@ -13,7 +13,7 @@ spec:
   tls:
     - hosts:
         - wallet-v2-staging.blocto.app
-      secretName: cf-origin-cert-wallet-v2-staging
+      secretName: cf-origin-cert-wallet-v2
   rules:
     - host: wallet-v2-staging.blocto.app
       http:
