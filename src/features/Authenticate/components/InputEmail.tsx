@@ -207,7 +207,12 @@ const InputEmail = () => {
             </InputRightElement>
           </InputGroup>
           {hasError && (
-            <Text fontSize="size.body.3" color="font.alert" mb="space.4xl">
+            <Text
+              fontSize="size.body.3"
+              color="font.alert"
+              mb="space.4xl"
+              textAlign="center"
+            >
               <FormattedMessage intlKey="feature.authn.input.invalidEmail" />
             </Text>
           )}
