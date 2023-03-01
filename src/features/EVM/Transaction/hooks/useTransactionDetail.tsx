@@ -89,7 +89,7 @@ export default function useTransactionDetail(transaction: Transaction) {
         isSupportedTokenTransferring: !!nativeToken,
         tokenName: nativeTokenName,
         tokenAmount: nativeTokenAmount,
-        tokenBalance: userBalance,
+        tokenBalance: fromWei(`${userBalance}`),
         usdValue: (parseFloat(nativeTokenAmount) * nativeTokenValue).toFixed(2),
         hasEnoughBalance: isNativeBalanceEnough(transactions, userBalance),
       };
