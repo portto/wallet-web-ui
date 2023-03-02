@@ -8,7 +8,7 @@ import {
 import { memo, useEffect, useRef, useState } from "react";
 import { ReactComponent as ArrowBack } from "src/assets/images/icons/arrow-back.svg";
 import { ReactComponent as CloseIcon } from "src/assets/images/icons/close.svg";
-import { IS_LOCAL, IS_MAINNET, IS_STAGING } from "src/services/Env";
+import { IS_MAINNET, IS_STAGING } from "src/services/Env";
 
 const PADDING_HORIZONTAL = 8;
 
