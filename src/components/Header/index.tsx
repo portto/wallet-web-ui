@@ -8,7 +8,7 @@ import {
 import { memo, useEffect, useRef, useState } from "react";
 import { ReactComponent as ArrowBack } from "src/assets/images/icons/arrow-back.svg";
 import { ReactComponent as CloseIcon } from "src/assets/images/icons/close.svg";
-import { IS_LOCAL, IS_STAGING } from "src/services/Env";
+import { IS_LOCAL, IS_MAINNET, IS_STAGING } from "src/services/Env";
 
 const PADDING_HORIZONTAL = 8;
 
@@ -85,7 +85,7 @@ const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
     }, 4000);
   };
 
-  if (IS_STAGING || IS_LOCAL) {
+  if (!IS_MAINNET) {
     return (
       <Box
         as="button"
@@ -107,7 +107,7 @@ const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
         {...(!!tagAnimation && { animation: tagAnimation })}
       >
         <Box py="space.4xs" px={`${PADDING_HORIZONTAL}px`} ref={envRef}>
-          DEV
+          {IS_STAGING ? "STAGING" : "DEV"}
         </Box>
         <Box
           ref={chainRef}
@@ -128,11 +128,6 @@ const NetworkLabel = ({ blockchain }: { blockchain: string }) => {
         </Box>
       </Box>
     );
-
-    // @todo: add condition about staging env.
-    //   if () {
-    //     return <Label>STAGING</Label>;
-    //   }
   }
 
   return null;
