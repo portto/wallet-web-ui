@@ -1,5 +1,5 @@
 import { Box, Flex, HStack, Spinner } from "@chakra-ui/react";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { estimatePoint, getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
@@ -17,7 +17,7 @@ import { ERROR_MESSAGES } from "src/utils/constants";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
-
+  const [isProcessing, setIsProcessing] = useState(false);
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject, mayFail, failReason } = transaction;
@@ -54,6 +54,7 @@ const Main = () => {
     const { fee = 0, discount = 0 } = transaction;
     const { id = "", blockchain, name = "" } = dapp;
 
+    setIsProcessing(true);
     await updateAuthorization({
       authorizationId,
       action: "approve",
@@ -62,6 +63,8 @@ const Main = () => {
       cost: fee,
       discount,
     });
+    setIsProcessing(false);
+
     const { status, transactionHash, reason } = await getAuthorization({
       blockchain,
       authorizationId,
@@ -172,7 +175,7 @@ const Main = () => {
       </Box>
 
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
-        <Button onClick={approve} disabled={mayFail}>
+        <Button onClick={approve} disabled={mayFail} isLoading={isProcessing}>
           <FormattedMessage intlKey="app.authz.approve" />
         </Button>
       </Flex>
