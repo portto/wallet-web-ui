@@ -10,7 +10,7 @@ import Field, { FieldLine } from "src/components/Field";
 import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
-import TransactionInfo from "src/components/TransactionInfo";
+import TransactionInfo from "src/components/transaction/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { getFlowScriptWithTemplate } from "src/services/Flow";
