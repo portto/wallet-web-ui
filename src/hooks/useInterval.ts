@@ -9,9 +9,8 @@ function useInterval(callback: () => void, delay: number | undefined) {
       return;
     }
 
-    if (callback !== tick) {
+    if (timer.current) {
       clearInterval(timer.current);
-      timer.current = undefined;
     }
 
     const id = window.setInterval(tick, delay);
