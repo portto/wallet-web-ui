@@ -112,6 +112,7 @@ const theme = extendTheme(
             color: "font.highlight",
             borderRadius: "12px",
             _hover: {
+              bg: { md: "interaction.secondary.hovered" },
               transform: "scale(0.98)",
             },
             _active: {
