@@ -205,7 +205,7 @@ const Main = () => {
           <DappLogo url={dapp.logo || ""} mb="space.s" />
         </TransactionInfo>
 
-        <ScrollableContainer px="space.l">
+        <ScrollableContainer attachShadow px="space.l">
           {recognizedTx ? (
             <>
               <Field

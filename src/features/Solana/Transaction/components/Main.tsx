@@ -90,7 +90,7 @@ const Main = () => {
         <TransactionInfo host={dappDomain}>
           <DappLogo url={dapp.logo || ""} mb="space.s" />
         </TransactionInfo>
-        <ScrollableContainer px="space.l">
+        <ScrollableContainer attachShadow px="space.l">
           {getTransactionFeeField()}
           <Box height="10px" bg="background.tertiary" mx="-20px" />
           <Field

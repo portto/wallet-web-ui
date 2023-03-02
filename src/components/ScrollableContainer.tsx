@@ -1,5 +1,6 @@
 import { Box, BoxProps, Flex } from "@chakra-ui/react";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import debounce from "lodash/debounce";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 
 const ScrollableContainer = ({
   children,
@@ -12,14 +13,18 @@ const ScrollableContainer = ({
   const [hasShadow, setHasShadow] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleScroll = () => {
-    const container = containerRef.current;
-    const hasShadow =
-      !!container &&
-      container.scrollTop + container.clientHeight < container.scrollHeight;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleScroll = useCallback(
+    debounce(() => {
+      const container = containerRef.current;
+      const hasShadow =
+        !!container &&
+        container.scrollTop + container.clientHeight < container.scrollHeight;
 
-    setHasShadow(hasShadow);
-  };
+      setHasShadow(hasShadow);
+    }, 500),
+    []
+  );
 
   useEffect(() => {
     const container = containerRef.current;
@@ -28,7 +33,7 @@ const ScrollableContainer = ({
 
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [handleScroll]);
 
   return (
     <Flex overflow="hidden">
