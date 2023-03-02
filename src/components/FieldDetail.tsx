@@ -2,7 +2,6 @@ import { Box, Flex, Heading } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as CheckVerified } from "src/assets/images/icons/check-verified.svg";
-import FormattedMessage from "src/components/FormattedMessage";
 
 export enum BadgeType {
   Verified,
