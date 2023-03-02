@@ -21,6 +21,7 @@ const Main = () => {
   const { context, send } = useTransactionMachine();
   const [recognizedTx, setRecognizedTx] = useState(false);
   const [verifiedTx, setVerifiedTx] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
@@ -82,6 +83,7 @@ const Main = () => {
     const { fee = 0, discount = 0 } = transaction;
     const { id = "", blockchain, name = "" } = dapp;
 
+    setIsProcessing(true);
     await updateAuthorization({
       authorizationId,
       action: "approve",
@@ -90,6 +92,8 @@ const Main = () => {
       cost: fee,
       discount,
     });
+    setIsProcessing(false);
+
     const { status, transactionHash, reason } = await getAuthorization({
       blockchain,
       authorizationId,

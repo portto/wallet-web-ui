@@ -44,6 +44,7 @@ const TransactionFeeField = () => (
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
+  const [isProcessing, setIsProcessing] = useState(false);
   const [isDangerousTx, setIsDangerousTx] = useState(false);
   // @todo: add operation verified logic
   const [verifiedTx] = useState(true);
@@ -99,6 +100,7 @@ const Main = () => {
     const { fee = 0, discount = 0 } = transaction;
     const { id = "", blockchain, name = "" } = dapp;
 
+    setIsProcessing(true);
     await updateAuthorization({
       authorizationId,
       action: "approve",
@@ -107,6 +109,8 @@ const Main = () => {
       cost: fee,
       discount,
     });
+    setIsProcessing(false);
+
     const { status, transactionHash, reason } = await getAuthorization({
       blockchain,
       authorizationId,

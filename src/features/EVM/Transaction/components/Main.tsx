@@ -22,6 +22,7 @@ import useTransactionDetail from "../hooks/useTransactionDetail";
 
 const Main = () => {
   const { context, send } = useTransactionMachine();
+  const [isProcessing, setIsProcessing] = useState(false);
   // @todo: add operation detection logic
   const [recognizedTx, setIsRecognizedTx] = useState(false);
   // @todo: add operation verified logic
@@ -100,6 +101,7 @@ const Main = () => {
     const { fee = 0, discount = 0 } = transaction;
     const { id = "", blockchain, name = "" } = dapp;
 
+    setIsProcessing(true);
     await updateAuthorization({
       authorizationId,
       action: "approve",
@@ -108,6 +110,8 @@ const Main = () => {
       cost: fee,
       discount,
     });
+    setIsProcessing(false);
+
     const { status, transactionHash, reason } = await getAuthorization({
       blockchain,
       authorizationId,
