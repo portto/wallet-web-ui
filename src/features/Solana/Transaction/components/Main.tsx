@@ -80,51 +80,53 @@ const Main = () => {
   }, [send]);
 
   return (
-    <Box>
+    <>
       <Header
         bg="background.secondary"
         onClose={handleClose}
         blockchain={dapp?.blockchain}
       />
-      <TransactionInfo host={dappDomain}>
-        <DappLogo url={dapp.logo || ""} mb="space.s" />
-      </TransactionInfo>
-      <ScrollableContainer px="space.l" maxH={220}>
-        {getTransactionFeeField()}
-        <Box height="10px" bg="background.tertiary" mx="-20px" />
-        <Field
-          title={<FormattedMessage intlKey="app.authz.script" />}
-          hidableInfo={
-            !!rawObject.convertedTx && (
-              <FieldDetail
-                title={<FormattedMessage intlKey="app.authz.operation" />}
-                badgeText={
-                  <FormattedMessage intlKey="app.authz.operationNotVerified" />
-                }
-                badgeType={BadgeType.Unverified}
-              >
-                {rawObject.convertedTx}
-              </FieldDetail>
-            )
-          }
-          icon={<CheckAlert width="16px" height="16px" />}
-        >
-          <FormattedMessage intlKey="app.authz.transactionContainsScript" />
-        </Field>
-        <FieldLine />
-        <ActivityDetail blockchain={blockchain} dAppName={name} />
-        <FieldLine />
-      </ScrollableContainer>
-      <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
-        <Button
-          onClick={approve}
-          disabled={mayFail || !isReady}
-          isLoading={isProcessing}
-        >
-          <FormattedMessage intlKey="app.authz.approve" />
-        </Button>
+      <Flex flexDirection="column" overflow="hidden">
+        <TransactionInfo host={dappDomain}>
+          <DappLogo url={dapp.logo || ""} mb="space.s" />
+        </TransactionInfo>
+        <ScrollableContainer px="space.l">
+          {getTransactionFeeField()}
+          <Box height="10px" bg="background.tertiary" mx="-20px" />
+          <Field
+            title={<FormattedMessage intlKey="app.authz.script" />}
+            hidableInfo={
+              !!rawObject.convertedTx && (
+                <FieldDetail
+                  title={<FormattedMessage intlKey="app.authz.operation" />}
+                  badgeText={
+                    <FormattedMessage intlKey="app.authz.operationNotVerified" />
+                  }
+                  badgeType={BadgeType.Unverified}
+                >
+                  {rawObject.convertedTx}
+                </FieldDetail>
+              )
+            }
+            icon={<CheckAlert width="16px" height="16px" />}
+          >
+            <FormattedMessage intlKey="app.authz.transactionContainsScript" />
+          </Field>
+          <FieldLine />
+          <ActivityDetail blockchain={blockchain} dAppName={name} />
+          <FieldLine />
+        </ScrollableContainer>
+        <Flex justify="center" p="space.l" width="100%">
+          <Button
+            onClick={approve}
+            disabled={mayFail || !isReady}
+            isLoading={isProcessing}
+          >
+            <FormattedMessage intlKey="app.authz.approve" />
+          </Button>
+        </Flex>
       </Flex>
-    </Box>
+    </>
   );
 };
 

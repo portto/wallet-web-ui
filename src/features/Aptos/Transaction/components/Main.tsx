@@ -191,77 +191,79 @@ const Main = () => {
   const targetAddress = hasValue && args[0];
 
   return (
-    <Box>
+    <>
       <Header
         bg="background.secondary"
         onClose={handleClose}
         blockchain={dapp?.blockchain}
       />
-      <TransactionInfo
-        host={dappDomain}
-        transactionDetail={{ tokenAmount, usdValue }}
-      >
-        <DappLogo url={dapp.logo || ""} mb="space.s" />
-      </TransactionInfo>
-
-      <ScrollableContainer px="space.l" maxH={220}>
-        {recognizedTx ? (
-          <>
-            <Field
-              title={<FormattedMessage intlKey="app.authz.operation" />}
-              hidableInfo={<TransactionContent />}
-              icon={
-                verifiedTx ? (
-                  <Check width="16px" height="16px" />
-                ) : (
-                  <CheckAlert width="16px" height="16px" />
-                )
-              }
-            >
-              {`${moduleName}::${methodName}`}
-            </Field>
-            <FieldLine />
-            {getTransactionFeeField()}
-            <FieldLine />
-            <ActivityDetail
-              blockchain={blockchain}
-              dAppName={name}
-              address={targetAddress}
-            />
-            <FieldLine />
-          </>
-        ) : (
-          <>
-            {getTransactionFeeField()}
-            <Box height="10px" bg="background.tertiary" mx="-20px" />
-            <Field
-              title={<FormattedMessage intlKey="app.authz.script" />}
-              hidableInfo={<TransactionContent />}
-              icon={<CheckAlert width="16px" height="16px" />}
-            >
-              <FormattedMessage intlKey="app.authz.transactionContainsScript" />
-            </Field>
-            <FieldLine />
-            <ActivityDetail
-              blockchain={blockchain}
-              dAppName={name}
-              address={targetAddress}
-            />
-            <FieldLine />
-          </>
-        )}
-      </ScrollableContainer>
-
-      <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
-        <Button
-          onClick={approve}
-          disabled={showInsufficientBalance || mayFail || !isReady}
-          isLoading={isProcessing}
+      <Flex flexDirection="column" overflow="hidden">
+        <TransactionInfo
+          host={dappDomain}
+          transactionDetail={{ tokenAmount, usdValue }}
         >
-          <FormattedMessage intlKey="app.authz.approve" />
-        </Button>
+          <DappLogo url={dapp.logo || ""} mb="space.s" />
+        </TransactionInfo>
+
+        <ScrollableContainer px="space.l">
+          {recognizedTx ? (
+            <>
+              <Field
+                title={<FormattedMessage intlKey="app.authz.operation" />}
+                hidableInfo={<TransactionContent />}
+                icon={
+                  verifiedTx ? (
+                    <Check width="16px" height="16px" />
+                  ) : (
+                    <CheckAlert width="16px" height="16px" />
+                  )
+                }
+              >
+                {`${moduleName}::${methodName}`}
+              </Field>
+              <FieldLine />
+              {getTransactionFeeField()}
+              <FieldLine />
+              <ActivityDetail
+                blockchain={blockchain}
+                dAppName={name}
+                address={targetAddress}
+              />
+              <FieldLine />
+            </>
+          ) : (
+            <>
+              {getTransactionFeeField()}
+              <Box height="10px" bg="background.tertiary" mx="-20px" />
+              <Field
+                title={<FormattedMessage intlKey="app.authz.script" />}
+                hidableInfo={<TransactionContent />}
+                icon={<CheckAlert width="16px" height="16px" />}
+              >
+                <FormattedMessage intlKey="app.authz.transactionContainsScript" />
+              </Field>
+              <FieldLine />
+              <ActivityDetail
+                blockchain={blockchain}
+                dAppName={name}
+                address={targetAddress}
+              />
+              <FieldLine />
+            </>
+          )}
+        </ScrollableContainer>
+
+        <Flex justify="center" p="space.l" width="100%">
+          <Button
+            onClick={approve}
+            disabled={showInsufficientBalance || mayFail || !isReady}
+            isLoading={isProcessing}
+          >
+            <FormattedMessage intlKey="app.authz.approve" />
+          </Button>
+        </Flex>
       </Flex>
-    </Box>
+    </>
   );
 };
 

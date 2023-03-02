@@ -158,98 +158,101 @@ const Main = () => {
   };
 
   return (
-    <Box>
+    <>
       <Header
         bg="background.secondary"
         onClose={handleClose}
         blockchain={dapp?.blockchain}
       />
-      <TransactionInfo
-        host={dappDomain}
-        transactionDetail={{
-          usdValue,
-          tokenAmount:
-            tokenAmount && tokenName ? `${tokenAmount} ${tokenName}` : "",
-        }}
-      >
-        <DappLogo url={dapp.logo || ""} mb="space.s" />
-      </TransactionInfo>
-      <ScrollableContainer attachShadow maxH={220} px="space.l">
-        {recognizedTx ? (
-          <>
+      <Flex flexDirection="column" overflow="hidden">
+        <TransactionInfo
+          host={dappDomain}
+          transactionDetail={{
+            usdValue,
+            tokenAmount:
+              tokenAmount && tokenName ? `${tokenAmount} ${tokenName}` : "",
+          }}
+        >
+          <DappLogo url={dapp.logo || ""} mb="space.s" />
+        </TransactionInfo>
+        <ScrollableContainer attachShadow px="space.l">
+          {recognizedTx ? (
             <>
-              <Field
-                title={<FormattedMessage intlKey="app.authz.operation" />}
-                hidableInfo={transactionData && <TransactionContent />}
-                icon={
-                  verifiedTx ? (
-                    <Check width="16px" height="16px" />
-                  ) : (
-                    <CheckAlert width="16px" height="16px" />
-                  )
-                }
-              >
-                {/* // @todo: add operation detection logic. */}
-                <FormattedMessage
-                  intlKey="app.authz.transferNativeToken"
-                  values={{
-                    amount: tokenAmount,
-                    token: tokenName,
-                  }}
-                />
-              </Field>
+              <>
+                <Field
+                  title={<FormattedMessage intlKey="app.authz.operation" />}
+                  hidableInfo={transactionData && <TransactionContent />}
+                  icon={
+                    verifiedTx ? (
+                      <Check width="16px" height="16px" />
+                    ) : (
+                      <CheckAlert width="16px" height="16px" />
+                    )
+                  }
+                >
+                  {/* // @todo: add operation detection logic. */}
+                  <FormattedMessage
+                    intlKey="app.authz.transferNativeToken"
+                    values={{
+                      amount: tokenAmount,
+                      token: tokenName,
+                    }}
+                  />
+                </Field>
+                <FieldLine />
+              </>
+              {getTransactionFeeField()}
+              <FieldLine />
+              <ActivityDetail
+                blockchain={blockchain}
+                dAppName={name}
+                address={firstTargetAddress}
+              />
+
               <FieldLine />
             </>
-            {getTransactionFeeField()}
-            <FieldLine />
-            <ActivityDetail
-              blockchain={blockchain}
-              dAppName={name}
-              address={firstTargetAddress}
-            />
-            <FieldLine />
-          </>
-        ) : (
-          <>
-            {getTransactionFeeField()}
-            {!isNativeTransferring && (
-              <>
-                <Box height="10px" bg="background.tertiary" mx="-20px" />
-                <Field
-                  title={<FormattedMessage intlKey="app.authz.script" />}
-                  hidableInfo={<TransactionContent />}
-                  icon={<CheckAlert width="16px" height="16px" />}
-                >
-                  <FormattedMessage intlKey="app.authz.transactionContainsScript" />
-                </Field>
-              </>
-            )}
-            <FieldLine />
-            <ActivityDetail
-              blockchain={blockchain}
-              dAppName={name}
-              address={firstTargetAddress}
-            />
-            <FieldLine />
-          </>
-        )}
-      </ScrollableContainer>
-      <Flex justify="center" p="space.m" pos="absolute" bottom="0" width="100%">
-        {showInsufficientAmountHint ? (
-          <Button onClick={handlePurchase}>
-            <FormattedMessage intlKey="app.authz.purchaseonmoonpay" />
-          </Button>
-        ) : (
-          <Button
-            onClick={approve}
-            disabled={mayFail || !isReady}
-            isLoading={isProcessing}
-          >
-            <FormattedMessage intlKey="app.authz.approve" />
-          </Button>
-        )}
+          ) : (
+            <>
+              {getTransactionFeeField()}
+              {!isNativeTransferring && (
+                <>
+                  <Box height="10px" bg="background.tertiary" mx="-20px" />
+                  <Field
+                    title={<FormattedMessage intlKey="app.authz.script" />}
+                    hidableInfo={<TransactionContent />}
+                    icon={<CheckAlert width="16px" height="16px" />}
+                  >
+                    <FormattedMessage intlKey="app.authz.transactionContainsScript" />
+                  </Field>
+                </>
+              )}
+              <FieldLine />
+              <ActivityDetail
+                blockchain={blockchain}
+                dAppName={name}
+                address={firstTargetAddress}
+              />
+              <FieldLine />
+            </>
+          )}
+        </ScrollableContainer>
+        <Flex textAlign="center" p="space.m" width="100%">
+          {showInsufficientAmountHint ? (
+            <Button onClick={handlePurchase}>
+              <FormattedMessage intlKey="app.authz.purchaseonmoonpay" />
+            </Button>
+          ) : (
+            <Button
+              onClick={approve}
+              disabled={mayFail || !isReady}
+              isLoading={isProcessing}
+            >
+              <FormattedMessage intlKey="app.authz.approve" />
+            </Button>
+          )}
+        </Flex>
       </Flex>
-    </Box>
+    </>
   );
 };
 

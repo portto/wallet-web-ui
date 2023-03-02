@@ -136,116 +136,118 @@ const Main = () => {
     return <TransactionFeeField isFree />;
   };
   return (
-    <Box>
+    <>
       <Header
         bg="background.secondary"
         onClose={handleClose}
         blockchain={dapp?.blockchain}
       />
-      <TransactionInfo
-        host={dappDomain}
-        transactionDetail={{ usdValue, tokenAmount }}
-      >
-        <DappLogo url={dapp.logo || ""} mb="space.s" />
-      </TransactionInfo>
-      <ScrollableContainer attachShadow maxH={220} px="space.l">
-        {recognizedTx ? (
-          <>
-            <Field
-              title={<FormattedMessage intlKey="app.authz.operation" />}
-              hidableInfo={
-                <FieldDetail
-                  title={<FormattedMessage intlKey="app.authz.operation" />}
-                  badgeText={
-                    <FormattedMessage intlKey="app.authz.operationVerified" />
-                  }
-                  badgeType={BadgeType.Verified}
-                >
-                  <Text
-                    whiteSpace="pre"
-                    wordBreak="break-word"
-                    overflowX="auto"
+      <Flex flexDirection="column" overflow="hidden">
+        <TransactionInfo
+          host={dappDomain}
+          transactionDetail={{ usdValue, tokenAmount }}
+        >
+          <DappLogo url={dapp.logo || ""} mb="space.s" />
+        </TransactionInfo>
+        <ScrollableContainer attachShadow px="space.l">
+          {recognizedTx ? (
+            <>
+              <Field
+                title={<FormattedMessage intlKey="app.authz.operation" />}
+                hidableInfo={
+                  <FieldDetail
+                    title={<FormattedMessage intlKey="app.authz.operation" />}
+                    badgeText={
+                      <FormattedMessage intlKey="app.authz.operationVerified" />
+                    }
+                    badgeType={BadgeType.Verified}
                   >
-                    {scriptInfo.arguments}
-                    {/* temporarily remove params field, as it's deprecated on flow end */}
-                    {/* but some dapps are still using them so leave it here until we can safely remove 'em */}
-                    {/* scriptInfo.params */}
-                    {scriptInfo.script}
-                  </Text>
-                </FieldDetail>
-              }
-              icon={
-                verifiedTx ? (
-                  <Check width="16px" height="16px" />
-                ) : (
-                  <CheckAlert width="16px" height="16px" />
-                )
-              }
-            >
-              <FormattedMessage
-                id={`transaction-${recognizedTx.hash}`}
-                defaultMessage={
-                  recognizedTx.messages[getTransactionLocale()] ||
-                  recognizedTx.messages.en
+                    <Text
+                      whiteSpace="pre"
+                      wordBreak="break-word"
+                      overflowX="auto"
+                    >
+                      {scriptInfo.arguments}
+                      {/* temporarily remove params field, as it's deprecated on flow end */}
+                      {/* but some dapps are still using them so leave it here until we can safely remove 'em */}
+                      {/* scriptInfo.params */}
+                      {scriptInfo.script}
+                    </Text>
+                  </FieldDetail>
                 }
-                values={recognizedTx.args}
-              />
-            </Field>
-            <FieldLine />
-            {getTransactionFeeField()}
-            <FieldLine />
-            <ActivityDetail blockchain={blockchain} dAppName={name} />
-            <FieldLine />
-          </>
-        ) : (
-          <>
-            {getTransactionFeeField()}
-            <Box height="10px" bg="background.tertiary" mx="-20px" />
-            <Field
-              title={<FormattedMessage intlKey="app.authz.script" />}
-              hidableInfo={
-                <FieldDetail
-                  title={<FormattedMessage intlKey="app.authz.operation" />}
-                  badgeText={
-                    <FormattedMessage intlKey="app.authz.operationNotVerified" />
+                icon={
+                  verifiedTx ? (
+                    <Check width="16px" height="16px" />
+                  ) : (
+                    <CheckAlert width="16px" height="16px" />
+                  )
+                }
+              >
+                <FormattedMessage
+                  id={`transaction-${recognizedTx.hash}`}
+                  defaultMessage={
+                    recognizedTx.messages[getTransactionLocale()] ||
+                    recognizedTx.messages.en
                   }
-                  badgeType={BadgeType.Unverified}
-                >
-                  <Text
-                    whiteSpace="pre"
-                    wordBreak="break-word"
-                    overflowX="auto"
+                  values={recognizedTx.args}
+                />
+              </Field>
+              <FieldLine />
+              {getTransactionFeeField()}
+              <FieldLine />
+              <ActivityDetail blockchain={blockchain} dAppName={name} />
+              <FieldLine />
+            </>
+          ) : (
+            <>
+              {getTransactionFeeField()}
+              <Box height="10px" bg="background.tertiary" mx="-20px" />
+              <Field
+                title={<FormattedMessage intlKey="app.authz.script" />}
+                hidableInfo={
+                  <FieldDetail
+                    title={<FormattedMessage intlKey="app.authz.operation" />}
+                    badgeText={
+                      <FormattedMessage intlKey="app.authz.operationNotVerified" />
+                    }
+                    badgeType={BadgeType.Unverified}
                   >
-                    {scriptInfo.arguments}
-                    {/* temporarily remove params field, as it's deprecated on flow end */}
-                    {/* but some dapps are still using them so leave it here until we can safely remove 'em */}
-                    {/* scriptInfo.params */}
-                    {scriptInfo.script}
-                  </Text>
-                </FieldDetail>
-              }
-              icon={<CheckAlert width="16px" height="16px" />}
-            >
-              <FormattedMessage intlKey="app.authz.transactionContainsScript" />
-            </Field>
-            <FieldLine />
-            <ActivityDetail blockchain={blockchain} dAppName={name} />
-            <FieldLine />
-          </>
-        )}
-      </ScrollableContainer>
-      <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
-        {showInsufficientAmountHint ? (
-          <Button onClick={handlePurchase}>
-            <FormattedMessage intlKey="app.authz.purchaseonmoonpay" />
-          </Button>
-        ) : (
-          <Button onClick={approve} isLoading={isProcessing}>
-            <FormattedMessage intlKey="app.authz.approve" />
-          </Button>
-        )}
+                    <Text
+                      whiteSpace="pre"
+                      wordBreak="break-word"
+                      overflowX="auto"
+                    >
+                      {scriptInfo.arguments}
+                      {/* temporarily remove params field, as it's deprecated on flow end */}
+                      {/* but some dapps are still using them so leave it here until we can safely remove 'em */}
+                      {/* scriptInfo.params */}
+                      {scriptInfo.script}
+                    </Text>
+                  </FieldDetail>
+                }
+                icon={<CheckAlert width="16px" height="16px" />}
+              >
+                <FormattedMessage intlKey="app.authz.transactionContainsScript" />
+              </Field>
+              <FieldLine />
+              <ActivityDetail blockchain={blockchain} dAppName={name} />
+              <FieldLine />
+            </>
+          )}
+        </ScrollableContainer>
+        <Flex justify="center" p="space.l" width="100%">
+          {showInsufficientAmountHint ? (
+            <Button onClick={handlePurchase}>
+              <FormattedMessage intlKey="app.authz.purchaseonmoonpay" />
+            </Button>
+          ) : (
+            <Button onClick={approve} isLoading={isProcessing}>
+              <FormattedMessage intlKey="app.authz.approve" />
+            </Button>
+          )}
+        </Flex>
       </Flex>
-    </Box>
+    </>
   );
 };
 

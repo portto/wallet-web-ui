@@ -1,14 +1,12 @@
-import { Box, BoxProps } from "@chakra-ui/react";
+import { Box, BoxProps, Flex } from "@chakra-ui/react";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
 const ScrollableContainer = ({
   children,
-  maxH,
   attachShadow = false,
   ...restProps
 }: {
   children: ReactNode;
-  maxH: number;
   attachShadow?: boolean;
 } & BoxProps) => {
   const [hasShadow, setHasShadow] = useState<boolean>(false);
@@ -33,20 +31,23 @@ const ScrollableContainer = ({
   }, []);
 
   return (
-    <Box
-      ref={containerRef}
-      maxH={`${maxH}px`}
-      overflowY="auto"
-      pb="space.4xl"
-      boxShadow={
-        attachShadow && hasShadow
-          ? "inset 0 -10px 10px -10px rgb(35 37 40 / 5%)"
-          : ""
-      }
-      {...restProps}
-    >
-      {children}
-    </Box>
+    <Flex overflow="hidden">
+      <Box
+        ref={containerRef}
+        h="100%"
+        w="100%"
+        overflowY="auto"
+        pb="space.4xl"
+        boxShadow={
+          attachShadow && hasShadow
+            ? "inset 0 -10px 10px -10px rgb(35 37 40 / 5%)"
+            : ""
+        }
+        {...restProps}
+      >
+        {children}
+      </Box>
+    </Flex>
   );
 };
 export default ScrollableContainer;
