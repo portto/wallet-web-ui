@@ -17,12 +17,16 @@ const ScrollableContainer = ({
   const handleScroll = useCallback(
     debounce(() => {
       const container = containerRef.current;
-      const hasShadow =
-        !!container &&
-        container.scrollTop + container.clientHeight < container.scrollHeight;
 
-      setHasShadow(hasShadow);
-    }, 500),
+      if (!container) return;
+
+      const atBottom =
+        Math.abs(
+          container.scrollHeight - container.clientHeight - container.scrollTop
+        ) < 1;
+
+      setHasShadow(!atBottom);
+    }, 100),
     []
   );
 
