@@ -1,7 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import Web3 from "web3";
 import { createSignatureDetails } from "src/apis";
-import { KEY_SESSION_ID, getItem } from "src/services/LocalStorage";
 import { Chains } from "src/types";
 import { EVM_CHAINS, FALLBACK_ERROR_MESSAGES } from "src/utils/constants";
 
@@ -56,9 +55,7 @@ const EVMSignFallback = memo((props: Props) => {
       messageToBeSigned = utf8ToHex(messageToBeSigned).slice(2);
     }
 
-    const sessionId = getItem(KEY_SESSION_ID, "");
     createSignatureDetails({
-      sessionId,
       blockchain,
       message: messageToBeSigned,
       method: type,

@@ -38,9 +38,7 @@ const SolanaAuthzFallback = memo((props: Props) => {
       return setError(FALLBACK_ERROR_MESSAGES.forbiddenBlockchain);
     }
 
-    const sessionId = getItem(KEY_SESSION_ID, "");
     createDAppAuthorization({
-      sessionId,
       blockchain,
       message,
       isInvokeWrapped,

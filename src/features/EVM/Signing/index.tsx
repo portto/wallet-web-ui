@@ -55,7 +55,6 @@ const useDefaultStateFromProps = () => {
         url: document.referrer ? new URL(document.referrer).origin : "",
       },
       user: {
-        sessionId: getItem(KEY_SESSION_ID),
         type: getItem(KEY_USER_TYPE),
       },
       requestId,

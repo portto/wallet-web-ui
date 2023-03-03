@@ -23,7 +23,7 @@ export const finish = async (context: TransactionMachineContext) => {
 };
 
 export const abort = async (context: TransactionMachineContext) => {
-  const { sessionId, authorizationId } = context.user;
+  const { authorizationId } = context.user;
   const { blockchain, url = "" } = context.dapp;
   const { error = "" } = context.transaction;
 
@@ -33,11 +33,10 @@ export const abort = async (context: TransactionMachineContext) => {
     errorMessage: error,
   });
 
-  if (authorizationId && sessionId) {
+  if (authorizationId) {
     updateAuthorization({
       authorizationId,
       action: "decline",
-      sessionId,
       blockchain,
     });
   }

@@ -1,7 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import Web3 from "web3";
 import { createAuthorization, getLatestBlock } from "src/apis";
-import { KEY_SESSION_ID, getItem } from "src/services/LocalStorage";
 import { Chains } from "src/types";
 import { EVM_CHAINS, FALLBACK_ERROR_MESSAGES } from "src/utils/constants";
 
@@ -33,8 +32,6 @@ const EVMAuthzFallback = memo((props: Props) => {
       return setError(FALLBACK_ERROR_MESSAGES.forbiddenBlockchain);
     }
 
-    const sessionId = getItem(KEY_SESSION_ID, "");
-
     getLatestBlock()
       .then(({ result }) => {
         // Following the default setting in web3js
@@ -57,7 +54,6 @@ const EVMAuthzFallback = memo((props: Props) => {
               data,
             },
           ],
-          sessionId,
           blockchain,
           isInDApp: true,
         })

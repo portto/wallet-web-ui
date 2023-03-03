@@ -15,7 +15,6 @@ const Main = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { context, send } = useSigningMachine();
   const {
-    user: { sessionId = "" },
     message: { raw },
     signatureId,
     dapp: { blockchain, id = "", url = "", name = "", logo = "" },
@@ -33,7 +32,6 @@ const Main = () => {
 
     updateSignatureDetails({
       signatureId,
-      sessionId,
       action: "approve",
       blockchain,
     }).then((result) => {
@@ -43,13 +41,12 @@ const Main = () => {
         data: { signature },
       });
     });
-  }, [signatureId, url, blockchain, name, id, sessionId, send]);
+  }, [signatureId, url, blockchain, name, id, send]);
 
   const handleClose = useCallback(() => {
     if (signatureId) {
       updateSignatureDetails({
         signatureId,
-        sessionId,
         action: "decline",
         blockchain,
       });
@@ -58,7 +55,7 @@ const Main = () => {
       type: "reject",
       data: { error: ERROR_MESSAGES.SIGN_DECLINE_ERROR },
     });
-  }, [blockchain, send, sessionId, signatureId]);
+  }, [blockchain, send, signatureId]);
 
   return (
     <Flex flexDirection="column">

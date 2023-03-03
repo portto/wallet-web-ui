@@ -7,17 +7,16 @@ import { Chains } from "src/types";
 interface EstimatePointParams {
   rawObject: object;
   blockchain: Chains;
-  sessionId: string;
 }
 
 export default function useEstimatePointInterval(
-  { rawObject, blockchain, sessionId }: EstimatePointParams,
+  { rawObject, blockchain }: EstimatePointParams,
   delay = 10000
 ) {
   const { send } = useTransactionMachine();
   const [hasEstimated, setHasEstimated] = useState(false);
   const estimate = useCallback(() => {
-    estimatePoint({ rawObject, sessionId, blockchain }).then(
+    estimatePoint({ rawObject, blockchain }).then(
       ({ cost, discount, error_code, chain_error_msg }) => {
         setHasEstimated(true);
         send({
@@ -31,7 +30,7 @@ export default function useEstimatePointInterval(
         });
       }
     );
-  }, [blockchain, rawObject, send, sessionId]);
+  }, [blockchain, rawObject, send]);
 
   useInterval(estimate, delay);
 

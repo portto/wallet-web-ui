@@ -22,7 +22,6 @@ const NonCustodial = () => {
     appId?: string;
   }>();
   const [dAppInfo, setdAppInfo] = useState<{ url?: string }>({ url: "" });
-  const sessionId = getItem(KEY_SESSION_ID);
 
   useEffect(() => {
     fetchDappInfo({ id: appId }).then((data) => {
@@ -32,8 +31,8 @@ const NonCustodial = () => {
 
   const handleClose = useCallback(() => {
     const { url = "" } = dAppInfo;
-    if (authorizationId && sessionId) {
-      updateNonCustodial({ authorizationId, sessionId }).then(() => {
+    if (authorizationId) {
+      updateNonCustodial({ authorizationId }).then(() => {
         onTransactionDecline({
           blockchain,
           l6n: url,
@@ -41,7 +40,7 @@ const NonCustodial = () => {
         });
       });
     }
-  }, [authorizationId, blockchain, dAppInfo, sessionId]);
+  }, [authorizationId, blockchain, dAppInfo]);
 
   return (
     <Box position="relative">

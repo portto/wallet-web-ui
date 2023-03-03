@@ -47,13 +47,9 @@ const Main = () => {
     hasValue,
   } = txDetailData || {};
   const showInsufficientBalance = hasValue && !hasEnoughBalance;
-  const { sessionId = "" } = user;
   const { blockchain } = dapp;
 
-  const [isReady] = useEstimatePointInterval(
-    { rawObject, sessionId, blockchain },
-    10000
-  );
+  const [isReady] = useEstimatePointInterval({ rawObject, blockchain }, 10000);
 
   useEffect(() => {
     // Framework module address range: 0x1 - 0xa
@@ -65,10 +61,10 @@ const Main = () => {
     if (type === "entry_function_payload") {
       setRecognizedTx(true);
     }
-  }, [sessionId, rawObject, blockchain, send, moduleAddress, type]);
+  }, [rawObject, blockchain, send, moduleAddress, type]);
 
   const approve = useCallback(async () => {
-    const { sessionId = "", authorizationId = "" } = user;
+    const { authorizationId = "" } = user;
     const { fee = 0, discount = 0 } = transaction;
     const { id = "", blockchain, name = "" } = dapp;
 
@@ -76,7 +72,6 @@ const Main = () => {
     await updateAuthorization({
       authorizationId,
       action: "approve",
-      sessionId,
       blockchain,
       cost: fee,
       discount,

@@ -38,7 +38,6 @@ export interface TransactionMachineContext {
     email?: string;
     type?: string;
     authorizationId?: string;
-    sessionId?: string;
     points?: number;
     assets?: AccountAsset[];
     balance?: number;

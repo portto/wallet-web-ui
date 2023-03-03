@@ -62,7 +62,6 @@ const useDefaultStateFromProps = () => {
       user: {
         id: getItem(KEY_USER_ID),
         authorizationId,
-        sessionId: getItem(KEY_SESSION_ID),
         email: getItem(KEY_EMAIL),
         addresses: {},
         type: getItem(KEY_USER_TYPE),

@@ -9,21 +9,18 @@ import fetchDappInfo from "src/utils/fetchDappInfo";
 const Connecting = () => {
   const { context, send } = useTransactionMachine();
   const { authorizationId = "" } = context.user;
-  const { blockchain, name, logo, id, url } = context.dapp;
+  const { blockchain, id, url } = context.dapp;
 
   const fetchTransaction = useCallback(async () => {
-    const [
-      { point, type, email, id },
-      { assets: allAssets },
-      { sessionId, transaction },
-    ] = await Promise.all([
-      getUserInfo(),
-      getAccountAssets(),
-      getAuthorization({
-        authorizationId,
-        blockchain,
-      }),
-    ]);
+    const [{ point, type, email, id }, { assets: allAssets }, { transaction }] =
+      await Promise.all([
+        getUserInfo(),
+        getAccountAssets(),
+        getAuthorization({
+          authorizationId,
+          blockchain,
+        }),
+      ]);
     const assets = allAssets.filter(
       (asset: AccountAsset) => asset.blockchain === blockchain
     );
@@ -38,7 +35,6 @@ const Connecting = () => {
       type,
       points: point,
       assets,
-      sessionId,
       balance,
     };
 
@@ -59,6 +55,7 @@ const Connecting = () => {
     // get transaction info
     fetchTransaction();
     // intentionally run once
+    // eslint-disable-next-line
   }, []);
 
   const handleClose = useCallback(async () => {

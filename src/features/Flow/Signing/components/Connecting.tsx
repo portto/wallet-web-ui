@@ -15,7 +15,6 @@ const Connecting = () => {
   const {
     dapp: { blockchain, url, id },
     signatureId,
-    user: { sessionId = "" },
   } = context;
 
   useEffect(() => {
@@ -23,7 +22,7 @@ const Connecting = () => {
       // get user type (custodial or not) and get the details of the signing message
       Promise.all([
         getUserInfo(),
-        getSignatureDetails({ signatureId, blockchain, sessionId }),
+        getSignatureDetails({ signatureId, blockchain }),
       ]).then(([{ type }, { message }]) => {
         send({
           type: type === "normal" ? "ready" : "nonCustodial",
@@ -46,13 +45,12 @@ const Connecting = () => {
     );
     // Shouldn't include {url} since {fetchDappInfo} is meant to update them
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blockchain, id, send, sessionId, signatureId]);
+  }, [blockchain, id, send, signatureId]);
 
   const handleClose = useCallback(() => {
     if (signatureId) {
       updateSignatureDetails({
         signatureId,
-        sessionId,
         action: "decline",
         blockchain,
       });
@@ -61,7 +59,7 @@ const Connecting = () => {
       type: "reject",
       data: { error: ERROR_MESSAGES.SIGN_DECLINE_ERROR },
     });
-  }, [blockchain, send, sessionId, signatureId]);
+  }, [blockchain, send, signatureId]);
 
   return <Loading blockchain={blockchain} onClose={handleClose} />;
 };
