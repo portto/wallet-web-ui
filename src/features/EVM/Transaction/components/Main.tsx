@@ -23,6 +23,7 @@ import useTransactionDetail from "../hooks/useTransactionDetail";
 const Main = () => {
   const { context, send } = useTransactionMachine();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   // @todo: add operation detection logic
   const [recognizedTx, setIsRecognizedTx] = useState(false);
   // @todo: add operation verified logic
@@ -68,6 +69,7 @@ const Main = () => {
   useEffect(() => {
     estimatePoint({ rawObject, sessionId, blockchain }).then(
       ({ cost, discount, error_code, chain_error_msg }) => {
+        setIsReady(true);
         send({
           type: "updateTransaction",
           data: {
@@ -286,7 +288,11 @@ const Main = () => {
             <FormattedMessage intlKey="app.authz.purchaseonmoonpay" />
           </Button>
         ) : (
-          <Button onClick={approve} disabled={mayFail} isLoading={isProcessing}>
+          <Button
+            onClick={approve}
+            disabled={mayFail || !isReady}
+            isLoading={isProcessing}
+          >
             <FormattedMessage intlKey="app.authz.approve" />
           </Button>
         )}

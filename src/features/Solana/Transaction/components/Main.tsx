@@ -18,6 +18,7 @@ import { ERROR_MESSAGES } from "src/utils/constants";
 const Main = () => {
   const { context, send } = useTransactionMachine();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject, mayFail, failReason } = transaction;
@@ -36,7 +37,8 @@ const Main = () => {
       rawObject: { ...rawObject, message: actualTx },
       sessionId,
       blockchain,
-    }).then(({ cost, discount, error_code, chain_error_msg }) =>
+    }).then(({ cost, discount, error_code, chain_error_msg }) => {
+      setIsReady(true);
       send({
         type: "updateTransaction",
         data: {
@@ -45,8 +47,8 @@ const Main = () => {
           mayFail: !!error_code,
           failReason: chain_error_msg || error_code,
         },
-      })
-    );
+      });
+    });
   }, [sessionId, rawObject, blockchain, send]);
 
   const approve = useCallback(async () => {
@@ -175,7 +177,11 @@ const Main = () => {
       </Box>
 
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
-        <Button onClick={approve} disabled={mayFail} isLoading={isProcessing}>
+        <Button
+          onClick={approve}
+          disabled={mayFail || !isReady}
+          isLoading={isProcessing}
+        >
           <FormattedMessage intlKey="app.authz.approve" />
         </Button>
       </Flex>
