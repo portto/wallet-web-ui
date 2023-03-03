@@ -17,6 +17,7 @@ import {
 import Connecting from "./components/Connecting";
 import DangerousTxAlert from "./components/DangerousTxAlert";
 import Main from "./components/Main";
+import TxSent from "./components/TxSent";
 
 const systemStatus = [
   machineStates.IDLE,
@@ -35,6 +36,7 @@ const stageComponentMapping: Record<
     component: DangerousTxAlert,
     layoutSize: "sm",
   },
+  [machineStates.TX_SENT]: { component: TxSent, layoutSize: "lg" },
 };
 
 const useDefaultStateFromProps = () => {

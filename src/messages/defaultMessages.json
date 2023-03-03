@@ -7,6 +7,10 @@
   "app.general.itTakesSomeTimeToProceed": "It takes some time to proceed",
   "app.general.downloadBloctoApp": "Download Blocto App",
   "app.general.message": "Message",
+  "app.general.buyBloctoPoint": "Buy Blocto Point",
+  "app.general.buyBloctoPoint.description": "Purchase unified Blocto points for multi-chains transaction fee. Scan the qrcode to download the App and buy blocto points!",
+  "app.general.manageYourAssets": "Manage your assets",
+  "app.general.ok": "OK",
   "feature.authn.confirm.title": "Request account with",
   "feature.authn.confirm.useAnotherAccount": "Use Another Account",
   "feature.authn.enable.title": "Creating {chain} Wallet...",
@@ -53,5 +57,7 @@
   "app.authz.maliciousHint": "We detected this transaction may contain malicious operation and suggest to terminate this transaction. <a>Help Center</a>",
   "app.authz.purchaseonmoonpay": "Purchase on MoonPay",
   "app.authz.transferNativeToken": "Transfer {amount} {token}",
-  "app.authz.insufficientBalance": "Insufficient balance"
+  "app.authz.insufficientBalance": "Insufficient balance",
+  "feature.authz.done.title": "You are good to go",
+  "feature.authz.done.description": "we've sent this transaction to the blockchain network, it takes time to confirm. Download Blocto wallet to manage your assets!"
 }

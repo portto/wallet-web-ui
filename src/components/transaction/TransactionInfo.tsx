@@ -1,12 +1,5 @@
 import { Box, Text } from "@chakra-ui/react";
-import React, {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import FormattedMessage from "src/components/FormattedMessage";
 import measureTextWidth from "src/utils/measureTextWidth";
 

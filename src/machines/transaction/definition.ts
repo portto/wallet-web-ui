@@ -15,6 +15,7 @@ export const machineStates = {
   DANGEROUS: "dangerous",
   MAIN: "main",
   NON_CUSTODIAL: "nonCustodial",
+  TX_SENT: "txSent",
   FINISH_PROCESS: "finishProcess",
   MAINTENANCE: "maintenance",
   ERROR: "error",
@@ -97,7 +98,7 @@ const machine = createMachine<TransactionMachineContext>(
         on: {
           reject: { target: machineStates.CLOSE, actions: "updateTransaction" },
           approve: {
-            target: machineStates.FINISH_PROCESS,
+            target: machineStates.TX_SENT,
             actions: "updateTransaction",
           },
           dangerousTx: machineStates.DANGEROUS,
@@ -110,6 +111,11 @@ const machine = createMachine<TransactionMachineContext>(
             target: machineStates.FINISH_PROCESS,
             actions: "updateTransaction",
           },
+        },
+      },
+      [machineStates.TX_SENT]: {
+        on: {
+          next: machineStates.FINISH_PROCESS,
         },
       },
       [machineStates.FINISH_PROCESS]: {

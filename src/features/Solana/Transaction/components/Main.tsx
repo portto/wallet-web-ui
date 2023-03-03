@@ -5,12 +5,12 @@ import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-aler
 import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
-import EstimatePointErrorField from "src/components/EstimatePointErrorField";
 import Field, { FieldLine } from "src/components/Field";
 import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
-import TransactionInfo from "src/components/TransactionInfo";
+import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
+import TransactionInfo from "src/components/transaction/TransactionInfo";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { ERROR_MESSAGES } from "src/utils/constants";
