@@ -10,16 +10,16 @@ function useInterval(callback: () => void, delay: number | undefined) {
       return;
     }
 
+    // clear the last timer when tick function change or delay change
     if (timer.current) {
       clearInterval(timer.current);
     }
 
     tick();
-    const id = window.setInterval(() => tick(), delay);
-    timer.current = id;
+    timer.current = window.setInterval(() => tick(), delay);
 
     return () => clearInterval(timer.current);
-  }, [delay, callback, tick]);
+  }, [delay, tick]);
 }
 
 export default useInterval;
