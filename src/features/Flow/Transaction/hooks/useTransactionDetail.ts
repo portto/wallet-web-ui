@@ -69,7 +69,7 @@ export default function useTransactionDetail(transaction: FlowTransaction) {
     ) || [];
 
   const flowAssets = Object.fromEntries(
-    assetsList.map((asset) => [asset.symbol, asset])
+    assetsList.map((asset: AccountAsset) => [asset.symbol, asset])
   );
 
   const getRecognizedTokens = useCallback(() => {
@@ -100,7 +100,10 @@ export default function useTransactionDetail(transaction: FlowTransaction) {
       tokenNames: tokenValuePair.map(([tokenName]) => tokenName),
       // use map function for displaying multiple tokens in the tx.
       tokenBalances: tokenValuePair
-        .map(([tokenName]) => `${flowAssets[tokenName].value} ${tokenName}`)
+        .map(([tokenName]) => {
+          const { decimals, value } = flowAssets[tokenName];
+          return `${parseFloat(value) / 10 ** decimals} ${tokenName}`;
+        })
         .join(" + "),
       tokenAmount: tokenValuePair
         .map(
