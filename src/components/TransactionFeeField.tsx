@@ -13,8 +13,13 @@ import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import { ReactComponent as PointWithMobile } from "src/assets/images/icons/point-with-mobile.svg";
 import Field from "src/components/Field";
 import FormattedMessage from "src/components/FormattedMessage";
+import { useTransactionMachine } from "src/machines/transaction";
 
 const FeeList = () => {
+  const { context } = useTransactionMachine();
+  const { transaction } = context;
+  const { txFeeOptions } = transaction;
+  console.log("txFeeOptions :", txFeeOptions);
   return (
     <>
       <Heading

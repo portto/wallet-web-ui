@@ -12,6 +12,7 @@ import {
   FlowSignatureDetails,
   FlowTransaction,
   FlowUpdateSignatureDetailsResponse,
+  TransactionFeeOption,
 } from "src/types";
 import { apiGet, apiPost, apiPut } from "./axios";
 
@@ -75,6 +76,7 @@ export const estimatePoint = ({
     discount?: string;
     error_code?: string;
     chain_error_msg?: string;
+    options: TransactionFeeOption[];
   }>({
     url: `api/${blockchain}/estimatePoint`,
     request: rawObject,

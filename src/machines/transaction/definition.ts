@@ -1,5 +1,5 @@
 import { assign, createMachine } from "xstate";
-import { AccountAsset, Chains } from "src/types";
+import { AccountAsset, Chains, TransactionFeeOption } from "src/types";
 
 const defaultContext = {
   dapp: {
@@ -49,6 +49,7 @@ export interface TransactionMachineContext {
     failReason?: string;
     fee?: number;
     discount?: number;
+    txFeeOptions?: TransactionFeeOption[];
     mayFail?: boolean;
     error?: string;
   };

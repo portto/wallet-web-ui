@@ -17,7 +17,7 @@ export default function useEstimatePointInterval(
   const [hasEstimated, setHasEstimated] = useState(false);
   const estimate = useCallback(() => {
     estimatePoint({ rawObject, blockchain }).then(
-      ({ cost, discount, error_code, chain_error_msg }) => {
+      ({ cost, discount, error_code, chain_error_msg, options }) => {
         setHasEstimated(true);
         send({
           type: "updateTransaction",
@@ -26,6 +26,7 @@ export default function useEstimatePointInterval(
             discount,
             mayFail: !!error_code,
             failReason: chain_error_msg || error_code,
+            txFeeOptions: options,
           },
         });
       }
