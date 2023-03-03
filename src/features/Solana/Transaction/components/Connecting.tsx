@@ -9,13 +9,13 @@ import fetchDappInfo from "src/utils/fetchDappInfo";
 const Connecting = () => {
   const { context, send } = useTransactionMachine();
   const { authorizationId = "" } = context.user;
-  const { blockchain, name, logo, id, url } = context.dapp;
+  const { blockchain, id, url } = context.dapp;
 
   const fetchTransaction = useCallback(async () => {
     const [
       { point, type, email, id },
       { assets: allAssets },
-      { sessionId, transaction, convertedTx, extraSignatures },
+      { transaction, convertedTx, extraSignatures },
     ] = await Promise.all([
       getUserInfo(),
       getAccountAssets(),
@@ -38,7 +38,6 @@ const Connecting = () => {
       type,
       points: point,
       assets,
-      sessionId,
       balance,
     };
 

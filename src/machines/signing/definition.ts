@@ -33,7 +33,6 @@ export interface SigningMachineContext {
   };
   user: {
     type?: string;
-    sessionId?: string;
   };
   signatureId?: string;
   requestId?: string;

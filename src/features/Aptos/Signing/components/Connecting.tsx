@@ -13,9 +13,8 @@ import fetchDappInfo from "src/utils/fetchDappInfo";
 const Connecting = () => {
   const { context, send } = useSigningMachine();
   const {
-    dapp: { blockchain, url, name, logo, id },
+    dapp: { blockchain, url, id },
     signatureId,
-    user: { sessionId = "" },
   } = context;
 
   useEffect(() => {
@@ -23,10 +22,9 @@ const Connecting = () => {
       // get user type (custodial or not) and get the details of the signing message
       Promise.all([
         getUserInfo(),
-        getSignatureDetails({ blockchain, signatureId, sessionId }),
+        getSignatureDetails({ blockchain, signatureId }),
       ]).then(([{ type }, signatureDetails]) => {
         const {
-          sessionId,
           fullMessage,
           message,
           nonce,
@@ -51,7 +49,6 @@ const Connecting = () => {
             },
             user: {
               type,
-              sessionId,
             },
           },
         });
@@ -63,13 +60,12 @@ const Connecting = () => {
     );
     // Shouldn't include {url} since {fetchDappInfo} is meant to update them
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blockchain, id, send, signatureId, sessionId]);
+  }, [blockchain, id, send, signatureId]);
 
   const handleClose = useCallback(() => {
     if (signatureId) {
       updateSignatureDetails({
         signatureId,
-        sessionId,
         action: "decline",
         blockchain,
       });
@@ -78,7 +74,7 @@ const Connecting = () => {
       type: "reject",
       data: { error: ERROR_MESSAGES.SIGN_DECLINE_ERROR },
     });
-  }, [blockchain, send, sessionId, signatureId]);
+  }, [blockchain, send, signatureId]);
 
   return <Loading blockchain={blockchain} onClose={handleClose} />;
 };

@@ -57,15 +57,11 @@ const Main = () => {
     }
   }, [isNativeTransferring]);
 
-  const { sessionId = "" } = user;
   const { blockchain } = dapp;
   const showInsufficientAmountHint =
     !hasEnoughBalance && isSupportedTokenTransferring;
 
-  const [isReady] = useEstimatePointInterval(
-    { rawObject, sessionId, blockchain },
-    10000
-  );
+  const [isReady] = useEstimatePointInterval({ rawObject, blockchain }, 10000);
 
   const handlePurchase = useCallback(() => {
     const { address = "", email = "", id = "" } = context.user;
@@ -83,7 +79,7 @@ const Main = () => {
   }, [blockchain, context.user]);
 
   const approve = useCallback(async () => {
-    const { sessionId = "", authorizationId = "" } = user;
+    const { authorizationId = "" } = user;
     const { fee = 0, discount = 0 } = transaction;
     const { id = "", blockchain, name = "" } = dapp;
 
@@ -91,7 +87,6 @@ const Main = () => {
     await updateAuthorization({
       authorizationId,
       action: "approve",
-      sessionId,
       blockchain,
       cost: fee,
       discount,

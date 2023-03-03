@@ -23,17 +23,17 @@ const Main = () => {
 
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject, mayFail, failReason } = transaction;
-  const { sessionId = "" } = user;
+
   const { blockchain } = dapp;
   const actualTx = rawObject.convertedTx || rawObject.transaction;
 
   const [isReady] = useEstimatePointInterval(
-    { rawObject: { ...rawObject, message: actualTx }, sessionId, blockchain },
+    { rawObject: { ...rawObject, message: actualTx }, blockchain },
     10000
   );
 
   const approve = useCallback(async () => {
-    const { sessionId = "", authorizationId = "" } = user;
+    const { authorizationId = "" } = user;
     const { fee = 0, discount = 0 } = transaction;
     const { id = "", blockchain, name = "" } = dapp;
 
@@ -41,7 +41,6 @@ const Main = () => {
     await updateAuthorization({
       authorizationId,
       action: "approve",
-      sessionId,
       blockchain,
       cost: fee,
       discount,

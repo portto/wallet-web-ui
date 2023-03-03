@@ -117,7 +117,7 @@ export const checkDeviceConfirmed = ({ jwt }: { jwt: string }) =>
 export const refreshToken = () =>
   apiPost({
     url: "blocto/account/refreshToken",
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const getUserInfo = (param: { jwt?: string } = {}) =>
@@ -136,14 +136,14 @@ export const getUserInfo = (param: { jwt?: string } = {}) =>
 export const getAccountSettings = () =>
   apiGet({
     url: "blocto/account/settings",
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const setAccountSettings = (payload = {}) =>
   apiPost({
     url: "blocto/account/settings",
     request: payload,
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const getAccountAssets = () =>
@@ -151,7 +151,7 @@ export const getAccountAssets = () =>
     assets: Array<AccountAsset>;
   }>({
     url: "blocto/account/assets",
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const getAccountAsset = ({
@@ -167,7 +167,7 @@ export const getAccountAsset = ({
       blockchain,
       force,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const getAccountFlowAsset = () =>
@@ -176,7 +176,7 @@ export const getAccountFlowAsset = () =>
     request: {
       blockchain: Chains.flow,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const getAccountSolanaAsset = () =>
@@ -185,7 +185,7 @@ export const getAccountSolanaAsset = () =>
     request: {
       blockchain: Chains.solana,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const estimateEnableBlockchain = ({
@@ -198,7 +198,7 @@ export const estimateEnableBlockchain = ({
     request: {
       blockchain,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const enableBlockchain = ({
@@ -217,7 +217,7 @@ export const enableBlockchain = ({
       point_cost: pointCost,
       point_discount: pointDiscount,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const enableSolana = () =>
@@ -226,7 +226,7 @@ export const enableSolana = () =>
     request: {
       blockchain: Chains.solana,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const signTransaction = ({ data }: { data: string }) =>
@@ -241,7 +241,7 @@ export const signTransaction = ({ data }: { data: string }) =>
     request: {
       raw_payload: data,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const signCosigner = ({ data }: { data: string }) =>
@@ -250,7 +250,7 @@ export const signCosigner = ({ data }: { data: string }) =>
     request: {
       raw_payload: data,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const signPayer = ({
@@ -267,7 +267,7 @@ export const signPayer = ({
         raw_payload: data,
         payer_id: payerId,
       },
-      isAuthorized: true,
+      withAccessToken: true,
     }
   );
 
@@ -284,7 +284,7 @@ export const createSigningRequest = ({
   apiPost<{ id: string }>({
     url: `blocto/nonCustodial/signingRequest/${blockchain}`,
     request: payload,
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const getSigningRequest = ({
@@ -301,7 +301,7 @@ export const getSigningRequest = ({
     | AptosNonCustodialSigningResponse
   >({
     url: `blocto/nonCustodial/signingRequest/${blockchain}/${id}`,
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const signMoonPayUrl = ({ query }: { query: string }) =>
@@ -310,7 +310,7 @@ export const signMoonPayUrl = ({ query }: { query: string }) =>
     request: {
       query,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const getDappInfo = ({ id }: { id: string }) =>

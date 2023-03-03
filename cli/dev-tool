@@ -141,7 +141,7 @@ def __main__():
       connection = init_connection()
       url = "/api/{blockchain}/user-signature".format(blockchain=blockchain)
 
-      payload = { 'sessionId': code }
+      payload = {}
 
       # @todo: support flow sign
       if blockchain in EVM_CHAINS:
@@ -156,7 +156,10 @@ def __main__():
       
       request_body = json.dumps(payload)
 
-      connection.request('POST', url, request_body, { 'Content-type': 'application/json' })
+      connection.request('POST', url, request_body, {
+        'Content-type': 'application/json',
+        'Blocto-Session-Identifier': code
+      })
       response = json.load(connection.getresponse())
       signature_id = response['signatureId']
       generated_url = "{dev_url}/{dapp_id}/{blockchain}/user-signature/{signature_id}".format(dev_url=dev_url, dapp_id=DEV_DAPP_ID, blockchain=blockchain, signature_id=signature_id)
@@ -178,9 +181,12 @@ def __main__():
 
     try:
       connection = init_connection()
-      accounts_url = "/api/{blockchain}/accounts?code={code}".format(blockchain=blockchain, code=code)
+      accounts_url = "/api/{blockchain}/accounts".format(blockchain=blockchain)
 
-      connection.request('GET', accounts_url, None, { 'Content-type': 'application/json', 'referer': DAPP_URL })
+      connection.request('GET', accounts_url, None, {
+        'Content-type': 'application/json',
+        'Blocto-Session-Identifier': code
+      })
       response = json.load(connection.getresponse())
       account = response['accounts'][0]
 
@@ -193,10 +199,12 @@ def __main__():
         payload = make_aptos_payload()
       request_body = json.dumps(payload)
 
-
-      url = "/api/{blockchain}/authz?code={code}".format(blockchain=blockchain, code=code)
-      connection.request('POST', url, request_body, { 'Content-type': 'application/json', 'referer': DAPP_URL })
-
+      url = "/api/{blockchain}/authz".format(blockchain=blockchain)
+      connection.request('POST', url, request_body, {
+        'Content-type': 'application/json',
+        'Blocto-Session-Identifier': code
+      })
+      
       response = json.load(connection.getresponse())
       auth_id = response['authorizationId']
       generated_url = "{dev_url}/{dapp_id}/{blockchain}/authz/{auth_id}".format(dev_url=dev_url, dapp_id=DEV_DAPP_ID, blockchain=blockchain, auth_id=auth_id)

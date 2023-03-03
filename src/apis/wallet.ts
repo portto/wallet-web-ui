@@ -1,3 +1,4 @@
+import { KEY_ACCESS_TOKEN, getItem } from "src/services/LocalStorage";
 import {
   AptosSignatureDetails,
   AptosTransaction,
@@ -29,14 +30,16 @@ export const createHandshake = (params: any) =>
     signatures: CompositeSignature[];
   }>({
     url: "api/createHandshake",
-    request: params,
-    isAuthorized: true,
+    request: {
+      accessToken: getItem(KEY_ACCESS_TOKEN),
+      ...params,
+    },
   });
 
 export const createAuthnQueue = () =>
   apiPost({
     url: "api/authn-queue",
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const getAuthnQueue = (queueId: number) =>
@@ -49,7 +52,7 @@ export const getAuthnQueue = (queueId: number) =>
     request: {
       queueId,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const getAuthn = (authenticationId: string) =>
@@ -61,11 +64,9 @@ export const getAuthn = (authenticationId: string) =>
   });
 
 export const estimatePoint = ({
-  sessionId,
   blockchain = Chains.ethereum,
   rawObject,
 }: {
-  sessionId: string;
   blockchain: Chains;
   rawObject: object;
 }) =>
@@ -76,54 +77,39 @@ export const estimatePoint = ({
     chain_error_msg?: string;
   }>({
     url: `api/${blockchain}/estimatePoint`,
-    request: {
-      sessionId,
-      ...rawObject,
-    },
-    isAuthorized: true,
+    request: rawObject,
+    withSession: true,
   });
 
 export const signEthereumMessage = ({
   chain = "ethereum",
   message,
-  sessionId,
 }: {
   chain: string;
   message: string;
-  sessionId: string;
 }) =>
   apiPost<{ signature: string }>({
     url: `api/${chain}/sign`,
     request: {
       message: `0x${message}`,
-      sessionId,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
-export const signAptosMessage = ({
-  message,
-  sessionId,
-}: {
-  message: string;
-  sessionId: string;
-}) =>
+export const signAptosMessage = ({ message }: { message: string }) =>
   apiPost({
     url: "api/aptos/sign",
     request: {
       message,
-      sessionId,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const createSignatureDetails = ({
-  sessionId,
   blockchain,
   message,
   method,
 }: {
-  sessionId: string;
   blockchain: Chains;
   message: string;
   method: string;
@@ -131,39 +117,33 @@ export const createSignatureDetails = ({
   apiPost<{ signatureId: string; status: "PENDING"; reason: null }>({
     url: `api/${blockchain}/user-signature`,
     request: {
-      sessionId,
       message,
       method,
     },
-    isAuthorized: true,
+    withSession: true,
   });
 
 export const getSignatureDetails = ({
   blockchain,
   signatureId,
-  sessionId,
 }: {
   blockchain: Chains;
   signatureId: string;
-  sessionId: string;
 }) =>
   apiGet<FlowSignatureDetails | EVMSignatureDetails | AptosSignatureDetails>({
     url: `api/${blockchain}/signature-details`,
     request: {
       signatureId,
-      sessionId,
     },
-    isAuthorized: true,
+    withSession: true,
   });
 
 export const updateSignatureDetails = ({
   signatureId,
-  sessionId,
   action,
   blockchain,
 }: {
   signatureId: string;
-  sessionId: string;
   blockchain: Chains;
   action: "approve" | "decline";
 }) =>
@@ -175,10 +155,10 @@ export const updateSignatureDetails = ({
     url: `api/${blockchain}/user-signature`,
     request: {
       signatureId,
-      sessionId,
       action,
     },
-    isAuthorized: true,
+    withAccessToken: true,
+    withSession: true,
   });
 
 export const getAuthorization = ({
@@ -189,7 +169,6 @@ export const getAuthorization = ({
   blockchain: string;
 }) =>
   apiGet<{
-    sessionId: string;
     status: "PENDING" | "APPROVED" | "DECLINED";
     reason: string | null;
     transactionHash: string | null;
@@ -202,7 +181,8 @@ export const getAuthorization = ({
     request: {
       authorizationId,
     },
-    isAuthorized: true,
+    withAccessToken: true,
+    withSession: true,
   });
 
 export const updateAuthentication = ({
@@ -223,7 +203,7 @@ export const updateAuthentication = ({
       action,
       data,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const updatePreAuthz = ({
@@ -241,7 +221,7 @@ export const updatePreAuthz = ({
       preauthId,
       action,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const checkPreAuthzQueue = ({
@@ -259,18 +239,16 @@ export const checkPreAuthzQueue = ({
     request: {
       preauthId,
     },
-    isAuthorized: true,
+    withSession: true,
   });
 
 export const createDAppAuthorization = ({
-  sessionId,
   blockchain = "flow",
   message,
   isInvokeWrapped,
   publicKeySignaturePairs,
   appendTx,
 }: {
-  sessionId: string;
   blockchain: string;
   message: string;
   isInvokeWrapped: boolean;
@@ -285,19 +263,17 @@ export const createDAppAuthorization = ({
   }>({
     url: `api/${blockchain}/authz-dapp`,
     request: {
-      sessionId,
       message,
       isInvokeWrapped,
       publicKeySignaturePairs,
       appendTx,
     },
-    isAuthorized: true,
+    withSession: true,
   });
 
 export const createAuthorization = ({
   txs,
   blockchain = "ethereum",
-  sessionId,
   isInDApp,
 }: any) =>
   apiPost<{
@@ -306,21 +282,20 @@ export const createAuthorization = ({
     reason: null;
     transactionHash: null;
   }>({
-    url: `api/${blockchain}/authz?code=${sessionId}&isInDApp=${isInDApp}`,
+    url: `api/${blockchain}/authz?isInDApp=${isInDApp}`,
     request: txs,
+    withSession: true,
   });
 
 export const updateAuthorization = ({
   authorizationId = "",
   action,
-  sessionId = "",
   blockchain = Chains.flow,
   cost = 0,
   discount = 0,
 }: {
   authorizationId: string;
   action: "decline" | "approve";
-  sessionId: string;
   blockchain: Chains;
   cost?: number;
   discount?: number;
@@ -330,29 +305,27 @@ export const updateAuthorization = ({
     request: {
       authorizationId,
       action,
-      sessionId,
       cost,
       discount,
     },
-    isAuthorized: true,
+    withAccessToken: true,
+    withSession: true,
   });
 
 export const updateNonCustodial = ({
   authorizationId,
-  sessionId,
   blockchain = "flow",
 }: any) =>
   apiPut({
     url: `api/${blockchain}/non-custodial`,
     request: {
       authorizationId,
-      sessionId,
     },
-    isAuthorized: true,
+    withAccessToken: true,
   });
 
 export const createSharedAccount = () =>
   apiPost<{ request_id: string; tx_hash: string }>({
     url: "api/flow/create-script",
-    isAuthorized: true,
+    withAccessToken: true,
   });

@@ -38,7 +38,6 @@ const NonCustodial = () => {
   const {
     dapp: { blockchain, id: appId = "", url = "", name = "", logo = "" },
     signatureId,
-    user: { sessionId = "" },
   } = context;
   const domain = url ? new URL(url).host : "";
 
@@ -69,7 +68,6 @@ const NonCustodial = () => {
     if (signatureId) {
       updateSignatureDetails({
         signatureId,
-        sessionId,
         action: "decline",
         blockchain,
       });
@@ -79,7 +77,7 @@ const NonCustodial = () => {
       type: "reject",
       data: { error: ERROR_MESSAGES.SIGN_DECLINE_ERROR },
     });
-  }, [blockchain, send, sessionId, signatureId]);
+  }, [blockchain, send, signatureId]);
 
   const pollWalletStatus = async () => {
     const result = await getSigningRequest({

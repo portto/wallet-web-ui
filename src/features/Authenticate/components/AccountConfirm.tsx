@@ -35,9 +35,9 @@ const AccountConifrm = () => {
   const {
     dapp: { id: dAppId = "", name: dAppName = "", logo, url = "", blockchain },
     user: {
-      id: userId,
+      id,
       email,
-      type: userType,
+      type,
       addresses,
       deviceKey,
       deviceId,
@@ -51,20 +51,19 @@ const AccountConifrm = () => {
   useEffect(() => {
     // create session with api server
     createHandshake({
-      blockchain,
+      id,
       email,
-      userId,
-      address: addresses,
-      domain,
-      appId: dAppId,
-      userType,
-      metadata: {
-        title: dAppName,
-        thumbnail: logo,
-      },
+      type,
+      addresses,
       deviceKey,
       deviceId,
       signatureData,
+      dapp: {
+        id: dAppId,
+        domain,
+        name: dAppName,
+        logo,
+      },
     }).then(({ paddr, code, signatures = [] }) => {
       setHandshakeData({ paddr, code, signatures });
       setItem(KEY_SESSION_ID, code);

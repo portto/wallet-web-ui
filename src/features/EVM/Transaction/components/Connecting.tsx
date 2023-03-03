@@ -17,6 +17,7 @@ const Connecting = () => {
     );
 
     // intentionally run once
+    // eslint-disable-next-line
   }, []);
 
   // get transaction info
@@ -24,7 +25,7 @@ const Connecting = () => {
     const { authorizationId = "" } = context.user;
     const { blockchain } = context.dapp;
     const fetchTransaction = async () => {
-      const { sessionId, transactions } = await getAuthorization({
+      const { transactions } = await getAuthorization({
         authorizationId,
         blockchain,
       });
@@ -45,7 +46,6 @@ const Connecting = () => {
         type,
         points: point,
         assets,
-        sessionId,
         balance,
         address,
       };
@@ -61,6 +61,7 @@ const Connecting = () => {
 
     fetchTransaction();
     // intentionally run once
+    // eslint-disable-next-line
   }, []);
 
   const handleClose = useCallback(async () => {

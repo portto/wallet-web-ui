@@ -75,7 +75,7 @@ const Main = () => {
   }, [context.user, recognizedTx]);
 
   const approve = useCallback(async () => {
-    const { sessionId = "", authorizationId = "" } = user;
+    const { authorizationId = "" } = user;
     const { fee = 0, discount = 0 } = transaction;
     const { id = "", blockchain, name = "" } = dapp;
 
@@ -83,7 +83,6 @@ const Main = () => {
     await updateAuthorization({
       authorizationId,
       action: "approve",
-      sessionId,
       blockchain,
       cost: fee,
       discount,
