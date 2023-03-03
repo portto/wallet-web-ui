@@ -11,15 +11,15 @@ const ScrollableContainer = ({
 } & BoxProps) => {
   const [isScrollable, setIsScrollable] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const container = containerRef.current;
 
   useEffect(() => {
-    const container = containerRef.current;
-
     if (!container) return;
 
     const isScrollable = container.scrollHeight > container.clientHeight;
+
     setIsScrollable(isScrollable);
-  }, []);
+  }, [container]);
 
   return (
     <Flex overflow="hidden">
