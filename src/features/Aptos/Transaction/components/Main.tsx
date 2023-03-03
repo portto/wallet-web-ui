@@ -22,6 +22,7 @@ const Main = () => {
   const [recognizedTx, setRecognizedTx] = useState(false);
   const [verifiedTx, setVerifiedTx] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
@@ -55,7 +56,8 @@ const Main = () => {
 
   useEffect(() => {
     estimatePoint({ rawObject, sessionId, blockchain }).then(
-      ({ cost, discount, error_code, chain_error_msg }) =>
+      ({ cost, discount, error_code, chain_error_msg }) => {
+        setIsReady(true);
         send({
           type: "updateTransaction",
           data: {
@@ -64,7 +66,8 @@ const Main = () => {
             mayFail: !!error_code,
             failReason: chain_error_msg || error_code,
           },
-        })
+        });
+      }
     );
 
     // Framework module address range: 0x1 - 0xa
@@ -296,7 +299,7 @@ const Main = () => {
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
         <Button
           onClick={approve}
-          disabled={showInsufficientBalance || mayFail}
+          disabled={showInsufficientBalance || mayFail || !isReady}
           isLoading={isProcessing}
         >
           <FormattedMessage intlKey="app.authz.approve" />
