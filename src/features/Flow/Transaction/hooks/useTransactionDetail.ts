@@ -15,8 +15,6 @@ interface RecognizedTokens {
   };
 }
 
-const FLOW_MAX_DIGITS = 100000000;
-
 const isBalanceEnough = (
   recognizedTokens: RecognizedTokens,
   flowAssets: FlowAssets
@@ -102,12 +100,10 @@ export default function useTransactionDetail(transaction: FlowTransaction) {
       tokenNames: tokenValuePair.map(([tokenName]) => tokenName),
       // use map function for displaying multiple tokens in the tx.
       tokenBalances: tokenValuePair
-        .map(
-          ([tokenName]) =>
-            `${
-              parseFloat(flowAssets[tokenName]?.value) / FLOW_MAX_DIGITS
-            } ${tokenName}`
-        )
+        .map(([tokenName]) => {
+          const { decimals, value } = flowAssets[tokenName];
+          return `${parseFloat(value) / 10 ** decimals} ${tokenName}`;
+        })
         .join(" + "),
       tokenAmount: tokenValuePair
         .map(
