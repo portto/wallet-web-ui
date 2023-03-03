@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef } from "react";
 
 function useInterval(callback: () => void, delay: number | undefined) {
   const tick = useCallback(() => callback && callback(), [callback]);
-  const timer = useRef<number | undefined>();
 
   useEffect(() => {
     // delay must be a number
@@ -10,15 +9,10 @@ function useInterval(callback: () => void, delay: number | undefined) {
       return;
     }
 
-    // clear the last timer when tick function change or delay change
-    if (timer.current) {
-      clearInterval(timer.current);
-    }
-
     tick();
-    timer.current = window.setInterval(() => tick(), delay);
+    const id = window.setInterval(() => tick(), delay);
 
-    return () => clearInterval(timer.current);
+    return () => clearInterval(id);
   }, [delay, tick]);
 }
 
