@@ -3,6 +3,8 @@ import { useTransactionMachine } from "src/machines/transaction";
 import { AccountAsset, AptosTransaction } from "src/types";
 
 const TOKEN_NAME = "APT";
+const APTOS_MAX_DIGITS = 100000000;
+
 export default function useTransactionDetail(transaction: AptosTransaction) {
   const {
     context: { user },
@@ -25,7 +27,7 @@ export default function useTransactionDetail(transaction: AptosTransaction) {
       hasValue,
       hasEnoughBalance: (user.balance || 0) > cost,
       ...(hasValue && {
-        tokenBalance: user.balance,
+        tokenBalance: (user?.balance || 0) / APTOS_MAX_DIGITS,
         tokenName: TOKEN_NAME,
         tokenAmount: `${(cost * 1e-8)
           .toFixed(8)
