@@ -1,8 +1,7 @@
-import { Box, Flex, HStack, Spinner } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
-import { estimatePoint, getAuthorization, updateAuthorization } from "src/apis";
+import { Box, Flex } from "@chakra-ui/react";
+import { useCallback, useState } from "react";
+import { getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
-import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
@@ -11,6 +10,8 @@ import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
+import TransactionFeeField from "src/components/TransactionFeeField";
+import useEstimatePointInterval from "src/hooks/useEstimatePointInterval";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { ERROR_MESSAGES } from "src/utils/constants";
@@ -18,38 +19,18 @@ import { ERROR_MESSAGES } from "src/utils/constants";
 const Main = () => {
   const { context, send } = useTransactionMachine();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isReady, setIsReady] = useState(false);
   const { user, transaction, dapp } = context;
+
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject, mayFail, failReason } = transaction;
-
-  const hasDiscount = (transaction.discount || 0) > 0;
-  const realTransactionFee =
-    (transaction.fee || 0) - (transaction.discount || 0);
-
   const { sessionId = "" } = user;
-
   const { blockchain } = dapp;
+  const actualTx = rawObject.convertedTx || rawObject.transaction;
 
-  useEffect(() => {
-    const actualTx = rawObject.convertedTx || rawObject.transaction;
-    estimatePoint({
-      rawObject: { ...rawObject, message: actualTx },
-      sessionId,
-      blockchain,
-    }).then(({ cost, discount, error_code, chain_error_msg }) => {
-      setIsReady(true);
-      send({
-        type: "updateTransaction",
-        data: {
-          fee: cost,
-          discount,
-          mayFail: !!error_code,
-          failReason: chain_error_msg || error_code,
-        },
-      });
-    });
-  }, [sessionId, rawObject, blockchain, send]);
+  const [isReady] = useEstimatePointInterval(
+    { rawObject: { ...rawObject, message: actualTx }, sessionId, blockchain },
+    10000
+  );
 
   const approve = useCallback(async () => {
     const { sessionId = "", authorizationId = "" } = user;
@@ -82,54 +63,14 @@ const Main = () => {
     } else send({ type: "reject", data: { error: reason } });
   }, [user, dapp, transaction, dappDomain, send]);
 
-  const TransactionFeeField = () => (
-    <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
-      <HStack>
-        {transaction.fee ? (
-          <>
-            <Flex
-              bg="background.secondary"
-              borderRadius="50%"
-              width="20px"
-              height="20px"
-              justifyContent="center"
-              alignItems="center"
-              mr="space.3xs"
-              p="space.4xs"
-            >
-              <Logo />
-            </Flex>
-            <Box>
-              <FormattedMessage
-                intlKey="app.authz.transactionFeePoints"
-                values={{ points: realTransactionFee }}
-              />
-              {hasDiscount && (
-                <Box as="span" pl="space.3xs">
-                  (
-                  <Box as="del">
-                    <FormattedMessage
-                      intlKey="app.authz.transactionFeePoints"
-                      values={{ points: transaction.fee }}
-                    />
-                  </Box>
-                  )
-                </Box>
-              )}
-            </Box>
-          </>
-        ) : (
-          <Spinner width="15px" height="15px" color="icon.tertiary" />
-        )}
-      </HStack>
-    </Field>
-  );
-
   const getTransactionFeeField = () => {
     return mayFail ? (
       <EstimatePointErrorField content={failReason} />
     ) : (
-      <TransactionFeeField />
+      <TransactionFeeField
+        discount={transaction.discount}
+        originalTransactionFee={transaction.fee}
+      />
     );
   };
 
