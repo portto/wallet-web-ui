@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { estimatePoint } from "src/apis";
 import useInterval from "src/hooks/useInterval";
 import { useTransactionMachine } from "src/machines/transaction";
@@ -15,9 +15,11 @@ export default function useEstimatePointInterval(
   delay = 10000
 ) {
   const { send } = useTransactionMachine();
+  const [hasEstimated, setHasEstimated] = useState(false);
   const estimate = useCallback(() => {
     estimatePoint({ rawObject, sessionId, blockchain }).then(
       ({ cost, discount, error_code, chain_error_msg }) => {
+        setHasEstimated(true);
         send({
           type: "updateTransaction",
           data: {
@@ -32,4 +34,6 @@ export default function useEstimatePointInterval(
   }, [blockchain, rawObject, send, sessionId]);
 
   useInterval(estimate, delay);
+
+  return [hasEstimated];
 }

@@ -62,7 +62,10 @@ const Main = () => {
   const showInsufficientAmountHint =
     !hasEnoughBalance && isSupportedTokenTransferring;
 
-  useEstimatePointInterval({ rawObject, sessionId, blockchain }, 10000);
+  const [isReady] = useEstimatePointInterval(
+    { rawObject, sessionId, blockchain },
+    10000
+  );
 
   const handlePurchase = useCallback(() => {
     const { address = "", email = "", id = "" } = context.user;
@@ -229,7 +232,11 @@ const Main = () => {
             <FormattedMessage intlKey="app.authz.purchaseonmoonpay" />
           </Button>
         ) : (
-          <Button onClick={approve} disabled={mayFail} isLoading={isProcessing}>
+          <Button
+            onClick={approve}
+            disabled={mayFail || !isReady}
+            isLoading={isProcessing}
+          >
             <FormattedMessage intlKey="app.authz.approve" />
           </Button>
         )}

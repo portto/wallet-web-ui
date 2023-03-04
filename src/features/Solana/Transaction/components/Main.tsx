@@ -27,7 +27,7 @@ const Main = () => {
   const { blockchain } = dapp;
   const actualTx = rawObject.convertedTx || rawObject.transaction;
 
-  useEstimatePointInterval(
+  const [isReady] = useEstimatePointInterval(
     { rawObject: { ...rawObject, message: actualTx }, sessionId, blockchain },
     10000
   );
@@ -118,7 +118,11 @@ const Main = () => {
       </Box>
 
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
-        <Button onClick={approve} disabled={mayFail} isLoading={isProcessing}>
+        <Button
+          onClick={approve}
+          disabled={mayFail || !isReady}
+          isLoading={isProcessing}
+        >
           <FormattedMessage intlKey="app.authz.approve" />
         </Button>
       </Flex>

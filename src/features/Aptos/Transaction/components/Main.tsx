@@ -50,7 +50,10 @@ const Main = () => {
   const { sessionId = "" } = user;
   const { blockchain } = dapp;
 
-  useEstimatePointInterval({ rawObject, sessionId, blockchain }, 10000);
+  const [isReady] = useEstimatePointInterval(
+    { rawObject, sessionId, blockchain },
+    10000
+  );
 
   useEffect(() => {
     // Framework module address range: 0x1 - 0xa
@@ -242,7 +245,7 @@ const Main = () => {
       <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
         <Button
           onClick={approve}
-          disabled={showInsufficientBalance || mayFail}
+          disabled={showInsufficientBalance || mayFail || !isReady}
           isLoading={isProcessing}
         >
           <FormattedMessage intlKey="app.authz.approve" />
