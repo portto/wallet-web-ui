@@ -1,77 +1,8 @@
-import {
-  Box,
-  Flex,
-  HStack,
-  Heading,
-  Link,
-  ListItem,
-  Spinner,
-  UnorderedList,
-} from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { Box, Flex, HStack, Spinner } from "@chakra-ui/react";
 import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
-import { ReactComponent as PointWithMobile } from "src/assets/images/icons/point-with-mobile.svg";
 import Field from "src/components/Field";
 import FormattedMessage from "src/components/FormattedMessage";
-import { useTransactionMachine } from "src/machines/transaction";
-
-const FeeList = () => {
-  const { context } = useTransactionMachine();
-  const { transaction } = context;
-  const { txFeeOptions } = transaction;
-  console.log("txFeeOptions :", txFeeOptions);
-  return (
-    <>
-      <Heading
-        as="h3"
-        fontSize="size.heading.3"
-        fontWeight="weight.l"
-        mb="space.m"
-      >
-        <FormattedMessage intlKey="app.authz.transactionFee" />
-      </Heading>
-      <Flex
-        p="space.s"
-        bg="background.secondary"
-        borderRadius="12px"
-        flexDirection="column"
-      >
-        <Flex mb="space.s">
-          <Box mr="space.s">
-            <FormattedMessage intlKey="app.authz.purchaseBloctoPoint" />
-          </Box>
-          <Box ml="space.3xs">
-            <PointWithMobile />
-          </Box>
-        </Flex>
-        <Box>
-          <FormattedMessage
-            intlKey="app.authz.bloctoPoint"
-            values={{
-              a: (chunks: ReactNode) => (
-                <Link
-                  href="https://portto.zendesk.com/hc/en-us/articles/900005302883-What-are-Blocto-points-What-can-I-do-with-Blocto-points-"
-                  isExternal
-                  textDecor="underline"
-                  rel="noopener noreferrer"
-                  fontWeight="weight.m"
-                >
-                  {chunks}
-                </Link>
-              ),
-            }}
-          />
-        </Box>
-      </Flex>
-      <UnorderedList listStyleType="none" m={0}>
-        <ListItem py="space.m">xx</ListItem>
-        <ListItem>xx</ListItem>
-        <ListItem>xx</ListItem>
-        <ListItem>xx</ListItem>
-      </UnorderedList>
-    </>
-  );
-};
+import FeeOptions from "src/components/transaction/FeeOptions";
 
 const FreeTransactionFeeField = () => (
   <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
@@ -116,7 +47,7 @@ const TransactionFeeField = ({
   return (
     <Field
       title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-      hidableInfo={<FeeList />}
+      hidableInfo={<FeeOptions />}
     >
       <HStack>
         {isLoading && (
