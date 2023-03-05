@@ -9,6 +9,7 @@
   "app.general.message": "Message",
   "app.general.buyBloctoPoint": "Buy Blocto Point",
   "app.general.buyBloctoPoint.description": "Blocto wallet supports multiple payment options for the transaction fees on blockchains now!",
+  "app.general.buy": "Buy",
   "app.general.manageYourAssets": "Manage your assets",
   "app.general.manageYourAssets.description": "Blocto App is your all-in-one access pass to Web3. Trade crypto, collect NFTs, explore a powerful ecosystem, and more.",
   "app.general.ok": "OK",
