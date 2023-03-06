@@ -68,8 +68,8 @@ const TransactionSent = ({
         isShown={isDownloadPageShown}
         blockchain={blockchain}
         onLastStepClick={toggleDownloadPage}
-        actionKey="app.general.buyBloctoPoint"
-        actionDescriptionKey="app.general.buyBloctoPoint.description"
+        actionKey="app.general.manageYourAssets"
+        actionDescriptionKey="app.general.manageYourAssets.description"
       />
     </>
   );
