@@ -8,8 +8,9 @@
   "app.general.downloadBloctoApp": "Download Blocto App",
   "app.general.message": "Message",
   "app.general.buyBloctoPoint": "Buy Blocto Point",
-  "app.general.buyBloctoPoint.description": "Purchase unified Blocto points for multi-chains transaction fee. Scan the qrcode to download the App and buy blocto points!",
+  "app.general.buyBloctoPoint.description": "Blocto wallet supports multiple payment options for the transaction fees on blockchains now!",
   "app.general.manageYourAssets": "Manage your assets",
+  "app.general.manageYourAssets.description": "Blocto App is your all-in-one access pass to Web3. Trade crypto, collect NFTs, explore a powerful ecosystem, and more.",
   "app.general.ok": "OK",
   "feature.authn.confirm.title": "Request account with",
   "feature.authn.confirm.useAnotherAccount": "Use Another Account",
@@ -59,5 +60,5 @@
   "app.authz.transferNativeToken": "Transfer {amount} {token}",
   "app.authz.insufficientBalance": "Insufficient balance",
   "feature.authz.done.title": "You are good to go",
-  "feature.authz.done.description": "we've sent this transaction to the blockchain network, it takes time to confirm. Download Blocto wallet to manage your assets!"
+  "feature.authz.done.description": "We’ve sent the transaction to the blockchain network, and it may take time to process. Download Blocto wallet to manage your assets!"
 }
