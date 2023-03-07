@@ -35,6 +35,11 @@ import { getLocale } from "./utils/locales";
 // This is for @metamask/eth-sig-util, which accesses Buffer to generate data
 globalThis.Buffer = Buffer;
 
+// A fallback function for app to set access token from in-app browser
+// @todo: remove this function after app remove their legacy flow
+// @ts-expect-error workaround
+window.setAccessToken = (token) => (window.accessToken = token);
+
 loadGA();
 initAmplitude();
 initSentry();
