@@ -9,9 +9,10 @@ import {
   UnorderedList,
   VStack,
 } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { ReactNode, useContext } from "react";
 import Logo from "src/assets/images/icons/logo.svg";
 import { ReactComponent as PointWithMobile } from "src/assets/images/icons/point-with-mobile.svg";
+import { FieldContext } from "src/context/field";
 import { useTransactionMachine } from "src/machines/transaction";
 import { AccountAsset, TransactionFeeOption } from "src/types";
 import FormattedMessage from "../FormattedMessage";
@@ -87,6 +88,7 @@ const FeeOptions = ({
   const { transaction, user } = context;
   const { assets = [], points = 0 } = user;
   const { txFeeOptions = [] } = transaction;
+  const { closeHidableInfo } = useContext(FieldContext);
   const txFeeOptionsWithLogo = getFeeOptionsFromAssets(
     txFeeOptions,
     assets,
@@ -102,6 +104,7 @@ const FeeOptions = ({
       decimals: feeOption.decimals,
       symbol: feeOption.symbol,
     });
+    closeHidableInfo();
   };
 
   return (
