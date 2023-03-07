@@ -4,6 +4,7 @@ import Loading from "src/components/Loading";
 import { logPageView } from "src/services/Amplitude";
 import { sendPageView } from "src/services/GoogleAnalytics";
 import { EVM_CHAINS } from "src/utils/constants";
+import { KEY_ACCESS_TOKEN, setItem } from "./services/LocalStorage";
 
 const Authenticate = React.lazy(() => import("src/features/Authenticate"));
 const EVM = {
@@ -38,6 +39,14 @@ const App = () => {
     sendPageView(location.pathname);
     logPageView({ pathname: location.pathname });
   }, [location]);
+
+  // handle injected access token from in-app browser to enable seemless login
+  useEffect(() => {
+    const injectedToken = (window as any).accessToken;
+    if (injectedToken) {
+      setItem(KEY_ACCESS_TOKEN, injectedToken);
+    }
+  }, []);
 
   return (
     <Suspense fallback={<Loading />}>
