@@ -149,10 +149,7 @@ const Main = () => {
     return mayFail ? (
       <EstimatePointErrorField content={failReason} />
     ) : (
-      <TransactionFeeField
-        originalTransactionFee={transaction.fee}
-        discount={transaction.discount}
-      />
+      <TransactionFeeField />
     );
   };
 

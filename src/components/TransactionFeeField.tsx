@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Spinner } from "@chakra-ui/react";
+import { Box, Flex, HStack, Image, Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import Logo from "src/assets/images/icons/logo.svg";
 import Field from "src/components/Field";
@@ -82,7 +82,7 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
               mr="space.3xs"
               p="space.4xs"
             >
-              <Logo />
+              <Image src={Logo} />
             </Flex>
             <Box>
               <FormattedMessage
