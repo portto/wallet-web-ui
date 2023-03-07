@@ -69,6 +69,9 @@ const render = (messages: any) => {
   );
 };
 
+// @ts-expect-error
+window.setAccessToken = (token) => (window.accessToken = token);
+
 runIntlPolyfill(() => render(translationMessages));
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
