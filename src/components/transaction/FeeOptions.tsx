@@ -16,7 +16,7 @@ import { FieldContext } from "src/context/field";
 import { useTransactionMachine } from "src/machines/transaction";
 import { AccountAsset, TransactionFeeOption } from "src/types";
 import FormattedMessage from "../FormattedMessage";
-import { FeeData } from "../TransactionFeeField";
+import { FeeData } from "./TransactionFeeField";
 
 interface ExtendedTransactionFeeOption extends TransactionFeeOption {
   logo: string;
