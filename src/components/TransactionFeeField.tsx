@@ -31,31 +31,38 @@ export interface FeeData {
   fee: number;
   discount: number;
   logo?: string;
+  symbol?: string;
+  type: string;
+  decimals: number;
 }
 
 const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
   const { context } = useTransactionMachine();
   const { transaction } = context;
-  const { fee = 0, discount = 0 } = transaction;
+  const { fee: feeInPoint = 0, discount: discountInPoint = 0 } = transaction;
   const [feeData, setFeeData] = useState<FeeData>({
     discount: 0,
     fee: 0,
     logo: "",
+    type: "point",
+    decimals: 0,
   });
-
-  console.log(" :feeData", feeData);
 
   useEffect(() => {
     setFeeData({
-      fee,
-      discount,
+      fee: feeInPoint,
+      discount: discountInPoint,
       logo: Logo,
+      type: "point",
+      decimals: 0,
     });
-  }, [fee, discount]);
+  }, [feeInPoint, discountInPoint]);
 
   const isLoading = !feeData.fee;
   const hasDiscount = feeData.discount > 0;
-  const realTransactionFee = hasDiscount ? fee - discount : fee;
+  const realTransactionFee = hasDiscount
+    ? feeData.fee - feeData.discount
+    : feeData.fee;
 
   if (isFree) {
     return <FreeTransactionFeeField />;
@@ -82,24 +89,48 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
               mr="space.3xs"
               p="space.4xs"
             >
-              <Image src={Logo} />
+              <Image src={feeData.logo} />
             </Flex>
             <Box>
-              <FormattedMessage
-                intlKey="app.authz.transactionFeePoints"
-                values={{ points: realTransactionFee }}
-              />
-              {hasDiscount && (
-                <Box as="span" pl="space.3xs">
-                  (
-                  <Box as="del">
-                    <FormattedMessage
-                      intlKey="app.authz.transactionFeePoints"
-                      values={{ points: fee }}
-                    />
-                  </Box>
-                  )
-                </Box>
+              {feeData.type === "point" ? (
+                <>
+                  <FormattedMessage
+                    intlKey="app.authz.transactionFeePoints"
+                    values={{ points: realTransactionFee }}
+                  />
+                  {hasDiscount && (
+                    <Box as="span" pl="space.3xs">
+                      (
+                      <Box as="del">
+                        <FormattedMessage
+                          intlKey="app.authz.transactionFeePoints"
+                          values={{ points: feeData.fee }}
+                        />
+                      </Box>
+                      )
+                    </Box>
+                  )}
+                </>
+              ) : (
+                <>
+                  <Box>{`${realTransactionFee / 10 ** feeData.decimals} ${
+                    feeData.symbol
+                  }`}</Box>
+                  {hasDiscount && (
+                    <Box as="span" pl="space.3xs">
+                      (
+                      <Box as="del">
+                        <FormattedMessage
+                          intlKey="app.authz.transactionFeePoints"
+                          values={{
+                            points: feeData.fee / 10 ** feeData.decimals,
+                          }}
+                        />
+                      </Box>
+                      )
+                    </Box>
+                  )}
+                </>
               )}
             </Box>
           </>

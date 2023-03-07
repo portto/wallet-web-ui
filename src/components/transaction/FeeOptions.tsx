@@ -1,4 +1,3 @@
-import { parse } from "path";
 import {
   Box,
   Flex,
@@ -18,11 +17,17 @@ import { AccountAsset, TransactionFeeOption } from "src/types";
 import FormattedMessage from "../FormattedMessage";
 import { FeeData } from "../TransactionFeeField";
 
+interface ExtendedTransactionFeeOption extends TransactionFeeOption {
+  logo: string;
+  userBalance: number;
+  feeAmount: number;
+}
+
 const getFeeOptionsFromAssets = (
   txFeeOptions: TransactionFeeOption[],
   assets: AccountAsset[],
   points: number
-) => {
+): ExtendedTransactionFeeOption[] => {
   const accountAssetsBySymbol = assets.reduce((acc, asset) => {
     acc[asset.symbol] = asset;
     return acc;
@@ -73,12 +78,6 @@ const getFeeOptionsFromAssets = (
   ];
 };
 
-interface ExtendedTransactionFeeOption extends TransactionFeeOption {
-  logo: string;
-  userBalance: number;
-  feeAmount: number;
-}
-
 const FeeOptions = ({
   setFeeData,
 }: {
@@ -94,14 +93,16 @@ const FeeOptions = ({
     points
   );
 
-  const onOptionClick =
-    (feeOption: Partial<ExtendedTransactionFeeOption>) => () => {
-      setFeeData({
-        fee: parseFloat(feeOption.cost || "0"),
-        discount: parseFloat(feeOption.discount || "0"),
-        logo: feeOption.logo,
-      });
-    };
+  const onOptionClick = (feeOption: ExtendedTransactionFeeOption) => () => {
+    setFeeData({
+      fee: parseFloat(feeOption.cost || "0"),
+      discount: parseFloat(feeOption.discount || "0"),
+      logo: feeOption.logo,
+      type: feeOption.type,
+      decimals: feeOption.decimals,
+      symbol: feeOption.symbol,
+    });
+  };
 
   return (
     <>
