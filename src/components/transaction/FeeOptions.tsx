@@ -153,11 +153,22 @@ const FeeOptions = ({
           return (
             <ListItem
               onClick={onOptionClick(feeOption)}
-              py="space.m"
               key={symbol}
               cursor={feeAmount > userBalance ? "default" : "pointer"}
             >
-              <HStack>
+              <HStack
+                py="space.2xs"
+                my="space.2xs"
+                px="space.xs"
+                borderRadius="12px"
+                transition=".2s background"
+                className="feeOptionPanel"
+                _hover={{
+                  ...(feeAmount > userBalance
+                    ? {}
+                    : { bg: { md: "background.tertiary" } }),
+                }}
+              >
                 <Flex
                   borderRadius="50%"
                   bg="background.secondary"
@@ -165,6 +176,14 @@ const FeeOptions = ({
                   height="48px"
                   justify="center"
                   align="center"
+                  transition=".2s background"
+                  sx={{
+                    ".feeOptionPanel:hover &": {
+                      ...(feeAmount > userBalance
+                        ? {}
+                        : { bg: { md: "white" } }),
+                    },
+                  }}
                 >
                   <Image src={logo} width="30px" height="30px" />
                 </Flex>
@@ -220,18 +239,6 @@ const FeeOptions = ({
                     color="white"
                     bg="interaction.primary"
                     cursor="pointer"
-                    _hover={{
-                      bg: { md: "interaction.primary.hovered" },
-                      transform: "scale(0.98)",
-                    }}
-                    _active={{
-                      bg: "interaction.secondary.pressed",
-                      transform: "scale(0.96)",
-                    }}
-                    _disabled={{
-                      bg: "interaction.secondary.disabled",
-                      cursor: "not-allowed",
-                    }}
                   >
                     <FormattedMessage intlKey="app.general.buy" />
                   </Box>
