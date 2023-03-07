@@ -1,5 +1,6 @@
 import { Flex, Image, Link, Text } from "@chakra-ui/react";
 import { QRCodeSVG } from "qrcode.react";
+import { MouseEvent } from "react";
 import appStore from "src/assets/images/icons/app-store.svg";
 import googlePlay from "src/assets/images/icons/google-play.svg";
 import logo from "src/assets/images/icons/logo-margin.svg";
@@ -16,7 +17,7 @@ const DownloadApp = ({
 }: {
   isShown: boolean;
   blockchain: string;
-  onLastStepClick: () => void;
+  onLastStepClick: (event?: MouseEvent) => void;
   actionKey: MessageKey;
   actionDescriptionKey: MessageKey;
 }) => {

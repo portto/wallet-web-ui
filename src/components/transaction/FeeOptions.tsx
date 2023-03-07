@@ -9,9 +9,10 @@ import {
   UnorderedList,
   VStack,
 } from "@chakra-ui/react";
-import { ReactNode, useContext } from "react";
+import { MouseEvent, ReactNode, useContext, useState } from "react";
 import Logo from "src/assets/images/icons/logo.svg";
 import { ReactComponent as PointWithMobile } from "src/assets/images/icons/point-with-mobile.svg";
+import DownloadApp from "src/components/DownloadApp";
 import { FieldContext } from "src/context/field";
 import { useTransactionMachine } from "src/machines/transaction";
 import { AccountAsset, TransactionFeeOption } from "src/types";
@@ -85,10 +86,18 @@ const FeeOptions = ({
   setFeeData: (feeOption: FeeData) => void;
 }) => {
   const { context } = useTransactionMachine();
-  const { transaction, user } = context;
+  const { transaction, user, dapp } = context;
+  const { blockchain } = dapp;
   const { assets = [], points = 0 } = user;
   const { txFeeOptions = [] } = transaction;
   const { closeHidableInfo } = useContext(FieldContext);
+  const [isDownloadPageShown, setIsDownloadPageShown] = useState(false);
+
+  const toggleDownloadPage = (event?: MouseEvent) => {
+    event?.stopPropagation();
+    setIsDownloadPageShown((prev) => !prev);
+  };
+
   const txFeeOptionsWithLogo = getFeeOptionsFromAssets(
     txFeeOptions,
     assets,
@@ -150,14 +159,16 @@ const FeeOptions = ({
           />
         </Box>
       </Flex>
-      <UnorderedList listStyleType="none" m={0}>
+      <UnorderedList listStyleType="none" m={0} overflowY="auto">
         {txFeeOptionsWithLogo.map((feeOption) => {
           const { logo, type, feeAmount, symbol, userBalance } = feeOption;
           return (
             <ListItem
-              onClick={onOptionClick(feeOption)}
               key={symbol}
-              cursor={feeAmount > userBalance ? "default" : "pointer"}
+              cursor={userBalance > feeAmount ? "pointer" : "default"}
+              {...(userBalance > feeAmount && {
+                onClick: onOptionClick(feeOption),
+              })}
             >
               <HStack
                 py="space.2xs"
@@ -167,9 +178,9 @@ const FeeOptions = ({
                 transition=".2s background"
                 className="feeOptionPanel"
                 _hover={{
-                  ...(feeAmount > userBalance
-                    ? {}
-                    : { bg: { md: "background.tertiary" } }),
+                  ...(userBalance > feeAmount
+                    ? { bg: { md: "background.tertiary" } }
+                    : {}),
                 }}
               >
                 <Flex
@@ -182,9 +193,9 @@ const FeeOptions = ({
                   transition=".2s background"
                   sx={{
                     ".feeOptionPanel:hover &": {
-                      ...(feeAmount > userBalance
-                        ? {}
-                        : { bg: { md: "white" } }),
+                      ...(userBalance > feeAmount
+                        ? { bg: { md: "white" } }
+                        : {}),
                     },
                   }}
                 >
@@ -242,6 +253,7 @@ const FeeOptions = ({
                     color="white"
                     bg="interaction.primary"
                     cursor="pointer"
+                    onClick={toggleDownloadPage}
                   >
                     <FormattedMessage intlKey="app.general.buy" />
                   </Box>
@@ -251,6 +263,13 @@ const FeeOptions = ({
           );
         })}
       </UnorderedList>
+      <DownloadApp
+        isShown={isDownloadPageShown}
+        blockchain={blockchain}
+        onLastStepClick={toggleDownloadPage}
+        actionKey="app.general.buyBloctoPoint"
+        actionDescriptionKey="app.general.buyBloctoPoint.description"
+      />
     </>
   );
 };
