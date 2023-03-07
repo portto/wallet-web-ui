@@ -1,3 +1,4 @@
+import { parse } from "path";
 import {
   Box,
   Flex,
@@ -15,6 +16,7 @@ import { ReactComponent as PointWithMobile } from "src/assets/images/icons/point
 import { useTransactionMachine } from "src/machines/transaction";
 import { AccountAsset, TransactionFeeOption } from "src/types";
 import FormattedMessage from "../FormattedMessage";
+import { FeeData } from "../TransactionFeeField";
 
 const getFeeOptionsFromAssets = (
   txFeeOptions: TransactionFeeOption[],
@@ -71,7 +73,17 @@ const getFeeOptionsFromAssets = (
   ];
 };
 
-const FeeOptions = () => {
+interface ExtendedTransactionFeeOption extends TransactionFeeOption {
+  logo: string;
+  userBalance: number;
+  feeAmount: number;
+}
+
+const FeeOptions = ({
+  setFeeData,
+}: {
+  setFeeData: (feeOption: FeeData) => void;
+}) => {
   const { context } = useTransactionMachine();
   const { transaction, user } = context;
   const { assets = [], points = 0 } = user;
@@ -81,6 +93,15 @@ const FeeOptions = () => {
     assets,
     points
   );
+
+  const onOptionClick =
+    (feeOption: Partial<ExtendedTransactionFeeOption>) => () => {
+      setFeeData({
+        fee: parseFloat(feeOption.cost || "0"),
+        discount: parseFloat(feeOption.discount || "0"),
+        logo: feeOption.logo,
+      });
+    };
 
   return (
     <>
@@ -126,9 +147,15 @@ const FeeOptions = () => {
         </Box>
       </Flex>
       <UnorderedList listStyleType="none" m={0}>
-        {txFeeOptionsWithLogo.map(
-          ({ logo, type, feeAmount, symbol, userBalance }) => (
-            <ListItem py="space.m" key={symbol}>
+        {txFeeOptionsWithLogo.map((feeOption) => {
+          const { logo, type, feeAmount, symbol, userBalance } = feeOption;
+          return (
+            <ListItem
+              onClick={onOptionClick(feeOption)}
+              py="space.m"
+              key={symbol}
+              cursor={feeAmount > userBalance ? "default" : "pointer"}
+            >
               <HStack>
                 <Flex
                   borderRadius="50%"
@@ -147,6 +174,11 @@ const FeeOptions = () => {
                         fontWeight="weight.m"
                         lineHeight="line.height.subheading.2"
                         fontSize="size.body.2"
+                        color={
+                          feeAmount > userBalance
+                            ? "font.alert"
+                            : "font.primary"
+                        }
                       >
                         <FormattedMessage
                           intlKey="app.authz.transactionFeePoints"
@@ -166,6 +198,11 @@ const FeeOptions = () => {
                         fontWeight="weight.m"
                         lineHeight="line.height.subheading.2"
                         fontSize="size.body.2"
+                        color={
+                          feeAmount > userBalance
+                            ? "font.alert"
+                            : "font.primary"
+                        }
                       >
                         {`${feeAmount} ${symbol}`}
                       </Box>
@@ -200,8 +237,8 @@ const FeeOptions = () => {
                 )}
               </HStack>
             </ListItem>
-          )
-        )}
+          );
+        })}
       </UnorderedList>
     </>
   );

@@ -1,8 +1,10 @@
 import { Box, Flex, HStack, Spinner } from "@chakra-ui/react";
-import { ReactComponent as Logo } from "src/assets/images/icons/logo.svg";
+import { useEffect, useState } from "react";
+import Logo from "src/assets/images/icons/logo.svg";
 import Field from "src/components/Field";
 import FormattedMessage from "src/components/FormattedMessage";
 import FeeOptions from "src/components/transaction/FeeOptions";
+import { useTransactionMachine } from "src/machines/transaction";
 
 const FreeTransactionFeeField = () => (
   <Field title={<FormattedMessage intlKey="app.authz.transactionFee" />}>
@@ -25,20 +27,35 @@ const FreeTransactionFeeField = () => (
   </Field>
 );
 
-const TransactionFeeField = ({
-  originalTransactionFee = 0,
-  discount = 0,
-  isFree = false,
-}: {
-  discount?: number;
-  originalTransactionFee?: number;
-  isFree?: boolean;
-}) => {
-  const isLoading = !originalTransactionFee;
-  const hasDiscount = (discount || 0) > 0;
-  const realTransactionFee = hasDiscount
-    ? originalTransactionFee - discount
-    : originalTransactionFee;
+export interface FeeData {
+  fee: number;
+  discount: number;
+  logo?: string;
+}
+
+const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
+  const { context } = useTransactionMachine();
+  const { transaction } = context;
+  const { fee = 0, discount = 0 } = transaction;
+  const [feeData, setFeeData] = useState<FeeData>({
+    discount: 0,
+    fee: 0,
+    logo: "",
+  });
+
+  console.log(" :feeData", feeData);
+
+  useEffect(() => {
+    setFeeData({
+      fee,
+      discount,
+      logo: Logo,
+    });
+  }, [fee, discount]);
+
+  const isLoading = !feeData.fee;
+  const hasDiscount = feeData.discount > 0;
+  const realTransactionFee = hasDiscount ? fee - discount : fee;
 
   if (isFree) {
     return <FreeTransactionFeeField />;
@@ -47,7 +64,7 @@ const TransactionFeeField = ({
   return (
     <Field
       title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-      hidableInfo={<FeeOptions />}
+      hidableInfo={<FeeOptions setFeeData={setFeeData} />}
     >
       <HStack>
         {isLoading && (
@@ -78,7 +95,7 @@ const TransactionFeeField = ({
                   <Box as="del">
                     <FormattedMessage
                       intlKey="app.authz.transactionFeePoints"
-                      values={{ points: originalTransactionFee }}
+                      values={{ points: fee }}
                     />
                   </Box>
                   )
