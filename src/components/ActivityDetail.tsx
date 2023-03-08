@@ -1,4 +1,4 @@
-import { Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import React from "react";
 import Field from "src/components/Field";
 import FormattedMessage from "src/components/FormattedMessage";
@@ -16,7 +16,7 @@ const ActivityDetail = ({
     <>
       <Field
         hidableInfo={
-          <>
+          <Box px="space.l" py="space.m">
             <Heading
               as="h3"
               fontSize="size.heading.3"
@@ -43,7 +43,7 @@ const ActivityDetail = ({
                 <Text>{address}</Text>
               </Field>
             )}
-          </>
+          </Box>
         }
         title={<FormattedMessage intlKey="app.authz.activityDetail" />}
       >
