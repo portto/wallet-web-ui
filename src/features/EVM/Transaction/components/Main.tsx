@@ -12,7 +12,7 @@ import Header from "src/components/Header";
 import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
 import TransactionFeeField from "src/components/transaction/TransactionFeeField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
-import useEstimatePointInterval from "src/hooks/useEstimatePointInterval";
+import useEstimatePoint from "src/hooks/useEstimatePoint";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { EvmTransaction } from "src/types";
@@ -61,7 +61,7 @@ const Main = () => {
   const showInsufficientAmountHint =
     !hasEnoughBalance && isSupportedTokenTransferring;
 
-  const [isReady] = useEstimatePointInterval({ rawObject, blockchain }, 10000);
+  const [isReady] = useEstimatePoint({ rawObject, blockchain });
 
   const handlePurchase = useCallback(() => {
     const { address = "", email = "", id = "" } = context.user;

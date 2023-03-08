@@ -1,6 +1,5 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { estimatePoint } from "src/apis";
-import useInterval from "src/hooks/useInterval";
 import { useTransactionMachine } from "src/machines/transaction";
 import { Chains } from "src/types";
 
@@ -9,10 +8,10 @@ interface EstimatePointParams {
   blockchain: Chains;
 }
 
-export default function useEstimatePointInterval(
-  { rawObject, blockchain }: EstimatePointParams,
-  delay = 10000
-) {
+export default function useEstimatePoint({
+  rawObject,
+  blockchain,
+}: EstimatePointParams) {
   const { send } = useTransactionMachine();
   const [hasEstimated, setHasEstimated] = useState(false);
   const estimate = useCallback(() => {
@@ -39,7 +38,9 @@ export default function useEstimatePointInterval(
     );
   }, [blockchain, rawObject, send]);
 
-  useInterval(estimate, delay);
+  useEffect(() => {
+    estimate();
+  }, [estimate]);
 
   return [hasEstimated];
 }
