@@ -1,11 +1,11 @@
 import React, { Suspense, useEffect } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
+import Errors from "src/components/Errors";
 import Loading from "src/components/Loading";
 import Maintenance from "src/components/Maintenance";
 import { logPageView } from "src/services/Amplitude";
 import { sendPageView } from "src/services/GoogleAnalytics";
 import { EVM_CHAINS } from "src/utils/constants";
-import Maintenance from "./features/Authenticate/components/Maintenance";
 import { KEY_ACCESS_TOKEN, setItem } from "./services/LocalStorage";
 
 const Authenticate = React.lazy(() => import("src/features/Authenticate"));
@@ -98,6 +98,7 @@ const App = () => {
           render={() => <AppSDKFallback />}
         />
         <Route path="/maintenance" render={() => <Maintenance />} />
+        <Route path="/errors" render={() => <Errors />} />
       </Switch>
     </Suspense>
   );
