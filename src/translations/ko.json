@@ -6,6 +6,8 @@
   "app.general.address": "{chain} Address",
   "app.general.itTakesSomeTimeToProceed": "It takes some time to proceed",
   "app.general.downloadBloctoApp": "Download Blocto App",
+  "app.general.underMaintenance": "We’re under maintenance.",
+  "app.general.maintenanceDescription": "is currently undergoing maintenance. We will be back soon.",
   "feature.authn.signInOrRegister": "Sign in / Register",
   "feature.authn.signIn.title": "Sign in",
   "feature.authn.signIn.description": "Request account with",

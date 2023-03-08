@@ -16,6 +16,7 @@ import {
 import Connecting from "./components/Connecting";
 import DangerousTxAlert from "./components/DangerousTxAlert";
 import Main from "./components/Main";
+import Maintenance from "./components/Maintenance";
 import TxSent from "./components/TxSent";
 
 const systemStatus = [
@@ -36,6 +37,7 @@ const stageComponentMapping: Record<
     layoutSize: "sm",
   },
   [machineStates.TX_SENT]: { component: TxSent, layoutSize: "lg" },
+  [machineStates.MAINTENANCE]: { component: Maintenance, layoutSize: "sm" },
 };
 
 const useDefaultStateFromProps = () => {

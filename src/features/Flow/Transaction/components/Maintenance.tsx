@@ -1,8 +1,8 @@
 import MaintenanceComponent from "src/components/Maintenance";
-import { useAuthenticateMachine } from "src/machines/authenticate";
+import { useTransactionMachine } from "src/machines/transaction";
 
 const Maintenance = () => {
-  const { send } = useAuthenticateMachine();
+  const { send } = useTransactionMachine();
   return <MaintenanceComponent onClose={() => send("close")} />;
 };
 

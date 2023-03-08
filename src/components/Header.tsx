@@ -142,7 +142,7 @@ const Header = memo(
   }: {
     onClose?: () => void;
     onLastStepClick?: () => void;
-    blockchain: string;
+    blockchain?: string;
   } & FlexProps) => {
     return (
       <Flex
@@ -166,7 +166,7 @@ const Header = memo(
               />
             </Box>
           )}
-          <NetworkLabel blockchain={blockchain} />
+          {blockchain && <NetworkLabel blockchain={blockchain} />}
         </Flex>
         {onClose && (
           <Box ml="auto" cursor="pointer" onClick={onClose}>

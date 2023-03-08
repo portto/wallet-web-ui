@@ -7,13 +7,10 @@ import {
   useSigningMachine,
   withSigningContext,
 } from "src/machines/signing";
-import {
-  KEY_SESSION_ID,
-  KEY_USER_TYPE,
-  getItem,
-} from "src/services/LocalStorage";
+import { KEY_USER_TYPE, getItem } from "src/services/LocalStorage";
 import Connecting from "./components/Connecting";
 import Main from "./components/Main";
+import Maintenance from "./components/Maintenance";
 
 const systemStatus = [
   machineStates.IDLE,
@@ -30,6 +27,7 @@ const stageComponentMapping: Record<
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
   // @todo: Implement proper sign process for non-custodial users
   [machineStates.NON_CUSTODIAL]: { component: Main, layoutSize: "lg" },
+  [machineStates.MAINTENANCE]: { component: Maintenance, layoutSize: "sm" },
 };
 
 const useDefaultStateFromProps = () => {

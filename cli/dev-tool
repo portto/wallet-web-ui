@@ -160,6 +160,7 @@ def __main__():
         'Content-type': 'application/json',
         'Blocto-Session-Identifier': code
       })
+
       response = json.load(connection.getresponse())
       signature_id = response['signatureId']
       generated_url = "{dev_url}/{dapp_id}/{blockchain}/user-signature/{signature_id}".format(dev_url=dev_url, dapp_id=DEV_DAPP_ID, blockchain=blockchain, signature_id=signature_id)
@@ -187,6 +188,7 @@ def __main__():
         'Content-type': 'application/json',
         'Blocto-Session-Identifier': code
       })
+
       response = json.load(connection.getresponse())
       account = response['accounts'][0]
 

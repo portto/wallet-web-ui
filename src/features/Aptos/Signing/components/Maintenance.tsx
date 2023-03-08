@@ -1,8 +1,8 @@
 import MaintenanceComponent from "src/components/Maintenance";
-import { useAuthenticateMachine } from "src/machines/authenticate";
+import { useSigningMachine } from "src/machines/signing";
 
 const Maintenance = () => {
-  const { send } = useAuthenticateMachine();
+  const { send } = useSigningMachine();
   return <MaintenanceComponent onClose={() => send("close")} />;
 };
 
