@@ -48,6 +48,7 @@ export interface TransactionMachineContext {
     txHash?: string;
     failReason?: string;
     fee?: number;
+    feeType?: string;
     discount?: number;
     txFeeOptions?: TransactionFeeOption[];
     mayFail?: boolean;

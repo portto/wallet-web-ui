@@ -86,7 +86,7 @@ const FeeOptions = ({
 }: {
   setFeeData: (feeOption: FeeData) => void;
 }) => {
-  const { context } = useTransactionMachine();
+  const { context, send } = useTransactionMachine();
   const { transaction, user, dapp } = context;
   const { blockchain } = dapp;
   const { assets = [], points = 0 } = user;
@@ -114,13 +114,23 @@ const FeeOptions = ({
   };
 
   const onOptionClick = (feeOption: ExtendedTransactionFeeOption) => () => {
+    const fee = parseFloat(feeOption.cost || "0");
+    const discount = parseFloat(feeOption.discount || "0");
     setFeeData({
-      fee: parseFloat(feeOption.cost || "0"),
-      discount: parseFloat(feeOption.discount || "0"),
+      fee,
+      discount,
       logo: feeOption.logo,
       type: feeOption.type,
       decimals: feeOption.decimals,
       symbol: feeOption.symbol,
+    });
+    send({
+      type: "updateTransaction",
+      data: {
+        feeType: feeOption.type,
+        fee,
+        discount,
+      },
     });
     closeHidableInfo();
   };

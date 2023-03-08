@@ -80,7 +80,7 @@ const Main = () => {
 
   const approve = useCallback(async () => {
     const { authorizationId = "" } = user;
-    const { fee = 0, discount = 0 } = transaction;
+    const { fee = 0, discount = 0, feeType } = transaction;
     const { id = "", blockchain, name = "" } = dapp;
 
     setIsProcessing(true);
@@ -90,6 +90,7 @@ const Main = () => {
       blockchain,
       cost: fee,
       discount,
+      type: feeType,
     });
     setIsProcessing(false);
 

@@ -295,12 +295,14 @@ export const updateAuthorization = ({
   blockchain = Chains.flow,
   cost = 0,
   discount = 0,
+  type = "point",
 }: {
   authorizationId: string;
   action: "decline" | "approve";
   blockchain: Chains;
   cost?: number;
   discount?: number;
+  type?: string;
 }) =>
   apiPut({
     url: `api/${blockchain}/authz`,
@@ -309,6 +311,7 @@ export const updateAuthorization = ({
       action,
       cost,
       discount,
+      type,
     },
     withAccessToken: true,
     withSession: true,
