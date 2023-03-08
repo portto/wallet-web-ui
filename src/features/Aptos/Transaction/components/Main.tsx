@@ -3,12 +3,14 @@ import { useCallback, useEffect, useState } from "react";
 import { getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
+import ActivityDetail from "src/components/ActivityDetail";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
 import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
+import ScrollableContainer from "src/components/ScrollableContainer";
 import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
 import TransactionFeeField from "src/components/transaction/TransactionFeeField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
@@ -47,7 +49,7 @@ const Main = () => {
     hasValue,
   } = txDetailData || {};
   const showInsufficientBalance = hasValue && !hasEnoughBalance;
-  const { blockchain } = dapp;
+  const { blockchain, name } = dapp;
 
   const [isReady] = useEstimatePoint({ rawObject, blockchain });
 
@@ -186,65 +188,82 @@ const Main = () => {
     );
   };
 
+  const targetAddress = hasValue && args[0];
+
   return (
-    <Box>
+    <>
       <Header
         bg="background.secondary"
         onClose={handleClose}
         blockchain={dapp?.blockchain}
       />
-      <TransactionInfo
-        host={dappDomain}
-        transactionDetail={{ tokenAmount, usdValue }}
-      >
-        <DappLogo url={dapp.logo || ""} mb="space.s" />
-      </TransactionInfo>
-      <Box px="space.l">
-        {recognizedTx ? (
-          <>
-            <Field
-              title={<FormattedMessage intlKey="app.authz.operation" />}
-              hidableInfo={<TransactionContent />}
-              icon={
-                verifiedTx ? (
-                  <Check width="16px" height="16px" />
-                ) : (
-                  <CheckAlert width="16px" height="16px" />
-                )
-              }
-            >
-              {`${moduleName}::${methodName}`}
-            </Field>
-            <FieldLine />
-            {getTransactionFeeField()}
-            <FieldLine />
-          </>
-        ) : (
-          <>
-            {getTransactionFeeField()}
-            <Box height="10px" bg="background.tertiary" mx="-20px" />
-            <Field
-              title={<FormattedMessage intlKey="app.authz.script" />}
-              hidableInfo={<TransactionContent />}
-              icon={<CheckAlert width="16px" height="16px" />}
-            >
-              <FormattedMessage intlKey="app.authz.transactionContainsScript" />
-            </Field>
-            <FieldLine />
-          </>
-        )}
-      </Box>
-
-      <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
-        <Button
-          onClick={approve}
-          disabled={showInsufficientBalance || mayFail || !isReady}
-          isLoading={isProcessing}
+      <Flex flexDirection="column" overflow="hidden">
+        <TransactionInfo
+          host={dappDomain}
+          transactionDetail={{ tokenAmount, usdValue }}
         >
-          <FormattedMessage intlKey="app.authz.approve" />
-        </Button>
+          <DappLogo url={dapp.logo || ""} mb="space.s" />
+        </TransactionInfo>
+
+        <ScrollableContainer attachShadow px="space.l">
+          {recognizedTx ? (
+            <>
+              <Field
+                title={<FormattedMessage intlKey="app.authz.operation" />}
+                hidableInfo={<TransactionContent />}
+                icon={
+                  verifiedTx ? (
+                    <Check width="16px" height="16px" />
+                  ) : (
+                    <CheckAlert width="16px" height="16px" />
+                  )
+                }
+              >
+                {`${moduleName}::${methodName}`}
+              </Field>
+              <FieldLine />
+              {getTransactionFeeField()}
+              <FieldLine />
+              <ActivityDetail
+                blockchain={blockchain}
+                dAppName={name}
+                address={targetAddress}
+              />
+              <FieldLine />
+            </>
+          ) : (
+            <>
+              {getTransactionFeeField()}
+              <Box height="10px" bg="background.tertiary" mx="-20px" />
+              <Field
+                title={<FormattedMessage intlKey="app.authz.script" />}
+                hidableInfo={<TransactionContent />}
+                icon={<CheckAlert width="16px" height="16px" />}
+              >
+                <FormattedMessage intlKey="app.authz.transactionContainsScript" />
+              </Field>
+              <FieldLine />
+              <ActivityDetail
+                blockchain={blockchain}
+                dAppName={name}
+                address={targetAddress}
+              />
+              <FieldLine />
+            </>
+          )}
+        </ScrollableContainer>
+
+        <Flex justify="center" p="space.l" width="100%">
+          <Button
+            onClick={approve}
+            disabled={showInsufficientBalance || mayFail || !isReady}
+            isLoading={isProcessing}
+          >
+            <FormattedMessage intlKey="app.authz.approve" />
+          </Button>
+        </Flex>
       </Flex>
-    </Box>
+    </>
   );
 };
 

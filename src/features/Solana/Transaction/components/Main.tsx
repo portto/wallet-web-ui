@@ -2,12 +2,14 @@ import { Box, Flex } from "@chakra-ui/react";
 import { useCallback, useState } from "react";
 import { getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
+import ActivityDetail from "src/components/ActivityDetail";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
 import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
+import ScrollableContainer from "src/components/ScrollableContainer";
 import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
 import TransactionFeeField from "src/components/transaction/TransactionFeeField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
@@ -23,8 +25,7 @@ const Main = () => {
 
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject, mayFail, failReason } = transaction;
-
-  const { blockchain } = dapp;
+  const { blockchain, name } = dapp;
   const actualTx = rawObject.convertedTx || rawObject.transaction;
 
   const [isReady] = useEstimatePoint({
@@ -79,51 +80,53 @@ const Main = () => {
   }, [send]);
 
   return (
-    <Box>
+    <>
       <Header
         bg="background.secondary"
         onClose={handleClose}
         blockchain={dapp?.blockchain}
       />
-      <TransactionInfo host={dappDomain}>
-        <DappLogo url={dapp.logo || ""} mb="space.s" />
-      </TransactionInfo>
-
-      <Box px="space.l">
-        {getTransactionFeeField()}
-        <Box height="10px" bg="background.tertiary" mx="-20px" />
-        <Field
-          title={<FormattedMessage intlKey="app.authz.script" />}
-          hidableInfo={
-            !!rawObject.convertedTx && (
-              <FieldDetail
-                title={<FormattedMessage intlKey="app.authz.operation" />}
-                badgeText={
-                  <FormattedMessage intlKey="app.authz.operationNotVerified" />
-                }
-                badgeType={BadgeType.Unverified}
-              >
-                {rawObject.convertedTx}
-              </FieldDetail>
-            )
-          }
-          icon={<CheckAlert width="16px" height="16px" />}
-        >
-          <FormattedMessage intlKey="app.authz.transactionContainsScript" />
-        </Field>
-        <FieldLine />
-      </Box>
-
-      <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
-        <Button
-          onClick={approve}
-          disabled={mayFail || !isReady}
-          isLoading={isProcessing}
-        >
-          <FormattedMessage intlKey="app.authz.approve" />
-        </Button>
+      <Flex flexDirection="column" overflow="hidden">
+        <TransactionInfo host={dappDomain}>
+          <DappLogo url={dapp.logo || ""} mb="space.s" />
+        </TransactionInfo>
+        <ScrollableContainer attachShadow px="space.l">
+          {getTransactionFeeField()}
+          <Box height="10px" bg="background.tertiary" mx="-20px" />
+          <Field
+            title={<FormattedMessage intlKey="app.authz.script" />}
+            hidableInfo={
+              !!rawObject.convertedTx && (
+                <FieldDetail
+                  title={<FormattedMessage intlKey="app.authz.operation" />}
+                  badgeText={
+                    <FormattedMessage intlKey="app.authz.operationNotVerified" />
+                  }
+                  badgeType={BadgeType.Unverified}
+                >
+                  {rawObject.convertedTx}
+                </FieldDetail>
+              )
+            }
+            icon={<CheckAlert width="16px" height="16px" />}
+          >
+            <FormattedMessage intlKey="app.authz.transactionContainsScript" />
+          </Field>
+          <FieldLine />
+          <ActivityDetail blockchain={blockchain} dAppName={name} />
+          <FieldLine />
+        </ScrollableContainer>
+        <Flex justify="center" p="space.l" width="100%">
+          <Button
+            onClick={approve}
+            disabled={mayFail || !isReady}
+            isLoading={isProcessing}
+          >
+            <FormattedMessage intlKey="app.authz.approve" />
+          </Button>
+        </Flex>
       </Flex>
-    </Box>
+    </>
   );
 };
 

@@ -3,12 +3,14 @@ import { useCallback, useEffect, useState } from "react";
 import { getAuthorization, updateAuthorization } from "src/apis";
 import { ReactComponent as CheckAlert } from "src/assets/images/icons/check-alert.svg";
 import { ReactComponent as Check } from "src/assets/images/icons/check-blue.svg";
+import ActivityDetail from "src/components/ActivityDetail";
 import Button from "src/components/Button";
 import DappLogo from "src/components/DappLogo";
 import Field, { FieldLine } from "src/components/Field";
 import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
+import ScrollableContainer from "src/components/ScrollableContainer";
 import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
 import TransactionFeeField from "src/components/transaction/TransactionFeeField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
@@ -30,6 +32,7 @@ const Main = () => {
   const [verifiedTx, setVerifiedTx] = useState(false);
 
   const { user, transaction, dapp } = context;
+  const { name, blockchain } = dapp;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject, failReason, mayFail } = transaction;
 
@@ -37,6 +40,7 @@ const Main = () => {
     .filter(({ data }: EvmTransaction) => data)
     .map(({ data }: EvmTransaction) => data)
     .join("\n\n");
+  const firstTargetAddress = rawObject.transactions[0].to;
 
   const txDetailData = useTransactionDetail(transaction);
   const {
@@ -57,7 +61,6 @@ const Main = () => {
     }
   }, [isNativeTransferring]);
 
-  const { blockchain } = dapp;
   const showInsufficientAmountHint =
     !hasEnoughBalance && isSupportedTokenTransferring;
 
@@ -155,86 +158,101 @@ const Main = () => {
   };
 
   return (
-    <Box>
+    <>
       <Header
         bg="background.secondary"
         onClose={handleClose}
         blockchain={dapp?.blockchain}
       />
-      <TransactionInfo
-        host={dappDomain}
-        transactionDetail={{
-          usdValue,
-          tokenAmount:
-            tokenAmount && tokenName ? `${tokenAmount} ${tokenName}` : "",
-        }}
-      >
-        <DappLogo url={dapp.logo || ""} mb="space.s" />
-      </TransactionInfo>
-      <Box px="space.l">
-        {recognizedTx ? (
-          <>
+      <Flex flexDirection="column" overflow="hidden">
+        <TransactionInfo
+          host={dappDomain}
+          transactionDetail={{
+            usdValue,
+            tokenAmount:
+              tokenAmount && tokenName ? `${tokenAmount} ${tokenName}` : "",
+          }}
+        >
+          <DappLogo url={dapp.logo || ""} mb="space.s" />
+        </TransactionInfo>
+        <ScrollableContainer attachShadow px="space.l">
+          {recognizedTx ? (
             <>
-              <Field
-                title={<FormattedMessage intlKey="app.authz.operation" />}
-                hidableInfo={transactionData && <TransactionContent />}
-                icon={
-                  verifiedTx ? (
-                    <Check width="16px" height="16px" />
-                  ) : (
-                    <CheckAlert width="16px" height="16px" />
-                  )
-                }
-              >
-                {/* // @todo: add operation detection logic. */}
-                <FormattedMessage
-                  intlKey="app.authz.transferNativeToken"
-                  values={{
-                    amount: tokenAmount,
-                    token: tokenName,
-                  }}
-                />
-              </Field>
+              <>
+                <Field
+                  title={<FormattedMessage intlKey="app.authz.operation" />}
+                  hidableInfo={transactionData && <TransactionContent />}
+                  icon={
+                    verifiedTx ? (
+                      <Check width="16px" height="16px" />
+                    ) : (
+                      <CheckAlert width="16px" height="16px" />
+                    )
+                  }
+                >
+                  {/* // @todo: add operation detection logic. */}
+                  <FormattedMessage
+                    intlKey="app.authz.transferNativeToken"
+                    values={{
+                      amount: tokenAmount,
+                      token: tokenName,
+                    }}
+                  />
+                </Field>
+                <FieldLine />
+              </>
+              {getTransactionFeeField()}
+              <FieldLine />
+              <ActivityDetail
+                blockchain={blockchain}
+                dAppName={name}
+                address={firstTargetAddress}
+              />
+
               <FieldLine />
             </>
-            {getTransactionFeeField()}
-            <FieldLine />
-          </>
-        ) : (
-          <>
-            {getTransactionFeeField()}
-            {!isNativeTransferring && (
-              <>
-                <Box height="10px" bg="background.tertiary" mx="-20px" />
-                <Field
-                  title={<FormattedMessage intlKey="app.authz.script" />}
-                  hidableInfo={<TransactionContent />}
-                  icon={<CheckAlert width="16px" height="16px" />}
-                >
-                  <FormattedMessage intlKey="app.authz.transactionContainsScript" />
-                </Field>
-              </>
-            )}
-            <FieldLine />
-          </>
-        )}
-      </Box>
-      <Flex justify="center" p="space.l" pos="absolute" bottom="0" width="100%">
-        {showInsufficientAmountHint ? (
-          <Button onClick={handlePurchase}>
-            <FormattedMessage intlKey="app.authz.purchaseonmoonpay" />
-          </Button>
-        ) : (
-          <Button
-            onClick={approve}
-            disabled={mayFail || !isReady}
-            isLoading={isProcessing}
-          >
-            <FormattedMessage intlKey="app.authz.approve" />
-          </Button>
-        )}
+          ) : (
+            <>
+              {getTransactionFeeField()}
+              {!isNativeTransferring && (
+                <>
+                  <Box height="10px" bg="background.tertiary" mx="-20px" />
+                  <Field
+                    title={<FormattedMessage intlKey="app.authz.script" />}
+                    hidableInfo={<TransactionContent />}
+                    icon={<CheckAlert width="16px" height="16px" />}
+                  >
+                    <FormattedMessage intlKey="app.authz.transactionContainsScript" />
+                  </Field>
+                </>
+              )}
+              <FieldLine />
+              <ActivityDetail
+                blockchain={blockchain}
+                dAppName={name}
+                address={firstTargetAddress}
+              />
+              <FieldLine />
+            </>
+          )}
+        </ScrollableContainer>
+        <Flex textAlign="center" p="space.m" width="100%">
+          {showInsufficientAmountHint ? (
+            <Button onClick={handlePurchase}>
+              <FormattedMessage intlKey="app.authz.purchaseonmoonpay" />
+            </Button>
+          ) : (
+            <Button
+              onClick={approve}
+              disabled={mayFail || !isReady}
+              isLoading={isProcessing}
+            >
+              <FormattedMessage intlKey="app.authz.approve" />
+            </Button>
+          )}
+        </Flex>
       </Flex>
-    </Box>
+    </>
   );
 };
 
