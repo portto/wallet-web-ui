@@ -14,11 +14,11 @@ export const EXP_TIME = 86400 * 14 * 1000; // 14 days
 
 export const INTERNAL_WL_DOMAINS = [
   // 'localhost:3000',
-  "developers.blocto.app",
-  "developers-dev.blocto.app",
-  "developers-staging.blocto.app",
-  "developers-testnet.blocto.app",
-  "sale.blocto.app",
+  "https://developers.blocto.app",
+  "https://developers-dev.blocto.app",
+  "https://developers-staging.blocto.app",
+  "https://developers-testnet.blocto.app",
+  "https://sale.blocto.app",
 ];
 
 export const EVM_CHAINS = [
