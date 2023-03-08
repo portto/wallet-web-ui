@@ -15,6 +15,7 @@ import { ReactComponent as PointWithMobile } from "src/assets/images/icons/point
 import DownloadApp from "src/components/DownloadApp";
 import { FieldContext } from "src/context/field";
 import { useTransactionMachine } from "src/machines/transaction";
+import { isHandheld } from "src/services/Device";
 import { AccountAsset, TransactionFeeOption } from "src/types";
 import FormattedMessage from "../FormattedMessage";
 import { FeeData } from "./TransactionFeeField";
@@ -103,6 +104,14 @@ const FeeOptions = ({
     assets,
     points
   );
+
+  const onBuyClick = (event: MouseEvent) => {
+    if (isHandheld) {
+      window.open("https://blocto.app.link/download");
+    } else {
+      toggleDownloadPage(event);
+    }
+  };
 
   const onOptionClick = (feeOption: ExtendedTransactionFeeOption) => () => {
     setFeeData({
@@ -253,7 +262,7 @@ const FeeOptions = ({
                     color="white"
                     bg="interaction.primary"
                     cursor="pointer"
-                    onClick={toggleDownloadPage}
+                    onClick={onBuyClick}
                   >
                     <FormattedMessage intlKey="app.general.buy" />
                   </Box>
