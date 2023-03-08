@@ -14,6 +14,7 @@
   "app.general.manageYourAssets.description": "Blocto App is your all-in-one access pass to Web3. Trade crypto, collect NFTs, explore a powerful ecosystem, and more.",
   "app.general.underMaintenance": "We're under maintenance.",
   "app.general.maintenanceDescription": "Our wallet is currently undergoing maintenance. We will be back soon.",
+  "app.general.error": "Error",
   "app.general.ok": "OK",
   "feature.authn.confirm.title": "Request account with",
   "feature.authn.confirm.useAnotherAccount": "Use Another Account",
