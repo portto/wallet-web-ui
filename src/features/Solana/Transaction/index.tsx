@@ -16,6 +16,7 @@ import {
 
 import Connecting from "./components/Connecting";
 import Main from "./components/Main";
+import Maintenance from "./components/Maintenance";
 import NonCustodial from "./components/NonCustodial";
 import TxSent from "./components/TxSent";
 
@@ -34,6 +35,7 @@ const stageComponentMapping: Record<
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
   [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "sm" },
   [machineStates.TX_SENT]: { component: TxSent, layoutSize: "lg" },
+  [machineStates.MAINTENANCE]: { component: Maintenance, layoutSize: "sm" },
 };
 
 const useDefaultStateFromProps = () => {

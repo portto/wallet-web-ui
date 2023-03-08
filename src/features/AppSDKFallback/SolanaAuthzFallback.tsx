@@ -1,6 +1,5 @@
 import { memo, useEffect, useState } from "react";
 import { createDAppAuthorization } from "src/apis";
-import { KEY_SESSION_ID, getItem } from "src/services/LocalStorage";
 import { Chains } from "src/types";
 import { FALLBACK_ERROR_MESSAGES } from "src/utils/constants";
 

@@ -7,13 +7,10 @@ import {
   useSigningMachine,
   withSigningContext,
 } from "src/machines/signing";
-import {
-  KEY_SESSION_ID,
-  KEY_USER_TYPE,
-  getItem,
-} from "src/services/LocalStorage";
+import { KEY_USER_TYPE, getItem } from "src/services/LocalStorage";
 import Connecting from "./components/Connecting";
 import Main from "./components/Main";
+import Maintenance from "./components/Maintenance";
 import NonCustodial from "./components/NonCustodial";
 
 const systemStatus = [
@@ -30,6 +27,7 @@ const stageComponentMapping: Record<
   [machineStates.CONNECTING]: { component: Connecting, layoutSize: "sm" },
   [machineStates.MAIN]: { component: Main, layoutSize: "lg" },
   [machineStates.NON_CUSTODIAL]: { component: NonCustodial, layoutSize: "sm" },
+  [machineStates.MAINTENANCE]: { component: Maintenance, layoutSize: "sm" },
 };
 
 const useDefaultStateFromProps = () => {
