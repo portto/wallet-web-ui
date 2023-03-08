@@ -10,9 +10,9 @@ import FieldDetail, { BadgeType } from "src/components/FieldDetail";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import EstimatePointErrorField from "src/components/transaction/EstimatePointErrorField";
+import TransactionFeeField from "src/components/transaction/TransactionFeeField";
 import TransactionInfo from "src/components/transaction/TransactionInfo";
-import TransactionFeeField from "src/components/TransactionFeeField";
-import useEstimatePointInterval from "src/hooks/useEstimatePointInterval";
+import useEstimatePoint from "src/hooks/useEstimatePoint";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
 import { EvmTransaction } from "src/types";
@@ -61,7 +61,7 @@ const Main = () => {
   const showInsufficientAmountHint =
     !hasEnoughBalance && isSupportedTokenTransferring;
 
-  const [isReady] = useEstimatePointInterval({ rawObject, blockchain }, 10000);
+  const [isReady] = useEstimatePoint({ rawObject, blockchain });
 
   const handlePurchase = useCallback(() => {
     const { address = "", email = "", id = "" } = context.user;
@@ -80,7 +80,7 @@ const Main = () => {
 
   const approve = useCallback(async () => {
     const { authorizationId = "" } = user;
-    const { fee = 0, discount = 0 } = transaction;
+    const { fee = 0, discount = 0, feeType } = transaction;
     const { id = "", blockchain, name = "" } = dapp;
 
     setIsProcessing(true);
@@ -90,6 +90,7 @@ const Main = () => {
       blockchain,
       cost: fee,
       discount,
+      type: feeType,
     });
     setIsProcessing(false);
 
@@ -137,7 +138,7 @@ const Main = () => {
     <Field title={<FormattedMessage intlKey="app.authz.balance" />}>
       <Box color="font.alert">
         {`${tokenBalance} ${tokenName} `}
-        (<FormattedMessage intlKey="app.authz.insufficientBalance" />)
+        (<FormattedMessage intlKey="app.authz.insufficientAmount" />)
       </Box>
     </Field>
   );
@@ -149,10 +150,7 @@ const Main = () => {
     return mayFail ? (
       <EstimatePointErrorField content={failReason} />
     ) : (
-      <TransactionFeeField
-        originalTransactionFee={transaction.fee}
-        discount={transaction.discount}
-      />
+      <TransactionFeeField />
     );
   };
 

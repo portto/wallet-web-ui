@@ -9,6 +9,7 @@
   "app.general.message": "Message",
   "app.general.buyBloctoPoint": "Buy Blocto Point",
   "app.general.buyBloctoPoint.description": "Blocto wallet supports multiple payment options for the transaction fees on blockchains now!",
+  "app.general.buy": "Buy",
   "app.general.manageYourAssets": "Manage your assets",
   "app.general.manageYourAssets.description": "Blocto App is your all-in-one access pass to Web3. Trade crypto, collect NFTs, explore a powerful ecosystem, and more.",
   "app.general.ok": "OK",
@@ -58,7 +59,9 @@
   "app.authz.maliciousHint": "We detected this transaction may contain malicious operation and suggest to terminate this transaction. <a>Help Center</a>",
   "app.authz.purchaseonmoonpay": "Purchase on MoonPay",
   "app.authz.transferNativeToken": "Transfer {amount} {token}",
-  "app.authz.insufficientBalance": "Insufficient balance",
+  "app.authz.insufficientAmount": "Insufficient amount",
   "feature.authz.done.title": "You are good to go",
-  "feature.authz.done.description": "We’ve sent the transaction to the blockchain network, and it may take time to process. Download Blocto wallet to manage your assets!"
+  "feature.authz.done.description": "We’ve sent the transaction to the blockchain network, and it may take time to process. Download Blocto wallet to manage your assets!",
+  "app.authz.purchaseBloctoPoint": "Purchase Blocto points through in-App purchase for universal gas fee payment now!",
+  "app.authz.bloctoPoint": "<a>Blocto Points?</a>"
 }

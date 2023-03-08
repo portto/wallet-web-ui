@@ -1,4 +1,4 @@
-import { Box, HTMLChakraProps } from "@chakra-ui/react";
+import { Flex, HTMLChakraProps } from "@chakra-ui/react";
 import { FC } from "react";
 import Header from "./Header";
 
@@ -16,12 +16,13 @@ const InnerPage: FC<Props & HTMLChakraProps<"div">> = ({
   ...rest
 }) => {
   return (
-    <Box
+    <Flex
       flexDirection="column"
       width="100%"
       height="100%"
       bg="background.primary"
       position="absolute"
+      top={0}
       left="100%"
       zIndex={1}
       transform={isShown ? "translate(-100%, 0px)" : ""}
@@ -30,7 +31,7 @@ const InnerPage: FC<Props & HTMLChakraProps<"div">> = ({
     >
       <Header blockchain={blockchain} onLastStepClick={onLastStepClick} />
       {children}
-    </Box>
+    </Flex>
   );
 };
 

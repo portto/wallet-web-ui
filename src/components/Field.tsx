@@ -1,7 +1,9 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { ReactNode, useState } from "react";
-import { ReactComponent as ArrowBack } from "src/assets/images/icons/arrow-back.svg";
+import { useParams } from "react-router-dom";
 import { ReactComponent as ArrowNext } from "src/assets/images/icons/arrow-next.svg";
+import { FieldContext } from "src/context/field";
+import InnerPage from "./InnerPage";
 
 export const FieldLine = () => <Box w="100%" h="0.5px" bg="border.tertiary" />;
 
@@ -17,66 +19,56 @@ const Field = ({
   icon?: ReactNode;
 }) => {
   const [showHidableInfo, setShowHidableInfo] = useState(false);
+  const { blockchain } = useParams<{ blockchain: string }>();
 
-  const onClickNext = () => {
+  const openHidableInfo = () => {
     setShowHidableInfo(true);
   };
 
-  const onCloseHidableInfo = () => setShowHidableInfo(false);
+  const closeHidableInfo = () => setShowHidableInfo(false);
 
   return (
-    <Flex py="space.m" alignItems="center">
-      <Box maxWidth="100%">
-        <Flex alignItems="center" mb="space.3xs">
-          <Text color="font.secondary" mr="space.3xs" fontSize="size.body.3">
-            {title}
-          </Text>
+    <FieldContext.Provider value={{ openHidableInfo, closeHidableInfo }}>
+      <Flex py="space.m" alignItems="center">
+        <Box maxWidth="100%">
+          <Flex alignItems="center" mb="space.3xs">
+            <Text color="font.secondary" mr="space.3xs" fontSize="size.body.3">
+              {title}
+            </Text>
 
-          {icon && <span>{icon}</span>}
-        </Flex>
+            {icon && <span>{icon}</span>}
+          </Flex>
 
-        <Box color="font.primary" fontSize="size.body.3" whiteSpace="pre-wrap">
-          {children}
-        </Box>
-      </Box>
-
-      {hidableInfo && (
-        <>
-          <Box ml="auto">
-            <ArrowNext
-              width="16px"
-              height="16px"
-              cursor="pointer"
-              onClick={onClickNext}
-            />
-          </Box>
           <Box
-            pos="absolute"
-            w="100%"
-            top="0"
-            right="0"
-            bottom="0"
-            zIndex={1}
-            left={showHidableInfo ? "0" : "100%"}
-            bg="white"
-            overflowY="scroll"
+            color="font.primary"
+            fontSize="size.body.3"
+            whiteSpace="pre-wrap"
           >
-            <Box px="space.l" py="space.m">
-              <ArrowBack
-                width="20px"
-                height="20px"
+            {children}
+          </Box>
+        </Box>
+
+        {hidableInfo && (
+          <>
+            <Box ml="auto">
+              <ArrowNext
+                width="16px"
+                height="16px"
                 cursor="pointer"
-                onClick={onCloseHidableInfo}
+                onClick={openHidableInfo}
               />
             </Box>
-
-            <Box px="space.l" py="space.m">
+            <InnerPage
+              isShown={showHidableInfo}
+              blockchain={blockchain}
+              onLastStepClick={closeHidableInfo}
+            >
               {hidableInfo}
-            </Box>
-          </Box>
-        </>
-      )}
-    </Flex>
+            </InnerPage>
+          </>
+        )}
+      </Flex>
+    </FieldContext.Provider>
   );
 };
 export default Field;

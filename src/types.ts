@@ -32,6 +32,16 @@ export enum Chains {
   solana = "solana",
 }
 
+export interface TransactionFeeOption {
+  contract_address: string;
+  cost: string;
+  decimals: number;
+  deposit_address: string;
+  discount: string;
+  symbol: string;
+  type: string;
+}
+
 export interface EvmTransaction {
   from: string;
   to: string;

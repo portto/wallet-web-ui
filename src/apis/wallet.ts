@@ -12,6 +12,7 @@ import {
   FlowSignatureDetails,
   FlowTransaction,
   FlowUpdateSignatureDetailsResponse,
+  TransactionFeeOption,
 } from "src/types";
 import { apiGet, apiPost, apiPut } from "./axios";
 
@@ -75,6 +76,7 @@ export const estimatePoint = ({
     discount?: string;
     error_code?: string;
     chain_error_msg?: string;
+    options: TransactionFeeOption[];
   }>({
     url: `api/${blockchain}/estimatePoint`,
     request: rawObject,
@@ -293,12 +295,14 @@ export const updateAuthorization = ({
   blockchain = Chains.flow,
   cost = 0,
   discount = 0,
+  type = "point",
 }: {
   authorizationId: string;
   action: "decline" | "approve";
   blockchain: Chains;
   cost?: number;
   discount?: number;
+  type?: string;
 }) =>
   apiPut({
     url: `api/${blockchain}/authz`,
@@ -307,6 +311,7 @@ export const updateAuthorization = ({
       action,
       cost,
       discount,
+      type,
     },
     withAccessToken: true,
     withSession: true,

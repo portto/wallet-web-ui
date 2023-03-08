@@ -5,12 +5,13 @@ import Button from "src/components/Button";
 import DownloadApp from "src/components/DownloadApp";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
+import { Chains } from "src/types";
 
 const TransactionSent = ({
   blockchain,
   onClose,
 }: {
-  blockchain: string;
+  blockchain: Chains;
   onClose: () => void;
 }) => {
   const [isDownloadPageShown, setIsDownloadPageShown] = useState(false);
