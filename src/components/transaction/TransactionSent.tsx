@@ -6,7 +6,6 @@ import DownloadApp from "src/components/DownloadApp";
 import FormattedMessage from "src/components/FormattedMessage";
 import Header from "src/components/Header";
 import { Chains } from "src/types";
-import isNotInApp from "src/utils/isNotInApp";
 
 const TransactionSent = ({
   blockchain,
@@ -21,6 +20,9 @@ const TransactionSent = ({
     setIsDownloadPageShown((prev) => !prev);
   };
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const isNotInApp = !window[blockchain]?.isBlocto;
   return (
     <>
       <Header blockchain={blockchain} onClose={onClose} />
@@ -52,13 +54,10 @@ const TransactionSent = ({
         </Flex>
 
         <Flex width="100%" flexDirection="column">
-          <Button
-            mb={isNotInApp(blockchain) ? "space.xs" : ""}
-            onClick={onClose}
-          >
+          <Button mb={isNotInApp ? "space.xs" : ""} onClick={onClose}>
             <FormattedMessage intlKey="app.general.ok" />
           </Button>
-          {isNotInApp(blockchain) && (
+          {isNotInApp && (
             <Button variant="secondary" onClick={toggleDownloadPage}>
               <FormattedMessage intlKey="app.general.downloadBloctoApp" />
             </Button>
