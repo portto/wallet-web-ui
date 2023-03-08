@@ -58,7 +58,7 @@ const FieldDetail = ({
   };
 
   return (
-    <>
+    <Box px="space.l" py="space.m">
       <Heading
         as="h3"
         fontSize="size.heading.3"
@@ -74,7 +74,7 @@ const FieldDetail = ({
       <Box mt="space.xl" wordBreak="break-all" fontSize="size.body.3">
         {children}
       </Box>
-    </>
+    </Box>
   );
 };
 export default FieldDetail;

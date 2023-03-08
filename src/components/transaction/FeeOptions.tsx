@@ -117,7 +117,7 @@ const FeeOptions = ({
   };
 
   return (
-    <>
+    <Flex direction="column" overflow="hidden" px="space.l" py="space.m">
       <Heading
         as="h3"
         fontSize="size.heading.3"
@@ -159,7 +159,7 @@ const FeeOptions = ({
           />
         </Box>
       </Flex>
-      <UnorderedList listStyleType="none" m={0} overflowY="auto">
+      <UnorderedList listStyleType="none" m={0} overflowY="auto" mt="space.l">
         {txFeeOptionsWithLogo.map((feeOption) => {
           const { logo, type, feeAmount, symbol, userBalance } = feeOption;
           return (
@@ -270,7 +270,7 @@ const FeeOptions = ({
         actionKey="app.general.buyBloctoPoint"
         actionDescriptionKey="app.general.buyBloctoPoint.description"
       />
-    </>
+    </Flex>
   );
 };
 

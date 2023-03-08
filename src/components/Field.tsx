@@ -62,11 +62,8 @@ const Field = ({
               isShown={showHidableInfo}
               blockchain={blockchain}
               onLastStepClick={closeHidableInfo}
-              scrollable
             >
-              <Box px="space.l" py="space.m">
-                {hidableInfo}
-              </Box>
+              {hidableInfo}
             </InnerPage>
           </>
         )}

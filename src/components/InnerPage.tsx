@@ -1,4 +1,4 @@
-import { Box, HTMLChakraProps } from "@chakra-ui/react";
+import { Flex, HTMLChakraProps } from "@chakra-ui/react";
 import { FC } from "react";
 import Header from "./Header";
 
@@ -6,7 +6,6 @@ interface Props {
   isShown: boolean;
   blockchain: string;
   onLastStepClick: () => void;
-  scrollable?: boolean;
 }
 
 const InnerPage: FC<Props & HTMLChakraProps<"div">> = ({
@@ -14,11 +13,10 @@ const InnerPage: FC<Props & HTMLChakraProps<"div">> = ({
   blockchain,
   onLastStepClick,
   children,
-  scrollable = false,
   ...rest
 }) => {
   return (
-    <Box
+    <Flex
       flexDirection="column"
       width="100%"
       height="100%"
@@ -29,12 +27,11 @@ const InnerPage: FC<Props & HTMLChakraProps<"div">> = ({
       zIndex={1}
       transform={isShown ? "translate(-100%, 0px)" : ""}
       transition="transform 0.4s ease-in-out"
-      overflowY={scrollable ? "auto" : "hidden"}
       {...rest}
     >
       <Header blockchain={blockchain} onLastStepClick={onLastStepClick} />
       {children}
-    </Box>
+    </Flex>
   );
 };
 
