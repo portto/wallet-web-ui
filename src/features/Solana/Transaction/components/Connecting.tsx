@@ -60,6 +60,7 @@ const Connecting = () => {
     // get transaction info
     fetchTransaction();
     // intentionally run once
+    // eslint-disable-next-line
   }, []);
 
   const handleClose = useCallback(async () => {

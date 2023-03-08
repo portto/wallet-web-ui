@@ -63,6 +63,8 @@ const EVMAuthzFallback = memo((props: Props) => {
           .catch(errorCallback);
       })
       .catch(errorCallback);
+    // intentionally run once
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {

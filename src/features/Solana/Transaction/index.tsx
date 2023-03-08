@@ -9,7 +9,6 @@ import {
 } from "src/machines/transaction";
 import {
   KEY_EMAIL,
-  KEY_SESSION_ID,
   KEY_USER_ID,
   KEY_USER_TYPE,
   getItem,
