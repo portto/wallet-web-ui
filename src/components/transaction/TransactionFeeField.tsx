@@ -47,9 +47,11 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
     logo: "",
     type: "point",
     decimals: 0,
+    symbol: "",
   });
 
   useEffect(() => {
+    if (feeData.fee) return;
     setFeeData({
       fee: feeInPoint,
       discount: discountInPoint,
@@ -57,7 +59,7 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
       type: "point",
       decimals: 0,
     });
-  }, [feeInPoint, discountInPoint]);
+  }, [feeInPoint, discountInPoint, feeData.fee]);
 
   const isLoading = !feeData.fee;
   const hasDiscount = feeData.discount > 0;
