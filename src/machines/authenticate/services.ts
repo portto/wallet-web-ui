@@ -129,9 +129,9 @@ export const finish = async (context: AuthenticateMachineContext) => {
       },
     });
   }
-
+  const domain = url ? new URL(url).hostname : "";
   // pass access token for internal use cases
-  if (INTERNAL_WL_DOMAINS.includes(url)) {
+  if (INTERNAL_WL_DOMAINS.includes(domain)) {
     onInternalConfirm({
       l6n,
       accessToken,
