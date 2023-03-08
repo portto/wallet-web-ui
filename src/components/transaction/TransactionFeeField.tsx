@@ -38,7 +38,8 @@ export interface FeeData {
 
 const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
   const { context } = useTransactionMachine();
-  const { transaction } = context;
+  const { transaction, user } = context;
+  const { points = 0 } = user;
   const { fee: feeInPoint = 0, discount: discountInPoint = 0 } = transaction;
   const [feeData, setFeeData] = useState<FeeData>({
     discount: 0,
@@ -63,6 +64,9 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
   const realTransactionFee = hasDiscount
     ? feeData.fee - feeData.discount
     : feeData.fee;
+
+  const insufficientPoint =
+    feeData.type === "point" && realTransactionFee > points;
 
   if (isFree) {
     return <FreeTransactionFeeField />;
@@ -91,7 +95,7 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
             >
               <Image src={feeData.logo} />
             </Flex>
-            <Box>
+            <Box color={insufficientPoint ? "font.alert" : "font.primary"}>
               {feeData.type === "point" ? (
                 <>
                   <FormattedMessage
@@ -110,6 +114,9 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
                       )
                     </Box>
                   )}
+                  {` (`}
+                  <FormattedMessage intlKey="app.authz.insufficientAmount" />
+                  {`)`}
                 </>
               ) : (
                 <>
@@ -120,12 +127,9 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
                     <Box as="span" pl="space.3xs">
                       (
                       <Box as="del">
-                        <FormattedMessage
-                          intlKey="app.authz.transactionFeePoints"
-                          values={{
-                            points: feeData.fee / 10 ** feeData.decimals,
-                          }}
-                        />
+                        {`${feeData.fee / 10 ** feeData.decimals} ${
+                          feeData.symbol
+                        }`}
                       </Box>
                       )
                     </Box>

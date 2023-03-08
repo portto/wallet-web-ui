@@ -59,7 +59,7 @@
   "app.authz.maliciousHint": "We detected this transaction may contain malicious operation and suggest to terminate this transaction. <a>Help Center</a>",
   "app.authz.purchaseonmoonpay": "Purchase on MoonPay",
   "app.authz.transferNativeToken": "Transfer {amount} {token}",
-  "app.authz.insufficientBalance": "Insufficient balance",
+  "app.authz.insufficientAmount": "Insufficient amount",
   "feature.authz.done.title": "You are good to go",
   "feature.authz.done.description": "We’ve sent the transaction to the blockchain network, and it may take time to process. Download Blocto wallet to manage your assets!",
   "app.authz.purchaseBloctoPoint": "Purchase Blocto points through in-App purchase for universal gas fee payment now!",

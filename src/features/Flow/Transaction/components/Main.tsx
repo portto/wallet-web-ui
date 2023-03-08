@@ -119,7 +119,7 @@ const Main = () => {
     <Field title={<FormattedMessage intlKey="app.authz.balance" />}>
       <Box color="font.alert">
         {`${tokenBalances} `}
-        (<FormattedMessage intlKey="app.authz.insufficientBalance" />)
+        (<FormattedMessage intlKey="app.authz.insufficientAmount" />)
       </Box>
     </Field>
   );
