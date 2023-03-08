@@ -1,6 +1,6 @@
 import { Chains, ChallengeResponse } from "src/types";
 import { DEFAULT_APP_ID, EVM_CHAINS } from "src/utils/constants";
-import { KEY_ACCESS_TOKEN, getItem } from "../LocalStorage";
+import { KEY_SESSION_ID, getItem } from "../LocalStorage";
 import {
   CLOSE_EVENTS,
   FCL_EVENTS,
@@ -54,7 +54,7 @@ export const onChallengeResponse = ({
   signatures = [],
   appId,
 }: any) => {
-  const code = getItem(KEY_ACCESS_TOKEN);
+  const code = getItem(KEY_SESSION_ID);
   let services: ChallengeResponse["data"]["services"] = [
     // authentication service
     {
