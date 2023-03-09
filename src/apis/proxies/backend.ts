@@ -320,5 +320,5 @@ export const getDappInfo = ({ id }: { id: string }) =>
     web: { web_domain: string };
     blockchains: Chains[];
   }>({
-    url: `dapps/${id}/info`,
+    url: `blocto-dapp/dapps/${id}/info`,
   });
