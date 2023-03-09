@@ -9,7 +9,7 @@ import EVMSignFallback from "./EVMSignFallback";
 import SolanaAuthzFallback from "./SolanaAuthzFallback";
 
 const REQUEST_METHOD = {
-  requestAccount: "request_account",
+  authn: "authn",
   signMessage: "sign_message",
   sendTransaction: "send_transaction",
   signAndSendTransaction: "sign_and_send_transaction",
@@ -51,9 +51,16 @@ const formatUrlParam = () => {
 };
 
 const useDefaultStateFromProps = () => {
-  const { appId: id, blockchain } = useParams<{
+  const {
+    appId,
+    blockchain,
+    method,
+    id: requestingId,
+  } = useParams<{
     appId?: string;
     blockchain?: Chains;
+    method: string;
+    id: string;
   }>();
 
   const urlParam = formatUrlParam();
@@ -64,12 +71,13 @@ const useDefaultStateFromProps = () => {
   return useMemo(
     () => ({
       dapp: {
-        id,
+        id: appId,
         blockchain,
       },
       request: {
         id: checkForString(urlParam.request_id),
-        method: checkForString(urlParam.method),
+        method,
+        requestingId,
         from: checkForString(urlParam.from),
         message: checkForString(urlParam.message),
         /** For EVM signing */
@@ -89,7 +97,7 @@ const useDefaultStateFromProps = () => {
         /** For Solana sign and send tx */
       },
     }),
-    [blockchain, id, isInvokeWrapped, urlParam]
+    [appId, requestingId, blockchain, isInvokeWrapped, method, urlParam]
   );
 };
 
@@ -100,6 +108,7 @@ const AppSDKFallback = memo(() => {
     request: {
       id: requestId,
       method,
+      requestingId,
       type,
       from,
       message = "",
@@ -120,7 +129,7 @@ const AppSDKFallback = memo(() => {
   };
 
   useEffect(() => {
-    if (!appId || !blockchain || !method || !requestId) {
+    if (!appId || !blockchain || !method || !requestingId) {
       return setError(FALLBACK_ERROR_MESSAGES.unexpectedError);
     }
 
@@ -144,8 +153,8 @@ const AppSDKFallback = memo(() => {
         .catch(errorCallback);
     }
 
-    if (method === REQUEST_METHOD.requestAccount) {
-      window.location.href = `${window.location.origin}/${appId}/${blockchain}/authn/?requestId=${requestId}`;
+    if (method === REQUEST_METHOD.authn) {
+      window.location.href = `${window.location.origin}/${appId}/${blockchain}/authn/?requestId=${requestingId}`;
     }
   }, []);
 

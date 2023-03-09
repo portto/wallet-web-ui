@@ -92,7 +92,7 @@ const App = () => {
           render={() => <Aptos.Signing />}
         />
         <Route
-          path={`/:appId/:blockchain/sdk`}
+          path={`/:appId/:blockchain/sdk/:method/:id`}
           render={() => <AppSDKFallback />}
         />
       </Switch>

@@ -10,6 +10,7 @@ import {
   KEY_SESSION_ID,
   KEY_USER_ID,
   KEY_USER_TYPE,
+  getItem,
   removeItem,
   setItem,
 } from "src/services/LocalStorage";
@@ -141,7 +142,8 @@ export const finish = async (context: AuthenticateMachineContext) => {
 
   // Redirect to app deep link
   if (requestId) {
-    window.location.href = `blocto://?request_id=${requestId}&address=${addresses?.[blockchain]}`;
+    const sessionId = getItem(KEY_SESSION_ID);
+    window.location.href = `blocto://?request_id=${requestId}&address=${addresses?.[blockchain]}&session_id=${sessionId}`;
   }
 };
 
