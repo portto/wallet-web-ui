@@ -32,6 +32,13 @@ spec:
                 name: wallet-web-backend-service
                 port:
                   number: 80
+          - path: /dapps
+            pathType: Prefix
+            backend:
+              service:
+                name: wallet-web-backend-service
+                port:
+                  number: 80
           - path: /access
             pathType: Prefix
             backend:
