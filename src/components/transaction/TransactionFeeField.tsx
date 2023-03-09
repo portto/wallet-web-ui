@@ -1,6 +1,6 @@
 import { Box, Flex, HStack, Image, Spinner } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import Logo from "src/assets/images/icons/logo.svg";
+import logo from "src/assets/images/icons/logo.svg";
 import Field from "src/components/Field";
 import FormattedMessage from "src/components/FormattedMessage";
 import FeeOptions from "src/components/transaction/FeeOptions";
@@ -18,7 +18,7 @@ const FreeTransactionFeeField = () => (
         alignItems="center"
         p="space.4xs"
       >
-        <Logo />
+        <Image src={logo} />
       </Flex>
       <Box>
         <FormattedMessage intlKey="app.authz.free" />
@@ -55,7 +55,7 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
     setFeeData({
       fee: feeInPoint,
       discount: discountInPoint,
-      logo: Logo,
+      logo,
       type: "point",
       decimals: 0,
     });
