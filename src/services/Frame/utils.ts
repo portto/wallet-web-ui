@@ -7,7 +7,7 @@ export const postMessageToParentFrame = (args: unknown, l6n: string) => {
     console.debug(`Post message to ${l6n}:`, args);
   }
   const parent = window.opener || window.parent;
-  if (parent && parent.postMessage) {
+  if (parent && parent.postMessage && l6n) {
     parent.postMessage(args, l6n);
   }
 };
