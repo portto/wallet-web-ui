@@ -8,13 +8,13 @@ import EVMAuthzFallback from "./EVMAuthzFallback";
 import EVMSignFallback from "./EVMSignFallback";
 import SolanaAuthzFallback from "./SolanaAuthzFallback";
 
-const REQUEST_METHOD = {
-  authn: "authn",
-  authz: "authz",
-  signMessage: "sign_message",
-  sendTransaction: "send_transaction",
-  signAndSendTransaction: "sign_and_send_transaction",
-};
+enum RequestMethod {
+  Authn = "authn",
+  Authz = "authz",
+  SignMessage = "signMessage",
+  SendTransaction = "send_transaction",
+  SignAndSendTransaction = "sign_and_send_transaction",
+}
 
 const checkForString = (value: unknown) =>
   typeof value === "string" ? value : "";
@@ -155,11 +155,11 @@ const AppSDKFallback = memo(() => {
         .catch(errorCallback);
     }
 
-    if (method === REQUEST_METHOD.authn) {
+    if (method === RequestMethod.Authn) {
       window.location.href = `${window.location.origin}/${appId}/${blockchain}/authn/?requestId=${requestingId}`;
     }
 
-    if (blockchain === Chains.aptos && method === REQUEST_METHOD.authz) {
+    if (blockchain === Chains.aptos && method === RequestMethod.Authz) {
       window.location.href = `${window.location.origin}/${appId}/${blockchain}/authz/?requestId=${requestingId}`;
     }
   }, []);
@@ -173,7 +173,7 @@ const AppSDKFallback = memo(() => {
   }, [error, requestId]);
 
   switch (method) {
-    case REQUEST_METHOD.signMessage:
+    case RequestMethod.SignMessage:
       return (
         <EVMSignFallback
           // Already check whether the value exists when component did mount
@@ -186,7 +186,7 @@ const AppSDKFallback = memo(() => {
           type={type}
         />
       );
-    case REQUEST_METHOD.sendTransaction:
+    case RequestMethod.SendTransaction:
       return (
         <EVMAuthzFallback
           // Already check whether the value exists when component did mount
@@ -201,7 +201,7 @@ const AppSDKFallback = memo(() => {
           data={data}
         />
       );
-    case REQUEST_METHOD.signAndSendTransaction:
+    case RequestMethod.SignAndSendTransaction:
       return (
         <SolanaAuthzFallback
           // Already check whether the value exists when component did mount
