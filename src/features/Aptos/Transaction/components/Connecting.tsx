@@ -17,15 +17,18 @@ const Connecting = () => {
   const { blockchain } = context.dapp;
 
   const fetchTransaction = useCallback(async () => {
-    const [{ point, type, email, id }, { assets: allAssets }, { transaction }] =
-      await Promise.all([
-        getUserInfo(),
-        getAccountAssets(),
-        getAuthorization({
-          authorizationId,
-          blockchain,
-        }),
-      ]);
+    const [
+      { point, type, email, id },
+      { assets: allAssets },
+      { transaction, requestId },
+    ] = await Promise.all([
+      getUserInfo(),
+      getAccountAssets(),
+      getAuthorization({
+        authorizationId,
+        blockchain,
+      }),
+    ]);
 
     if (typeof transaction !== "string" && transaction?.from) {
       // Make sure the user asking for executing the method is the same as the one that currently logs in
@@ -73,7 +76,7 @@ const Connecting = () => {
         transaction: {
           rawObject: { transaction },
         },
-        requestId: typeof transaction !== "string" && transaction?.requestId,
+        requestId,
       },
     });
   }, [authorizationId, blockchain, send]);
