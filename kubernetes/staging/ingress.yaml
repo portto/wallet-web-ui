@@ -32,7 +32,7 @@ spec:
                 name: wallet-web-backend-service
                 port:
                   number: 80
-          - path: /dapps
+          - path: /blocto-dapp
             pathType: Prefix
             backend:
               service:
