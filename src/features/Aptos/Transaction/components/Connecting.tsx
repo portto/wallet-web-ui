@@ -1,9 +1,14 @@
 import { useCallback, useEffect } from "react";
-import { getAccountAssets, getAuthorization, getUserInfo } from "src/apis";
+import {
+  getAccountAsset,
+  getAccountAssets,
+  getAuthorization,
+  getUserInfo,
+} from "src/apis";
 import Loading from "src/components/Loading";
 import { useTransactionMachine } from "src/machines/transaction";
 import { AccountAsset } from "src/types";
-import { ERROR_MESSAGES } from "src/utils/constants";
+import { ERROR_MESSAGES, FALLBACK_ERROR_MESSAGES } from "src/utils/constants";
 import fetchDappInfo from "src/utils/fetchDappInfo";
 
 const Connecting = () => {
@@ -21,6 +26,29 @@ const Connecting = () => {
           blockchain,
         }),
       ]);
+
+    if (typeof transaction !== "string" && transaction?.from) {
+      // Make sure the user asking for executing the method is the same as the one that currently logs in
+      getAccountAsset({ blockchain, force: true })
+        .then(({ wallet_address }) => {
+          if (wallet_address !== transaction?.from) {
+            send({
+              type: "reject",
+              data: { error: FALLBACK_ERROR_MESSAGES.userNotMatch },
+            });
+          }
+        })
+        .catch((err) => {
+          const error = err?.response?.data?.error_code
+            ? err.response.data.error_code
+            : FALLBACK_ERROR_MESSAGES.unexpectedError;
+          send({
+            type: "reject",
+            data: { error },
+          });
+        });
+    }
+
     const assets = allAssets.filter(
       (asset: AccountAsset) => asset.blockchain === blockchain
     );
@@ -45,6 +73,7 @@ const Connecting = () => {
         transaction: {
           rawObject: { transaction },
         },
+        requestId: typeof transaction !== "string" && transaction?.requestId,
       },
     });
   }, [authorizationId, blockchain, send]);
