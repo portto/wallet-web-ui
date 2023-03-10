@@ -90,6 +90,7 @@ export interface FlowTransaction {
     ];
     authorizers: string[];
   };
+  from?: string; // @todo: for Flow SDK fallback
 }
 
 export interface AptosTransaction {
@@ -97,6 +98,7 @@ export interface AptosTransaction {
   function: string;
   type: string;
   type_arguments: string[];
+  from?: string; // This is for Aptos SDK fallback
 }
 
 export interface FlowSignatureDetails {

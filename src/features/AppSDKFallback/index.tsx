@@ -10,6 +10,7 @@ import SolanaAuthzFallback from "./SolanaAuthzFallback";
 
 const REQUEST_METHOD = {
   authn: "authn",
+  authz: "authz",
   signMessage: "sign_message",
   sendTransaction: "send_transaction",
   signAndSendTransaction: "sign_and_send_transaction",
@@ -75,6 +76,7 @@ const useDefaultStateFromProps = () => {
         blockchain,
       },
       request: {
+        // @todo: Remove getting the params from the query strings
         id: checkForString(urlParam.request_id),
         method,
         requestingId,
@@ -155,6 +157,10 @@ const AppSDKFallback = memo(() => {
 
     if (method === REQUEST_METHOD.authn) {
       window.location.href = `${window.location.origin}/${appId}/${blockchain}/authn/?requestId=${requestingId}`;
+    }
+
+    if (blockchain === Chains.aptos && method === REQUEST_METHOD.authz) {
+      window.location.href = `${window.location.origin}/${appId}/${blockchain}/authz/?requestId=${requestingId}`;
     }
   }, []);
 
