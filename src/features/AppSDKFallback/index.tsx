@@ -160,7 +160,7 @@ const AppSDKFallback = memo(() => {
     }
 
     if (blockchain === Chains.aptos && method === RequestMethod.Authz) {
-      window.location.href = `${window.location.origin}/${appId}/${blockchain}/authz/?requestId=${requestingId}`;
+      window.location.href = `${window.location.origin}/${appId}/${blockchain}/authz/${requestingId}`;
     }
   }, []);
 

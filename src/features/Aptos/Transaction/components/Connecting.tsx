@@ -73,6 +73,7 @@ const Connecting = () => {
         transaction: {
           rawObject: { transaction },
         },
+        requestId: typeof transaction !== "string" && transaction?.requestId,
       },
     });
   }, [authorizationId, blockchain, send]);
