@@ -17,7 +17,7 @@ import TransactionInfo from "src/components/transaction/TransactionInfo";
 import useEstimatePoint from "src/hooks/useEstimatePoint";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
-import { EvmTransaction } from "src/types";
+import { EvmTransaction, FeeType } from "src/types";
 import { ERROR_MESSAGES } from "src/utils/constants";
 import openMoonPayPage from "src/utils/openMoonPayPage";
 import { ChainCoinSymbols } from "../constants";
@@ -33,6 +33,15 @@ const Main = () => {
 
   const { user, transaction, dapp } = context;
   const { name, blockchain } = dapp;
+  const { points = 0 } = user;
+  const {
+    fee: feeInPoint = 0,
+    discount: discountInPoint = 0,
+    feeType,
+  } = transaction;
+
+  const insufficientPoint =
+    feeType === FeeType.Point && points < feeInPoint - discountInPoint;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
   const { rawObject, failReason, mayFail } = transaction;
 
@@ -244,7 +253,7 @@ const Main = () => {
           ) : (
             <Button
               onClick={approve}
-              disabled={mayFail || !isReady}
+              disabled={mayFail || !isReady || insufficientPoint}
               isLoading={isProcessing}
             >
               <FormattedMessage intlKey="app.authz.approve" />
