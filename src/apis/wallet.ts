@@ -178,6 +178,7 @@ export const getAuthorization = ({
     transaction?: string | FlowTransaction | AptosTransaction;
     convertedTx?: string;
     extraSignatures?: object;
+    requestId?: string; // This is for SDK fallback
   }>({
     url: `api/${blockchain}/authzDetails`,
     request: {
