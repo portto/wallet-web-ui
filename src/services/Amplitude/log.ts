@@ -1,3 +1,4 @@
+import normalizeDomain from "src/utils/normalizeDomain";
 import { getInstance } from "./system";
 
 const IS_LOCAL =
@@ -61,7 +62,7 @@ export const logRegister = ({
 }) =>
   logCore("wallet_register", {
     register_from: registerFrom,
-    domain,
+    domain: normalizeDomain(domain),
     dApp_name: dAppName,
     dApp_app_id: dAppId,
     chain,
@@ -82,7 +83,7 @@ export const logLogin = ({
 }) =>
   logCore("wallet_log_in", {
     product,
-    domain,
+    domain: normalizeDomain(domain),
     dApp_name: dAppName,
     dApp_app_id: dAppId,
     chain,
@@ -105,7 +106,7 @@ export const logRequestAccount = ({
 }) =>
   logCore("wallet_approve_request_account", {
     product,
-    domain,
+    domain: normalizeDomain(domain),
     dApp_name: dAppName,
     dApp_app_id: dAppId,
     chain,
@@ -126,7 +127,7 @@ export const logSendTx = ({
 }) =>
   logCore("wallet_approve_confirm_tx", {
     product,
-    domain,
+    domain: normalizeDomain(domain),
     dApp_name: dAppName,
     dApp_app_id: dAppId,
     chain,
@@ -147,7 +148,7 @@ export const logSignature = ({
 }) =>
   logCore("wallet_approve_signature", {
     product,
-    domain,
+    domain: normalizeDomain(domain),
     dApp_name: dAppName,
     dApp_app_id: dAppId,
     chain,
