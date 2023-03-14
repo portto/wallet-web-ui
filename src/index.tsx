@@ -69,7 +69,7 @@ const render = (messages: any) => {
   );
 };
 
-// @ts-expect-error
+// @ts-expect-error workaround function for backward compatibility
 window.setAccessToken = (token) => (window.accessToken = token);
 
 runIntlPolyfill(() => render(translationMessages));
