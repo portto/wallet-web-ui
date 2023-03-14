@@ -83,8 +83,10 @@ const getFeeOptionsFromAssets = (
 
 const FeeOptions = ({
   setFeeData,
+  insufficientPoint,
 }: {
   setFeeData: (feeOption: FeeData) => void;
+  insufficientPoint: boolean;
 }) => {
   const { context, send } = useTransactionMachine();
   const { transaction, user, dapp } = context;
@@ -145,39 +147,41 @@ const FeeOptions = ({
       >
         <FormattedMessage intlKey="app.authz.transactionFee" />
       </Heading>
-      <Flex
-        p="space.s"
-        bg="background.secondary"
-        borderRadius="12px"
-        flexDirection="column"
-      >
-        <Flex mb="space.s">
-          <Box mr="space.s">
-            <FormattedMessage intlKey="app.authz.purchaseBloctoPoint" />
-          </Box>
-          <Box ml="space.3xs">
-            <PointWithMobile />
+      {insufficientPoint && (
+        <Flex
+          p="space.s"
+          bg="background.secondary"
+          borderRadius="12px"
+          flexDirection="column"
+        >
+          <Flex mb="space.s">
+            <Box mr="space.s">
+              <FormattedMessage intlKey="app.authz.purchaseBloctoPoint" />
+            </Box>
+            <Box ml="space.3xs">
+              <PointWithMobile />
+            </Box>
+          </Flex>
+          <Box>
+            <FormattedMessage
+              intlKey="app.authz.bloctoPoint"
+              values={{
+                a: (chunks: ReactNode) => (
+                  <Link
+                    href="https://portto.zendesk.com/hc/en-us/articles/900005302883-What-are-Blocto-points-What-can-I-do-with-Blocto-points-"
+                    isExternal
+                    textDecor="underline"
+                    rel="noopener noreferrer"
+                    fontWeight="weight.m"
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              }}
+            />
           </Box>
         </Flex>
-        <Box>
-          <FormattedMessage
-            intlKey="app.authz.bloctoPoint"
-            values={{
-              a: (chunks: ReactNode) => (
-                <Link
-                  href="https://portto.zendesk.com/hc/en-us/articles/900005302883-What-are-Blocto-points-What-can-I-do-with-Blocto-points-"
-                  isExternal
-                  textDecor="underline"
-                  rel="noopener noreferrer"
-                  fontWeight="weight.m"
-                >
-                  {chunks}
-                </Link>
-              ),
-            }}
-          />
-        </Box>
-      </Flex>
+      )}
       <UnorderedList listStyleType="none" m={0} overflowY="auto" mt="space.l">
         {txFeeOptionsWithLogo.map((feeOption) => {
           const { logo, type, feeAmount, symbol, userBalance } = feeOption;
@@ -263,7 +267,7 @@ const FeeOptions = ({
                     </>
                   )}
                 </VStack>
-                {type === "point" && (
+                {type === "point" && insufficientPoint && (
                   <Box
                     py="space.s"
                     px="space.m"

@@ -78,7 +78,12 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
   return (
     <Field
       title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-      hidableInfo={<FeeOptions setFeeData={setFeeData} />}
+      hidableInfo={
+        <FeeOptions
+          setFeeData={setFeeData}
+          insufficientPoint={insufficientPoint}
+        />
+      }
     >
       <HStack>
         {isLoading && (
