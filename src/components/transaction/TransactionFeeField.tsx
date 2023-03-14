@@ -28,22 +28,23 @@ const FreeTransactionFeeField = () => (
 );
 
 export interface FeeData {
-  fee: number;
-  discount: number;
+  fee?: number;
+  discount?: number;
   logo?: string;
   symbol?: string;
   type: string;
   decimals: number;
 }
 
+const isNumber = (value: any) => typeof value === "number";
+
 const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
   const { context } = useTransactionMachine();
   const { transaction, user } = context;
   const { points = 0 } = user;
-  const { fee: feeInPoint = 0, discount: discountInPoint = 0 } = transaction;
+  const { fee: feeInPoint, discount: discountInPoint } = transaction;
+
   const [feeData, setFeeData] = useState<FeeData>({
-    discount: 0,
-    fee: 0,
     logo: "",
     type: "point",
     decimals: 0,
@@ -51,7 +52,7 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
   });
 
   useEffect(() => {
-    if (feeData.fee) return;
+    if (isNumber(feeData.fee)) return;
     setFeeData({
       fee: feeInPoint,
       discount: discountInPoint,
@@ -61,11 +62,11 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
     });
   }, [feeInPoint, discountInPoint, feeData.fee]);
 
-  const isLoading = !feeData.fee;
-  const hasDiscount = feeData.discount > 0;
+  const isLoading = !isNumber(feeData.fee);
+  const hasDiscount = (feeData?.discount ?? 0) > 0;
   const realTransactionFee = hasDiscount
-    ? feeData.fee - feeData.discount
-    : feeData.fee;
+    ? (feeData.fee ?? 0) - (feeData.discount ?? 0)
+    : feeData.fee ?? 0;
 
   const insufficientPoint =
     feeData.type === "point" && realTransactionFee > points;
@@ -77,7 +78,12 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
   return (
     <Field
       title={<FormattedMessage intlKey="app.authz.transactionFee" />}
-      hidableInfo={<FeeOptions setFeeData={setFeeData} />}
+      hidableInfo={
+        <FeeOptions
+          setFeeData={setFeeData}
+          insufficientPoint={insufficientPoint}
+        />
+      }
     >
       <HStack>
         {isLoading && (
@@ -116,9 +122,13 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
                       )
                     </Box>
                   )}
-                  {` (`}
-                  <FormattedMessage intlKey="app.authz.insufficientAmount" />
-                  {`)`}
+                  {insufficientPoint && (
+                    <>
+                      {` (`}
+                      <FormattedMessage intlKey="app.authz.insufficientAmount" />
+                      {`)`}
+                    </>
+                  )}
                 </>
               ) : (
                 <>
@@ -129,7 +139,7 @@ const TransactionFeeField = ({ isFree = false }: { isFree?: boolean }) => {
                     <Box as="span" pl="space.3xs">
                       (
                       <Box as="del">
-                        {`${feeData.fee / 10 ** feeData.decimals} ${
+                        {`${(feeData.fee ?? 0) / 10 ** feeData.decimals} ${
                           feeData.symbol
                         }`}
                       </Box>

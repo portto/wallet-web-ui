@@ -17,6 +17,7 @@ import TransactionInfo from "src/components/transaction/TransactionInfo";
 import useEstimatePoint from "src/hooks/useEstimatePoint";
 import { useTransactionMachine } from "src/machines/transaction";
 import { logSendTx } from "src/services/Amplitude";
+import { FeeType } from "src/types";
 import { ERROR_MESSAGES } from "src/utils/constants";
 import useTransactionDetail from "../hooks/useTransactionDetail";
 
@@ -28,7 +29,17 @@ const Main = () => {
 
   const { user, transaction, dapp } = context;
   const dappDomain = (dapp.url ? new URL(dapp.url) : {}).host || "";
-  const { rawObject, mayFail, failReason } = transaction;
+  const {
+    rawObject,
+    mayFail,
+    failReason,
+    fee: feeInPoint = 0,
+    discount: discountInPoint = 0,
+    feeType,
+  } = transaction;
+  const { points = 0 } = user;
+  const insufficientPoint =
+    feeType === FeeType.Point && points < feeInPoint - discountInPoint;
   const {
     type,
     arguments: args = [],
@@ -256,7 +267,12 @@ const Main = () => {
         <Flex justify="center" p="space.l" width="100%">
           <Button
             onClick={approve}
-            disabled={showInsufficientBalance || mayFail || !isReady}
+            disabled={
+              showInsufficientBalance ||
+              mayFail ||
+              !isReady ||
+              insufficientPoint
+            }
             isLoading={isProcessing}
           >
             <FormattedMessage intlKey="app.authz.approve" />

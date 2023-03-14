@@ -13,6 +13,7 @@ import {
   KEY_USER_TYPE,
   getItem,
 } from "src/services/LocalStorage";
+import { FeeType } from "src/types";
 
 import Connecting from "./components/Connecting";
 import Main from "./components/Main";
@@ -63,7 +64,9 @@ const useDefaultStateFromProps = () => {
         addresses: {},
         type: getItem(KEY_USER_TYPE),
       },
-      transaction: {},
+      transaction: {
+        feeType: FeeType.Point,
+      },
     }),
     [authorizationId, blockchain, id]
   );

@@ -32,6 +32,11 @@ export enum Chains {
   solana = "solana",
 }
 
+export enum FeeType {
+  Point = "point",
+  Native = "native",
+}
+
 export interface TransactionFeeOption {
   contract_address: string;
   cost: string;

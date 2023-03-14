@@ -33,7 +33,7 @@ const Connecting = () => {
       id,
       email,
       type,
-      points: point,
+      points: parseFloat(point),
       assets,
       balance,
     };
